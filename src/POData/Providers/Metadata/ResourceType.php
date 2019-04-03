@@ -58,7 +58,7 @@ class ResourceType
      * The type the resource described by this class instance.
      * Note: either Entity or Complex Type
      *
-     * @var  ResourceTypeKind
+     * @var ResourceTypeKind|int
      */
     private $_resourceTypeKind;
 
@@ -185,7 +185,7 @@ class ResourceType
      *                                                be 'ReflectionClass' and for
      *                                                primitive type this
      *                                                will be IType
-     * @param ResourceTypeKind      $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
+     * @param ResourceTypeKind|int  $resourceTypeKind Kind of resource (Entity, Complex or Primitive)
      * @param string                $name             Name of the resource
      * @param string                $namespaceName    Namespace of the resource
      * @param ResourceType          $baseType         Base type of the resource, if exists
@@ -818,7 +818,7 @@ class ResourceType
     /**
      * Get predefined ResourceType for a primitive type
      *
-     * @param EdmPrimitiveType $typeCode Typecode of primitive type
+     * @param EdmPrimitiveType|int $typeCode Typecode of primitive type
      *
      * @return ResourceType
      *
