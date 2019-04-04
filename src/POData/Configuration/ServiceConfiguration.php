@@ -241,7 +241,7 @@ class ServiceConfiguration
      * sets the access rights on the specified resource set
      *
      * @param string          $name   Name of resource set to set; '*' to indicate all
-     * @param EntitySetRights $rights Rights to be granted to this resource
+     * @param EntitySetRights|int $rights Rights to be granted to this resource
      *
      * @return void
      *
