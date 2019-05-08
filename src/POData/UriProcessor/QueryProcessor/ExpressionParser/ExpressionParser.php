@@ -667,12 +667,12 @@ class ExpressionParser
             $right = new ConstantExpression(0, new Int32());
         }
 
-        $dateTime = new DateTime();
-        if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
-            $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
-            $left = new FunctionCallExpression($dateTimeCmpFunctions[0], array($left, $right));
-            $right = new ConstantExpression(0, new Int32());
-        }
+        // $dateTime = new DateTime();
+        // if ($left->typeIs($dateTime) && $right->typeIs($dateTime)) {
+        //     $dateTimeCmpFunctions = FunctionDescription::dateTimeComparisonFunctions();
+        //     $left = new FunctionCallExpression($dateTimeCmpFunctions[0], array($left, $right));
+        //     $right = new ConstantExpression(0, new Int32());
+        // }
 
         $guid = new Guid();
         if ($left->typeIs($guid) && $right->typeIs($guid)) {
