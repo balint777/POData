@@ -632,7 +632,7 @@ class ProvidersWrapper
             }
         }
 
-        if (($queryType == QueryType::ENTITIES || $queryType == QueryType::ENTITIES_WITH_COUNT) && !is_array($queryResult->results)) {
+        if (($queryType == QueryType::ENTITIES || $queryType == QueryType::ENTITIES_WITH_COUNT) && !is_iterable($queryResult->results)) {
             throw ODataException::createInternalServerError(
                 Messages::queryProviderResultsMissing($methodName, $queryType)
             );

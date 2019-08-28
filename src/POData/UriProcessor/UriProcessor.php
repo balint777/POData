@@ -673,7 +673,7 @@ class UriProcessor
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
-            if (is_array($result)) {
+            if (is_iterable($result)) {
                 foreach ($result as $entry) {
                     // Check for null entry
                     if ($isCollection) {
