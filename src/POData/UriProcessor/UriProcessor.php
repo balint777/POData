@@ -651,7 +651,7 @@ class UriProcessor
         $node = $this->request->getRootProjectionNode();
         if (!is_null($node) && $node->isExpansionSpecified()) {
             $result = $this->request->getTargetResult();
-            if (!is_null($result) || is_array($result) && !empty($result)) {
+            if (!is_null($result) || is_iterable($result) && !empty($result)) {
                 $needPop = $this->_pushSegmentForRoot();
                 $this->_executeExpansion($result);
                 $this->_popSegment($needPop);

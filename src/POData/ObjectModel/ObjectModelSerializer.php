@@ -83,7 +83,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
      */
     public function writeTopLevelElements(&$entryObjects)
     {
-        $this->assert(is_array($entryObjects), 'is_array($entryObjects)');
+        $this->assert(is_iterable($entryObjects), 'is_iterable($entryObjects)');
         $requestTargetSource = $this->request->getTargetSource();
         $title = null;
         if ($requestTargetSource == TargetSource::ENTITY_SET) {
@@ -348,7 +348,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $relativeUri,
         ODataFeed &$feed
     ) {
-        $this->assert(is_array($entryObjects) || $entryObjects instanceof ArrayAccess, '_writeFeedElements::is_array($entryObjects)');
+        $this->assert(is_iterable($entryObjects) || $entryObjects instanceof ArrayAccess, '_writeFeedElements::is_iterable($entryObjects)');
         $feed->id = $absoluteUri;
         $feed->title = $title;
         $feed->selfLink = new ODataLink();

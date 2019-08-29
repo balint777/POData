@@ -625,7 +625,7 @@ class ProvidersWrapper
             }
 
             //If POData is supposed to handle the ordered aging they must return results! (possibly empty)
-            if (!$this->queryProvider->handlesOrderedPaging() && !is_array($queryResult->results)) {
+            if (!$this->queryProvider->handlesOrderedPaging() && !is_iterable($queryResult->results)) {
                 throw ODataException::createInternalServerError(
                     Messages::queryProviderResultsMissing($methodName, $queryType)
                 );
