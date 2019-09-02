@@ -369,8 +369,8 @@ abstract class BaseService implements IRequestHandler, IService
                 // Code path for collection (feed or links)
                 $entryObjects = $request->getTargetResult();
                 self::assert(
-                    !is_null($entryObjects) && is_array($entryObjects),
-                    '!is_null($entryObjects) && is_array($entryObjects)'
+                    !is_null($entryObjects) && is_iterable($entryObjects),
+                    '!is_null($entryObjects) && is_iterable($entryObjects)'
                 );
                 // If related resource set is empty for an entry then we should
                 // not throw error instead response must be empty feed or empty links

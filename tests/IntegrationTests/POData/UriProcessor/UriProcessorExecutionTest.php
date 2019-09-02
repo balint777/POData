@@ -38,7 +38,7 @@ class UriProcessorExecutionTest extends TestCase
         $queryProcessor->execute();
 
         $result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
-        $isarray = is_array($result);
+        $isarray = is_iterable($result);
         $this->assertTrue($isarray);
 
     }
@@ -66,7 +66,7 @@ class UriProcessorExecutionTest extends TestCase
 		$queryProcessor = $dataService->handleRequest();
 		$queryProcessor->execute();
 		$result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
-		$this->assertTrue(is_array($result));
+		$this->assertTrue(is_iterable($result));
 
     }
     
@@ -150,7 +150,7 @@ class UriProcessorExecutionTest extends TestCase
 		$queryProcessor = $dataService->handleRequest();
 		$queryProcessor->execute();
 		$result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
-		$this->assertTrue(!is_array($result));
+		$this->assertTrue(!is_iterable($result));
 
     }
 
@@ -202,7 +202,7 @@ class UriProcessorExecutionTest extends TestCase
 		$queryProcessor = $dataService->handleRequest();
 		$queryProcessor->execute();
 		$result = $queryProcessor->getRequestDescription()->getLastSegmentDescriptor()->getResult();
-		$this->assertTrue(is_array($result));
+		$this->assertTrue(is_iterable($result));
 
     }
     
