@@ -75,6 +75,15 @@ class OrderByParser
         $this->_providerWrapper = $providerWrapper;
     }
 
+    private static function _mock($instanceType)
+    {
+        $mock = [];
+        foreach ($instanceType->getProperties() as $property) {
+            $mock[$property->name] = null;
+        }
+        return (object) $mock;
+    }
+
     /**
      * This function perform the following tasks with the help of internal helper
      * functions
@@ -106,7 +115,7 @@ class OrderByParser
     ) {
         $orderByParser = new OrderByParser($providerWrapper);
         try {
-            $orderByParser->_dummyObject = $resourceType->getInstanceType()->newInstanceWithoutConstructor();
+            $orderByParser->_dummyObject = self::_mock($resourceType->getInstanceType());
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(Messages::orderByParserFailedToCreateDummyObject());
         }
@@ -267,63 +276,21 @@ class OrderByParser
                         );
                         // Initialize this member variable (identified by
                         // $resourceProperty) of parent object.
-                        try {
-                            $dummyProperty
-                                = new \ReflectionProperty(
-                                    $currentObject, $resourceProperty->getName()
-                                );
-                            $object = $resourceProperty->getInstanceType()->newInstanceWithoutConstructor();
-                            $dummyProperty->setAccessible(true);
-                            $dummyProperty->setValue($currentObject, $object);
-                            $currentObject = $object;
-                        } catch (\ReflectionException $reflectionException) {
-                            throw ODataException::createInternalServerError(
-                                Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                    $resourceProperty->getName(), $resourceType->getName()
-                                )
-                            );
-                        }
+                        $object = $this->_mock($resourceProperty->getInstanceType());
+                        $currentObject->{$resourceProperty->getName()} = $object;
+                        $currentObject = $object;
                     } else if ($resourceProperty->getKind() == ResourcePropertyKind::COMPLEX_TYPE) {
                         $node = new OrderByNode($orderBySubPathSegment, $resourceProperty, null);
                         // Initialize this member variable
                         // (identified by $resourceProperty)of parent object.
-                        try {
-                            $dummyProperty
-                                = new \ReflectionProperty(
-                                    $currentObject, $resourceProperty->getName()
-                                );
-                            $object = $resourceProperty->getInstanceType()->newInstanceWithoutConstructor();
-                            $dummyProperty->setValue($currentObject, $object);
-                            $currentObject = $object;
-                        } catch (\ReflectionException $reflectionException) {
-                            throw ODataException::createInternalServerError(
-                                Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                    $resourceProperty->getName(), $resourceType->getName()
-                                )
-                            );
-                        }
+                        $object = $this->_mock($resourceProperty->getInstanceType());
+                        $currentObject->{$resourceProperty->getName()} = $object;
+                        $currentObject = $object;
                     }
 
                     $currentNode->addNode($node);
                 } else {
-                    try {
-                        $reflectionClass = new \ReflectionClass(get_class($currentObject));
-                        $reflectionProperty = $reflectionClass->getProperty($resourceProperty->getName());
-                        $reflectionProperty->setAccessible(true);
-                        $currentObject = $reflectionProperty->getValue($currentObject);
-
-                        //$dummyProperty = new \ReflectionProperty(
-                        //    $currentObject, $resourceProperty->getName()
-                        //);
-                        //$currentObject = $dummyProperty->getValue($currentObject);
-                    } catch (\ReflectionException $reflectionException) {
-                            throw ODataException::createInternalServerError(
-                                Messages::orderByParserFailedToAccessOrInitializeProperty(
-                                    $resourceProperty->getName(),
-                                    $resourceType->getName()
-                                )
-                            );
-                    }
+                    $currentObject = $currentObject->{$resourceProperty->getName()};
 
                     if ($node instanceof OrderByLeafNode) {
                         //remove duplicate orderby path
