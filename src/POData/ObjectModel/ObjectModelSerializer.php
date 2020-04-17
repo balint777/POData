@@ -871,7 +871,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $stringValue = ($primitiveValue === true) ? 'true' : 'false';
         } else if ($type instanceof Binary) {
             $stringValue = base64_encode($primitiveValue);
-        } else if (($type instanceof DateTime || $type instanceof StringType) && $primitiveValue instanceof \DateTime) {
+        } else if (($type instanceof DateTime || $type instanceof StringType) && ($primitiveValue instanceof \DateTime || $primitiveValue instanceof \DateTimeImmutable)) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } else if ($type instanceof StringType && $primitiveValue instanceof \DateInterval) {
             $stringValue = (($primitiveValue->d * 86400) + ($primitiveValue->h * 3600) + ($primitiveValue->i * 60) + $primitiveValue->s) * 1000;
