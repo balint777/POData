@@ -394,7 +394,7 @@ class AtomODataWriter implements IODataWriter
         foreach ($properties->properties as $property) {
             $this->beginWriteProperty($property, $topLevel);
 
-            if ($property->value == null) {
+            if (is_null($property->value)) {
                 $this->writeNullValue($property);
             } elseif ($property->value instanceof ODataPropertyContent) {
                 $this->writeProperties($property->value, false);

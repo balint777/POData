@@ -38,7 +38,7 @@ class JsonWriter
 
     /**
      * Creates a new instance of Json writer
-     * 
+     *
      * @param string $writer writer to which text needs to be written
      */
     public function __construct($writer)
@@ -49,7 +49,7 @@ class JsonWriter
 
     /**
      * End the current scope
-     * 
+     *
      * @return JsonWriter
      */
     public function endScope()
@@ -57,7 +57,7 @@ class JsonWriter
         $this->_writer
             ->writeLine()
             ->decreaseIndent();
- 
+
         if (array_pop($this->_scopes)->type == $this->_scopeType['Array']) {
             $this->_writer->writeValue("]");
         } else {
@@ -70,7 +70,7 @@ class JsonWriter
 
     /**
      * Start the array scope
-     * 
+     *
      * @return JsonWriter
      */
     public function startArrayScope()
@@ -82,7 +82,7 @@ class JsonWriter
 
     /**
      * Write the "results" header for the data array
-     * 
+     *
      * @return JsonWriter
      */
     public function writeDataArrayName()
@@ -104,9 +104,9 @@ class JsonWriter
 
     /**
      * Write the name for the object property
-     * 
+     *
      * @param string $name name of the object property
-     * 
+     *
      * @return JsonWriter
      */
     public function writeName($name)
@@ -128,10 +128,10 @@ class JsonWriter
 
     /**
      * JSON write a basic data type (string, number, boolean, null)
-     * 
+     *
      * @param mixed  $value value to be written
      * @param string $type  data type of the value
-     * 
+     *
      * @return JsonWriter
      */
     public function writeValue($value, $type = null)
@@ -197,11 +197,11 @@ class JsonWriter
 
     /**
      * Returns the string value with special characters escaped
-     * 
+     *
      * @param string $string input string value
-     * 
+     *
      * Returns the string value with special characters escaped.
-     * 
+     *
      * @return string
      */
     private function _quoteJScriptString($string)
@@ -217,10 +217,10 @@ class JsonWriter
 
     /**
      * Write the string value with/without quotes
-     * 
+     *
      * @param string $text   value to be written
      * @param string $quotes put quotes around the value if this value is true
-     * 
+     *
      * @return void
      */
     private function _writeCore($text, $quotes)
@@ -248,9 +248,9 @@ class JsonWriter
 
     /**
      * Start the scope given the scope type
-     * 
+     *
      * @param int $type scope type
-     * 
+     *
      * @return void
      */
     private function _startScope($type)
@@ -282,7 +282,7 @@ class JsonWriter
 
     /**
      * return the indented result
-     * 
+     *
      * @return string
      */
     public function getJsonOutput()
@@ -294,26 +294,26 @@ class JsonWriter
 
 
 /**
- * class representing scope information 
+ * class representing scope information
 *
  */
 class Scope
 {
     /**
      * keeps the count of the nested scopes
-     *      
+     *
      */
     public $objectCount;
 
     /**
      *  keeps the type of the scope
-     *      
+     *
      */
     public $type;
 
     /**
      * Creates a new instance of scope type
-     * 
+     *
      * @param int $type type of the scope
      */
     public function __construct($type)

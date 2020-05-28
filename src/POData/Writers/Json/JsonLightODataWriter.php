@@ -127,7 +127,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
     protected function writeTopLevelProperty(ODataProperty $property)
     {
         $this->writePropertyMeta($property);
-        if ($property->value == null) {
+        if (is_null($property->value)) {
             $this->_writer->writeName(ODataConstants::JSON_LIGHT_VALUE_NAME);
             $this->_writer->writeValue("null");
         } elseif ($property->value instanceof ODataPropertyContent) {

@@ -35,7 +35,7 @@ class JsonODataV1Writer implements IODataWriter
 
     /**
      * Constructs and initializes the Json output writer.
-     * 
+     *
      */
     public function __construct()
     {
@@ -322,7 +322,7 @@ class JsonODataV1Writer implements IODataWriter
             $this->writePropertyMeta($property);
             $this->_writer->writeName($property->name);
 
-            if ($property->value == null) {
+            if (is_null($property->value)) {
                 $this->_writer->writeValue("null");
             } elseif ($property->value instanceof ODataPropertyContent) {
                 $this->writeComplexProperty($property);
@@ -351,7 +351,7 @@ class JsonODataV1Writer implements IODataWriter
             $this->writePropertyMeta($property);
             $this->_writer->writeName($property->name);
 
-            if ($property->value == null) {
+            if (is_null($property->value)) {
                 $this->_writer->writeValue("null");
             } elseif ($property->value instanceof ODataPropertyContent) {
                 $this->writeComplexProperty($property);
@@ -488,7 +488,7 @@ class JsonODataV1Writer implements IODataWriter
     }
 
 
-  
+
     /**
      * Get the Json final output.
      *
