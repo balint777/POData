@@ -13,41 +13,41 @@ class IndentedTextWriter
      * @var string
      */
     private $result;
-  
+
     /**
      * keeps track of the indentLevel
      * @var int
      */
     private $indentLevel;
-  
+
     /**
      * keeps track of pending tabs
      * @var bool
      */
     private $tabsPending;
-  
+
     /**
      * string representation of tab
      * @var string
      */
     private $tabString;
-  
+
     /**
      * Creates a new instance of IndentedTextWriter
-     * 
+     *
      * @param string $writer writer which IndentedTextWriter wraps
      */
     public function __construct($writer)
     {
         $this->result = $writer;
-        $this->tabString = "    ";
+        $this->tabString = "\t";
     }
-  
+
     /**
      * Writes the given string value to the underlying writer
-     * 
+     *
      * @param string $value string, char, text value to be written
-     * 
+     *
      * @return IndentedTextWriter
      */
     public function writeValue($value)
@@ -112,10 +112,10 @@ class IndentedTextWriter
     {
         return $this->result;
     }
-   
+
     /**
      * Writes the tabs depending on the indent level
-     * 
+     *
      * @return void
      */
     private function outputTabs()
@@ -125,18 +125,18 @@ class IndentedTextWriter
             $this->tabsPending = false;
         }
     }
-  
+
     /**
      * Writes the value to the text stream
-     * 
+     *
      * @param string $value value to be written
-     * 
+     *
      * @return void
      */
     private function _write($value)
     {
         $this->result .= $value;
     }
-   
+
 
 }
