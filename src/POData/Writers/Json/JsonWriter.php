@@ -172,7 +172,7 @@ class JsonWriter
 
 
             case 'Edm.String':
-                if ($value == null) {
+                if (is_null($value)) {
                     $this->_writeCore("null", /* quotes */ false);
                 } else {
                     $jsonEncoded = json_encode($value);
