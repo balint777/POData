@@ -224,13 +224,25 @@ class RequestDescription
      * Reference to the service
      * @var IService
      */
-        private $_service;
+    private $_service;
 
     /**
      * The parts of a multipart request
      * @var array
      */
-        private $_parts;
+    private $_parts;
+
+    /**
+     * The content of the Content-ID header of a request part
+     * @var string
+     */
+    private $_contentId;
+
+    /**
+     * The HTTP request method of a request part
+     * @var string
+     */
+    private $_requestMethod;
 
     /**
      * @param SegmentDescriptor[] $segmentDescriptors Description of segments in the resource path.
@@ -240,7 +252,7 @@ class RequestDescription
      * @param null|string $maxRequestVersion
      * @param string $dataType
      */
-    public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion, $dataType = null, IService $service = null)
+    public function __construct($segmentDescriptors, Url $requestUri, Version $serviceMaxVersion, $requestVersion, $maxRequestVersion, $dataType = null, IService $service = null, $contentId = null, $requestMethod = null)
     {
         $this->segments = $segmentDescriptors;
         $this->_segmentCount = count($this->segments);
@@ -292,6 +304,8 @@ class RequestDescription
         $this->_filterInfo = null;
         $this->_countValue = null;
         $this->_isExecuted = false;
+        $this->_contentId = $contentId;
+        $this->_requestMethod = $requestMethod;
 
         // Define data from request body
         if ($dataType) {
@@ -303,13 +317,21 @@ class RequestDescription
         return $this->_parts;
     }
 
-    /**
-     * Define request data from body
-     * @param string $dataType
-     */
-    private function _readData($dataType) {
-        $this->_data = null;
-        $string = file_get_contents('php://input');
+    public function getContentID() {
+        return $this->_contentId;
+    }
+
+    public function getRequestMethod() {
+        return $this->_requestMethod;
+    }
+
+    const STATE_PART_START = 'STATE_PART_START';
+    const STATE_HTTP_STATUS = 'STATE_HTTP_STATUS';
+    const STATE_HEADERS = 'STATE_HEADERS';
+    const STATE_BODY = 'STATE_BODY';
+
+    private function _processData($string, $dataType)
+    {
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
             $data = Xml2Array::createArray($string);
             if (!empty($data['a:entry']['a:content']['m:properties'])) {
@@ -338,20 +360,37 @@ class RequestDescription
                                 continue;
                 }
 
-                $contentType = null;
                 $requestMethod = null;
                 $requestUrl = null;
 
+                $reader_state = RequestDescription::STATE_PART_START;
+                $body = null;
+                $headers = [];
+                $part_headers = [];
+
                 foreach (explode("\n", $block) as $line) {
                     if (empty($line)) {
+                        if ($reader_state == RequestDescription::STATE_PART_START) {
+                            $reader_state = RequestDescription::STATE_HTTP_STATUS;
+                        } else if ($reader_state == RequestDescription::STATE_HEADERS) {
+                            $reader_state = RequestDescription::STATE_BODY;
+                            $body = '';
+                        }
                         continue;
                     }
                     $m = array();
-                    if (preg_match('/Content-Type:\s*(.*?)\s*$/', $line, $m)) {
-                        $contentType = trim($m[1]);
+                    if (in_array($reader_state, [RequestDescription::STATE_HTTP_STATUS, RequestDescription::STATE_HEADERS]) && preg_match('/(?<key>[^:]+):\s*(?<value>.*?)\s*$/', $line, $m)) {
+                        if ($reader_state == RequestDescription::STATE_HTTP_STATUS) {
+                            $headers[$m['key']] = $m['value'];
+                        } else if ($reader_state == RequestDescription::STATE_HEADERS) {
+                            $part_headers[$m['key']] = $m['value'];
+                        }
                     } else if (preg_match('/^(GET|PUT|POST|PATCH|DELETE)\s+(.*?)(\s+HTTP\/\d\.\d)?\s*$/', $line, $m)) {
                         $requestMethod = trim($m[1]);
                         $requestUrl = new Url(trim($m[2]), false);
+                        $reader_state = RequestDescription::STATE_HEADERS;
+                    } else if ($reader_state = RequestDescription::STATE_BODY) {
+                        $body .= $line."\n";
                     }
                 }
 
@@ -369,6 +408,8 @@ class RequestDescription
                     true
                 );
 
+                $contentType = $part_headers['Content-Type'] ?? null;
+
                 // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
                 $request = new RequestDescription(
                     $segments,
@@ -376,14 +417,36 @@ class RequestDescription
                     $this->maxServiceVersion,
                     null, // $this->requestVersion,
                     null, // $this->requestMaxVersion,
-                    $contentType
+                    $contentType,
+                    null,
+                    $headers['Content-ID'],
+                    $requestMethod
                 );
+
+                $request->_setBody($body, $contentType);
 
                 $this->_parts[] = $request;
             }
         }
     }
 
+    /**
+     * Define request data from body
+     * @param string $dataType
+     */
+    private function _readData($dataType) {
+        $this->_data = null;
+        $string = file_get_contents('php://input');
+        $this->_processData($string, $dataType);
+    }
+
+    /**
+     * Get request data from body
+     */
+    private function _setBody($string, $dataType) {
+        $this->_data = null;
+        $this->_processData($string, $dataType);
+    }
     /**
      * Get request data from body
      */
@@ -1151,5 +1214,10 @@ class RequestDescription
     public function setUriProcessor(UriProcessor $uriProcessor)
     {
         $this->_uriProcessor = $uriProcessor;
+    }
+
+    public function getQueryStringItem(string $item)
+    {
+        return $this->requestUrl->getQueryStringItem($item);
     }
 }

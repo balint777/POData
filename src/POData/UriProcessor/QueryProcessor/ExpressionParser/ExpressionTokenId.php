@@ -43,12 +43,15 @@ class ExpressionTokenId
 
     //Decimal literal.
     const DECIMAL_LITERAL = 12;
-
+    
     //Double literal.
     const DOUBLE_LITERAL = 13;
-
+    
     //GUID literal.
     const GUID_LITERAL = 14;
+
+    //Array.
+    const ARRAY_LITERAL = 25;
 
     //Binary literal.
     const BINARY_LITERAL = 15;

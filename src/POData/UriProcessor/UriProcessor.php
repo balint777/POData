@@ -119,6 +119,29 @@ class UriProcessor
     }
 
     /**
+     * Process the resource path and query options of client's request uri.
+     *
+     * @param IService $service Reference to the data service instance.
+     *
+     * @return URIProcessor
+     *
+     * @throws ODataException
+     */
+    public static function processPart($service, $request)
+    {
+        $uriProcessor = new UriProcessor($service);
+        //Parse the resource path part of the request Uri.
+        $uriProcessor->request = $request;
+
+        $request->setUriProcessor($uriProcessor);
+
+        //Parse the query string options of the request Uri.
+        QueryProcessor::process($uriProcessor->request, $service);
+
+        return $uriProcessor;
+    }
+
+    /**
      * Gets reference to the request submitted by client.
      *
      * @return RequestDescription
@@ -279,80 +302,120 @@ class UriProcessor
 
         foreach ($this->request->getParts() as $request) {
 
-            $segments = $request->getSegments();
+            switch ($request->getRequestMethod()) {
+                case 'GET':
+                    $segments = $request->getSegments();
 
-            foreach ($segments as $segment) {
+                    foreach ($segments as $segment) {
 
-                $requestTargetKind = $segment->getTargetKind();
+                        $requestTargetKind = $segment->getTargetKind();
 
-                if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
-                    $this->handleSegmentTargetsToResourceSet($segment);
-                } else if ($requestTargetKind == TargetKind::RESOURCE) {
-                    if (is_null($segment->getPrevious()->getResult())) {
-                        throw ODataException::createResourceNotFoundError(
-                            $segment->getPrevious()->getIdentifier()
-                        );
-                    }
-                    $this->_handleSegmentTargetsToRelatedResource($segment);
-                } else if ($requestTargetKind == TargetKind::LINK) {
-                    $segment->setResult($segment->getPrevious()->getResult());
-                } else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-                    // we are done, $count will the last segment and
-                    // taken care by _applyQueryOptions method
-                    $segment->setResult($this->request->getCountValue());
-                    break;
-                } else {
-                    if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
-                        if (is_null($segment->getPrevious()->getResult())) {
-                            throw ODataException::createResourceNotFoundError(
-                                $segment->getPrevious()->getIdentifier()
-                            );
-                        }
-                        // For MLE and Named Stream the result of last segment
-                        // should be that of previous segment, this is required
-                        // while retrieving content type or stream from IDSSP
-                        $segment->setResult($segment->getPrevious()->getResult());
-                        // we are done, as named stream property or $value on
-                        // media resource will be the last segment
-                        break;
-                    }
-
-                    $value = $segment->getPrevious()->getResult();
-                    while (!is_null($segment)) {
-                        //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
-                        if (!is_null($value)) {
-                            $value = null;
-                        } else {
-                            try {
-                                //see #88
-                                $property = new \ReflectionProperty($value, $segment->getIdentifier());
-                                $value = $property->getValue($value);
-                            } catch (\ReflectionException $reflectionException) {
-                                //throw ODataException::createInternalServerError(Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(), $resourceType->getName()));
+                        if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
+                            $this->handleSegmentTargetsToResourceSet($segment, $request);
+                        } else if ($requestTargetKind == TargetKind::RESOURCE) {
+                            if (is_null($segment->getPrevious()->getResult())) {
+                                throw ODataException::createResourceNotFoundError(
+                                    $segment->getPrevious()->getIdentifier()
+                                );
                             }
+                            $this->_handleSegmentTargetsToRelatedResource($segment);
+                        } else if ($requestTargetKind == TargetKind::LINK) {
+                            $segment->setResult($segment->getPrevious()->getResult());
+                        } else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                            // we are done, $count will the last segment and
+                            // taken care by _applyQueryOptions method
+                            $segment->setResult($this->request->getCountValue());
+                            break;
+                        } else {
+                            if ($requestTargetKind == TargetKind::MEDIA_RESOURCE) {
+                                if (is_null($segment->getPrevious()->getResult())) {
+                                    throw ODataException::createResourceNotFoundError(
+                                        $segment->getPrevious()->getIdentifier()
+                                    );
+                                }
+                                // For MLE and Named Stream the result of last segment
+                                // should be that of previous segment, this is required
+                                // while retrieving content type or stream from IDSSP
+                                $segment->setResult($segment->getPrevious()->getResult());
+                                // we are done, as named stream property or $value on
+                                // media resource will be the last segment
+                                break;
+                            }
+
+                            $value = $segment->getPrevious()->getResult();
+                            while (!is_null($segment)) {
+                                //TODO: what exactly is this doing here?  Once a null's found it seems everything will be null
+                                if (!is_null($value)) {
+                                    $value = null;
+                                } else {
+                                    try {
+                                        //see #88
+                                        $property = new \ReflectionProperty($value, $segment->getIdentifier());
+                                        $value = $property->getValue($value);
+                                    } catch (\ReflectionException $reflectionException) {
+                                        //throw ODataException::createInternalServerError(Messages::orderByParserFailedToAccessOrInitializeProperty($resourceProperty->getName(), $resourceType->getName()));
+                                    }
+                                }
+
+                                $segment->setResult($value);
+                                $segment = $segment->getNext();
+                                if (!is_null($segment) && $segment->getIdentifier() == ODataConstants::URI_VALUE_SEGMENT) {
+                                    $segment->setResult($value);
+                                    $segment = $segment->getNext();
+                                }
+                            }
+
+                            break;
+
                         }
 
-                        $segment->setResult($value);
-                        $segment = $segment->getNext();
-                        if (!is_null($segment) && $segment->getIdentifier() == ODataConstants::URI_VALUE_SEGMENT) {
-                            $segment->setResult($value);
-                            $segment = $segment->getNext();
+                        if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                            $this->applyQueryOptions($segment, $callback);
                         }
                     }
 
+                    // Apply $select and $expand options to result set, this function will be always applied
+                    // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+                    // not delegate $expand/$select operation to IDSQP2 implementation
+                    $this->handleExpansion();
                     break;
+                case 'POST':
+                    $callback = function($uriProcessor, $segment) use ($request) {
+                        $requestMethod = $request->getRequestMethod();
+                        $resourceSet = $segment->getTargetResourceSetWrapper();
+                        $data = $request->getData();
 
-                }
+                        if (!$resourceSet) {
+                            $url = $uriProcessor->service->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                            throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
+                        }
 
-                if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-                    $this->applyQueryOptions($segment, $callback);
-                }
+                        if (!$data) {
+                            throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
+                        }
+
+                        $result = $uriProcessor->providers->postResource($resourceSet, $data);
+
+                        $segment->setSingleResult(true);
+                        $segment->setResult($result);
+
+                        return $result;
+                    };
+
+                    $segments = $request->getSegments();
+
+                    foreach ($segments as $segment) {
+                        if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                            $this->applyQueryOptions($segment, $callback);
+                        }
+                    }
+                    //?? TODO : TEST
+                    // Apply $select and $expand options to result set, this function will be always applied
+                    // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+                    // not delegate $expand/$select operation to IDSQP2 implementation
+                    $this->handleExpansion();
+                    break;
             }
-
-            // Apply $select and $expand options to result set, this function will be always applied
-            // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
-            // not delegate $expand/$select operation to IDSQP2 implementation
-            $this->handleExpansion();
         }
 
         return;
@@ -393,7 +456,7 @@ class UriProcessor
             $requestTargetKind = $segment->getTargetKind();
 
             if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
-                $this->handleSegmentTargetsToResourceSet($segment);
+                $this->handleSegmentTargetsToResourceSet($segment, $this->request);
             } else if ($requestTargetKind == TargetKind::RESOURCE) {
                 if (is_null($segment->getPrevious()->getResult())) {
                     throw ODataException::createResourceNotFoundError(
@@ -469,7 +532,7 @@ class UriProcessor
      * @return void
      *
      */
-    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment) {
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, $request) {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->providers->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
@@ -480,17 +543,17 @@ class UriProcessor
 
         } else {
 
-            $internalskiptokentinfo = $this->request->getInternalSkipTokenInfo();
+            $internalskiptokentinfo = $request->getInternalSkipTokenInfo();
 
             $queryResult = $this->providers->getResourceSet(
-                $this->request->queryType,
+                $request->queryType,
                 $segment->getTargetResourceSetWrapper(),
-                $this->request->getFilterInfo(),
-                $this->request->getInternalOrderByInfo(),
-                $this->request->getTopCount(),
-                $this->request->getSkipCount(),
+                $request->getFilterInfo(),
+                $request->getInternalOrderByInfo(),
+                $request->getTopCount(),
+                $request->getSkipCount(),
                 $internalskiptokentinfo ? $internalskiptokentinfo->getSkipTokenInfo() : null,
-                $this->_getExpandedProjectionNodes()
+                $this->_getExpandedProjectionNodes($request)
             );
             $segment->setResult($queryResult);
         }
@@ -669,7 +732,7 @@ class UriProcessor
      */
     private function _executeExpansion($result)
     {
-        $expandedProjectionNodes = $this->_getExpandedProjectionNodes();
+        $expandedProjectionNodes = $this->_getExpandedProjectionNodes($this->request);
         foreach ($expandedProjectionNodes as $expandedProjectionNode) {
             $isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
             $expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
@@ -879,9 +942,9 @@ class UriProcessor
      * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
      *
      */
-    private function _getExpandedProjectionNodes()
+    private function _getExpandedProjectionNodes($request)
     {
-        $expandedProjectionNode = $this->_getCurrentExpandedProjectionNode();
+        $expandedProjectionNode = $this->_getCurrentExpandedProjectionNode($request);
         $expandedProjectionNodes = array();
         if (!is_null($expandedProjectionNode)) {
             foreach ($expandedProjectionNode->getChildNodes() as $node) {
@@ -900,10 +963,10 @@ class UriProcessor
      *
      * @return ExpandedProjectionNode|null
      */
-    private function _getCurrentExpandedProjectionNode()
+    private function _getCurrentExpandedProjectionNode($request)
     {
         $expandedProjectionNode
-            = $this->request->getRootProjectionNode();
+            = $request->getRootProjectionNode();
         if (!is_null($expandedProjectionNode)) {
             $depth = count($this->_segmentNames);
             if ($depth != 0) {

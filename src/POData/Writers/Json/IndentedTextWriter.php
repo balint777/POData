@@ -39,8 +39,9 @@ class IndentedTextWriter
      */
     public function __construct($writer)
     {
-        $this->result = $writer;
+        $this->_writer = $writer;
         $this->tabString = "\t";
+        $this->clear();
     }
 
     /**
@@ -111,6 +112,11 @@ class IndentedTextWriter
     public function getResult()
     {
         return $this->result;
+    }
+
+    public function clear()
+    {
+        $this->result = $this->_writer;
     }
 
     /**

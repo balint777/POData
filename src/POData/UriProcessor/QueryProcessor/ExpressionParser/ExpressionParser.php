@@ -16,6 +16,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Guid;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\NullType;
+use POData\Providers\Metadata\Type\ArrayType;
 use POData\Providers\Metadata\Type\IType;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourcePropertyKind;
@@ -383,6 +384,8 @@ class ExpressionParser
                 return $this->_parseTypedLiteral(new Single());
             case ExpressionTokenId::GUID_LITERAL:
                 return $this->_parseTypedLiteral(new Guid());
+            case ExpressionTokenId::ARRAY_LITERAL:
+                return $this->_parseTypedLiteral(new ArrayType());
             case ExpressionTokenId::BINARY_LITERAL:
                 throw new NotImplementedException(
                     'Support for binary is not implemented'
@@ -408,6 +411,14 @@ class ExpressionParser
 
         $this->_lexer->nextToken();
         $expr = $this->_parseExpression();
+        if ($this->_getCurrentToken()->Id == ExpressionTokenId::COMMA) {
+            $expr = [$expr];
+            while ($this->_getCurrentToken()->Id == ExpressionTokenId::COMMA)
+            {
+                $this->_lexer->nextToken();
+                $expr[] = $this->_parseExpression();
+            }
+        }
         if ($this->_getCurrentToken()->Id != ExpressionTokenId::CLOSEPARAM) {
             throw ODataException::createSyntaxError("Close parenthesis expected.");
         }
@@ -760,6 +771,10 @@ class ExpressionParser
             case ODataConstants::KEYWORD_LESSTHAN:
                 return new RelationalExpression(
                     $left, $right, ExpressionType::LESSTHAN
+                );
+            case ODataConstants::KEYWORD_IN:
+                return new RelationalExpression(
+                    $left, $right, ExpressionType::IN
                 );
             default:
                 return new RelationalExpression(

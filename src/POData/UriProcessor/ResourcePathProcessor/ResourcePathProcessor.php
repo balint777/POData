@@ -12,6 +12,7 @@ use POData\Common\ODataConstants;
 use POData\Common\Messages;
 use POData\Common\ODataException;
 use POData\OperationContext\HTTPRequestMethod;
+use POData\UriProcessor\UriProcessor;
 
 
 /**
@@ -33,6 +34,7 @@ class ResourcePathProcessor
      */
     public static function process(IService $service) {
         $host = $service->getHost();
+        $fullAbsoluteRequestUri = $host->getFullAbsoluteRequestUri();
         $absoluteRequestUri = $host->getAbsoluteRequestUri();
         $absoluteServiceUri = $host->getAbsoluteServiceUri();
 
@@ -54,7 +56,7 @@ class ResourcePathProcessor
         }
         $request = new RequestDescription(
             $segments,
-            $absoluteRequestUri,
+            $fullAbsoluteRequestUri,
             $service->getConfiguration()->getMaxDataServiceVersion(),
             $host->getRequestVersion(),
             $host->getRequestMaxVersion(),
@@ -63,54 +65,65 @@ class ResourcePathProcessor
         );
         $kind = $request->getTargetKind();
 
-        if ($kind == TargetKind::METADATA || $kind == TargetKind::BATCH || $kind == TargetKind::SERVICE_DIRECTORY) {
+        if ($kind == TargetKind::METADATA || $kind == TargetKind::SERVICE_DIRECTORY) {
             return $request;
         }
 
 
+        $lambda = function (RequestDescription &$request) use (&$service, $segments) {
+            $kind = $request->getTargetKind();
 
-        if ($kind == TargetKind::PRIMITIVE_VALUE || $kind == TargetKind::MEDIA_RESOURCE) {
-            // http://odata/NW.svc/Orders/$count
-            // http://odata/NW.svc/Orders(123)/Customer/CustomerID/$value
-            // http://odata/NW.svc/Employees(1)/$value
-            // http://odata/NW.svc/Employees(1)/ThumbNail_48X48/$value
-            $request->setContainerName($segments[count($segments) - 2]->getIdentifier());
-        } else {
-            $request->setContainerName($request->getIdentifier());
-        }
-
-        if ($request->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT) {
-            if (!$service->getConfiguration()->getAcceptCountRequests()) {
-                throw ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
+            if ($kind == TargetKind::PRIMITIVE_VALUE || $kind == TargetKind::MEDIA_RESOURCE) {
+                // http://odata/NW.svc/Orders/$count
+                // http://odata/NW.svc/Orders(123)/Customer/CustomerID/$value
+                // http://odata/NW.svc/Employees(1)/$value
+                // http://odata/NW.svc/Employees(1)/ThumbNail_48X48/$value
+                $request->setContainerName($segments[count($segments) - 2]->getIdentifier());
+            } else {
+                $request->setContainerName($request->getIdentifier());
             }
 
-            $request->queryType = QueryType::COUNT;
-            // use of $count requires request DataServiceVersion
-            // and MaxDataServiceVersion greater than or equal to 2.0
-
-            $request->raiseResponseVersion(2, 0);
-            $request->raiseMinVersionRequirement(2, 0);
-
-        } else if ($request->isNamedStream()) {
-            $request->raiseMinVersionRequirement(3, 0);
-        } else if ($request->getTargetKind() == TargetKind::RESOURCE) {
-            if (!$request->isLinkUri()) {
-                $resourceSetWrapper = $request->getTargetResourceSetWrapper();
-                //assert($resourceSetWrapper != null)
-                $hasNamedStream = $resourceSetWrapper->hasNamedStreams($service->getProvidersWrapper());
-
-                $hasBagProperty = $resourceSetWrapper->hasBagProperty($service->getProvidersWrapper());
-
-                if ($hasNamedStream || $hasBagProperty) {
-                    $request->raiseResponseVersion(3, 0);
+            if ($request->getIdentifier() === ODataConstants::URI_COUNT_SEGMENT) {
+                if (!$service->getConfiguration()->getAcceptCountRequests()) {
+                    throw ODataException::createBadRequestError(Messages::configurationCountNotAccepted());
                 }
+
+                $request->queryType = QueryType::COUNT;
+                // use of $count requires request DataServiceVersion
+                // and MaxDataServiceVersion greater than or equal to 2.0
+
+                $request->raiseResponseVersion(2, 0);
+                $request->raiseMinVersionRequirement(2, 0);
+
+            } else if ($request->isNamedStream()) {
+                $request->raiseMinVersionRequirement(3, 0);
+            } else if ($request->getTargetKind() == TargetKind::RESOURCE) {
+                if (!$request->isLinkUri()) {
+                    $resourceSetWrapper = $request->getTargetResourceSetWrapper();
+                    //assert($resourceSetWrapper != null)
+                    $hasNamedStream = $resourceSetWrapper->hasNamedStreams($service->getProvidersWrapper());
+
+                    $hasBagProperty = $resourceSetWrapper->hasBagProperty($service->getProvidersWrapper());
+
+                    if ($hasNamedStream || $hasBagProperty) {
+                        $request->raiseResponseVersion(3, 0);
+                    }
+                }
+            } else if ($request->getTargetKind() == TargetKind::BAG
+            ) {
+                $request->raiseResponseVersion(3, 0);
             }
-        } else if ($request->getTargetKind() == TargetKind::BAG
-        ) {
-            $request->raiseResponseVersion(3, 0);
+        };
+
+        // $uriProcessor = UriProcessor::process($this);
+        foreach($request->getParts() as &$part) {
+
+            $uriProcessor = UriProcessor::processPart($service, $part);
+
+            $lambda($part);
         }
 
-
+        $lambda($request);
         return $request;
     }
 }

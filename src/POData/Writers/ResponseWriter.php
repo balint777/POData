@@ -20,13 +20,13 @@ use POData\Writers\Metadata\MetadataWriter;
 class ResponseWriter
 {
     /**
-     * Write in specific format 
-     * 
+     * Write in specific format
+     *
      * @param IService $service
      * @param RequestDescription $request the OData request
      * @param mixed $entityModel OData model instance
      * @param String $responseContentType Content type of the response
-     * 
+     *
      */
     public static function write(
         IService $service,
@@ -41,7 +41,7 @@ class ResponseWriter
         if ($targetKind == TargetKind::METADATA) {
             // /$metadata
             $writer = new MetadataWriter($service->getProvidersWrapper());
-            $responseBody = $writer->writeMetadata();            
+            $responseBody = $writer->writeMetadata();
             $dataServiceVersion = $writer->getDataServiceVersion();
         } else if ($targetKind == TargetKind::PRIMITIVE_VALUE && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
             //This second part is to exclude binary properties
@@ -66,6 +66,7 @@ class ResponseWriter
             }
         } else {
             $writer = $service->getODataWriterRegistry()->getWriter($request->getResponseVersion(), $responseContentType);
+            $writer->clear();
             //TODO: move ot Messages
             if (is_null($writer)) {
                 throw new \Exception("no writer can handle the request");
@@ -83,5 +84,5 @@ class ResponseWriter
         $service->getHost()->setResponseVersion($dataServiceVersion->toString() . ';');
         $service->getHost()->setResponseCacheControl(ODataConstants::HTTPRESPONSE_HEADER_CACHECONTROL_NOCACHE);
         $service->getHost()->getOperationContext()->outgoingResponse()->setStream($responseBody);
-    }    
+    }
 }

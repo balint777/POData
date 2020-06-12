@@ -47,6 +47,11 @@ class JsonWriter
 
     }
 
+    public function clear()
+    {
+        $this->_writer->clear();
+    }
+
     /**
      * End the current scope
      *

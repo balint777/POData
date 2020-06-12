@@ -41,6 +41,11 @@ class JsonODataV1Writer implements IODataWriter
     {
         $this->_writer = new JsonWriter('');
     }
+    
+    public function clear()
+    {
+        $this->_writer->clear();
+    }
 
     /**
      * Determines if the given writer is capable of writing the response or not

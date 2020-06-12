@@ -28,4 +28,5 @@ class TypeCode
     const NULL1      = 18;
     const TIME       = 19;
     const TIMESPAN   = 20;
+    const ARRAY      = 21;
 }
