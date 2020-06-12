@@ -413,6 +413,7 @@ abstract class BaseService implements IRequestHandler, IService
                         $streams = [];
                         foreach ($request->getParts() as $key => $part) {
                             $_objectModelSerializer = new ObjectModelSerializer($this, $part);
+                            $status = "200 Ok";
                             try {
                                 if (is_iterable($entryObjects[$key])) {
                                     $_odataModelInstance = $_objectModelSerializer->writeTopLevelElements($entryObjects[$key]);
@@ -426,12 +427,14 @@ abstract class BaseService implements IRequestHandler, IService
                                 $write($this, $part, $_odataModelInstance);
                             } catch (Exception $exception) {
                                 ErrorHandler::handleException($exception, $this);
+                                $status = "500 Internal Server Error";
                             }
                             $body = $response->getStream();
                             $stream = [
                                 'body' => $body,
                                 'length' => strlen($body),
-                                'content_id' => $part->getContentID()
+                                'content_id' => $part->getContentID(),
+                                'status' => $status
                             ];
                             $streams[] = $stream;
                         }
@@ -443,7 +446,7 @@ abstract class BaseService implements IRequestHandler, IService
                             $output_stream.="Content-Type: application/http\r\n";
                             $output_stream.="Content-Transfer-Encoding: binary\r\n";
                             $output_stream.="\r\n";
-                            $output_stream.="{$_SERVER['SERVER_PROTOCOL']} 200 Ok\r\n";
+                            $output_stream.="{$_SERVER['SERVER_PROTOCOL']} {$stream['status']}\r\n";
                             $output_stream.="Content-Type: {$responseContentType}\r\n";
                             $output_stream.="Content-Length: {$stream['length']}\r\n";
                             $output_stream.="\r\n";

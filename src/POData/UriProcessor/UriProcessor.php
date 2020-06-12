@@ -135,6 +135,8 @@ class UriProcessor
 
         $request->setUriProcessor($uriProcessor);
 
+
+        $service->getProvidersWrapper()->getExpressionProvider()->clear();
         //Parse the query string options of the request Uri.
         QueryProcessor::process($uriProcessor->request, $service);
 
