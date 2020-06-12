@@ -670,6 +670,9 @@ class ODataConstants
     //'ge' keyword for expressions.
     const KEYWORD_GREATERTHAN_OR_EQUAL = 'ge';
 
+    //'ge' keyword for expressions.
+    const KEYWORD_IN = 'in';
+
     //'lt' keyword for expressions.
     const KEYWORD_LESSTHAN = 'lt';
 

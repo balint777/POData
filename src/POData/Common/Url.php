@@ -2,6 +2,8 @@
 
 namespace POData\Common;
 
+use POData\Common\ODataConstants;
+
 
 /**
  * Class Url
@@ -9,18 +11,25 @@ namespace POData\Common;
  */
 class Url
 {
-    private $_urlAsString = null;    
+    private $_urlAsString = null;
     private $_parts = array();
     private $_segments = array();
     const ABS_URL_REGEXP = '/^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
     const REL_URL_REGEXP = '/^(\/|\/([\w#!:.?+=&%@!\-\/]))?/';
 
     /**
-     * Creates new instance of Url 
-     * 
+     * array of query-string parameters
+     *
+     * @var array(string, string)
+     */
+    private $_queryOptions;
+
+    /**
+     * Creates new instance of Url
+     *
      * @param string  $url        The url as string
      * @param boolean $isAbsolute Whether the given url is absolute or not
-     * 
+     *
      * @throws UrlFormatException Exception if url is malformed
      */
     public function __construct($url, $isAbsolute = true)
@@ -39,8 +48,8 @@ class Url
         if ($this->_parts === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
-        
-        $path = urldecode($this->getPath());        
+
+        $path = urldecode($this->getPath());
         if ($path != null) {
             $this->_segments = explode('/', trim($path, '/'));
             foreach ($this->_segments as $segment) {
@@ -52,11 +61,16 @@ class Url
         }
 
         $this->_urlAsString = $url;
+
+        $this->_queryOptions = [];
+        if (!empty($this->_parts['query'])) {
+            parse_str($this->_parts['query'], $this->_queryOptions);
+        }
     }
 
     /**
      * Gets the url represented by this instance as string
-     * 
+     *
      * @return string
      */
     public function getUrlAsString()
@@ -67,7 +81,7 @@ class Url
     /**
      * Get the scheme part of the Url
      *
-     * @return string|null Returns the scheme part of the url, 
+     * @return string|null Returns the scheme part of the url,
      * if scheme is missing returns NULL
      */
     public function getScheme()
@@ -78,7 +92,7 @@ class Url
     /**
      * Get the host part of the Url
      *
-     * @return string|null Returns the host part of the url, 
+     * @return string|null Returns the host part of the url,
      * if host is missing returns NULL
      */
     public function getHost()
@@ -92,7 +106,7 @@ class Url
      * @return int
      */
     public function getPort()
-    {        
+    {
         $port = isset ($this->_parts['port']) ? $this->_parts['port'] : null;
         if ($port != null) {
             return $port;
@@ -107,11 +121,11 @@ class Url
 
         return $port;
     }
-    
+
     /**
      * To get the path segment
      *
-     * @return string Returns the host part of the url, 
+     * @return string Returns the host part of the url,
      * if host is missing returns NULL
      */
     public function getPath()
@@ -122,7 +136,7 @@ class Url
     /**
      * Get the query part
      *
-     * @return string|null Returns the query part of the url, 
+     * @return string|null Returns the query part of the url,
      * if query is missing returns NULL
      */
     public function getQuery()
@@ -133,7 +147,7 @@ class Url
     /**
      * Get the fragment part
      *
-     * @return string|null Returns the fragment part of the url, 
+     * @return string|null Returns the fragment part of the url,
      * if fragment is missing returns NULL
      */
     public function getFragment()
@@ -143,7 +157,7 @@ class Url
 
     /**
      * Get the segments
-     * 
+     *
      * @return array Returns array of segments,
      * if no segments then returns empty array.
      */
@@ -154,7 +168,7 @@ class Url
 
     /**
      * Gets number of segments, if no segment then returns zero.
-     * 
+     *
      * @return int
      */
     public function getSegmentCount()
@@ -184,15 +198,15 @@ class Url
 
     /**
      * Checks this url is base uri for the given url.
-     * 
+     *
      * @param Url $targetUri The url to inspect the base part.
-     * 
+     *
      * @return boolean
      */
     public function isBaseOf(Url $targetUri)
     {
-        if ($this->_parts['scheme'] !== $targetUri->getScheme()  
-            || $this->_parts['host'] !== $targetUri->getHost() 
+        if ($this->_parts['scheme'] !== $targetUri->getScheme()
+            || $this->_parts['host'] !== $targetUri->getHost()
             || $this->getPort() !== $targetUri->getPort()
         ) {
                 return false;
@@ -212,5 +226,111 @@ class Url
         }
 
         return true;
+    }
+
+    /**
+     * This method verfies the client provided url query parameters and check whether
+     * any of the odata query option specified more than once or check any of the
+     * non-odata query parameter start will $ symbol or check any of the odata query
+     * option specified with out value. If any of the above check fails throws
+     * ODataException, else set _queryOptions member variable
+     *
+     * @return void
+     *
+     * @throws ODataException
+     */
+    public function validateQueryParameters()
+    {
+        $namesFound = array();
+        foreach ($this->_queryOptions as $optionName => $optionValue) {
+            if (empty($optionName)) {
+                if (!empty($optionValue)) {
+                    if (isset($optionValue[0]) && $optionValue[0] == '$') {
+                        if ($this->_isODataQueryOption($optionValue)) {
+                            throw ODataException::createBadRequestError(
+                                Messages::hostODataQueryOptionFoundWithoutValue(
+                                    $optionValue
+                                )
+                            );
+                        } else {
+                            throw ODataException::createBadRequestError(
+                                Messages::hostNonODataOptionBeginsWithSystemCharacter(
+                                    $optionValue
+                                )
+                            );
+                        }
+                    }
+                }
+            } else {
+                if ($optionName[0] == '$') {
+                    if (!$this->_isODataQueryOption($optionName)) {
+                        throw ODataException::createBadRequestError(
+                            Messages::hostNonODataOptionBeginsWithSystemCharacter(
+                                $optionName
+                            )
+                        );
+                    }
+
+                    if (array_search($optionName, $namesFound) !== false) {
+                        throw ODataException::createBadRequestError(
+                            Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce(
+                                $optionName
+                            )
+                        );
+                    }
+
+                    if (empty($optionValue) && $optionValue !== '0') {
+                        throw ODataException::createBadRequestError(
+                            Messages::hostODataQueryOptionFoundWithoutValue(
+                                $optionName
+                            )
+                        );
+                    }
+
+                    $namesFound[] = $optionName;
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets the value for the specified item in the request query string
+     * Remark: This method assumes 'validateQueryParameters' has already been
+     * called.
+     *
+     * @param string $item The query item to get the value of.
+     *
+     * @return string|null The value for the specified item in the request
+     *                     query string NULL if the query option is absent.
+     */
+    public function getQueryStringItem($item)
+    {
+        if (array_key_exists($item, $this->_queryOptions)) {
+            return $this->_queryOptions[$item];
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Verifies the given url option is a valid odata query option.
+     *
+     * @param string $optionName option to validate
+     *
+     * @return boolean True if the given option is a valid odata option False otherwise.
+     *
+     */
+    private function _isODataQueryOption($optionName)
+    {
+        return ($optionName === ODataConstants::HTTPQUERY_STRING_FILTER ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_EXPAND ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_INLINECOUNT ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_ORDERBY ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_SELECT ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_SKIP ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
+                $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT);
     }
 }

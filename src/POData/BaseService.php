@@ -34,6 +34,8 @@ use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\ODataWriterRegistry;
 use POData\Writers\ResponseWriter;
 use POData\OperationContext\IOperationContext;
+use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
+use POData\Common\Url;
 
 
 /**
@@ -211,7 +213,7 @@ abstract class BaseService implements IRequestHandler, IService
     {
         try {
             $this->createProviders();
-            $this->_serviceHost->validateQueryParameters();
+            $this->_serviceHost->getFullAbsoluteRequestUri()->validateQueryParameters();
             //$requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
             //if ($requestMethod != HTTPRequestMethod::GET) {
                 # Now supporting GET and trying to support PUT
@@ -357,6 +359,29 @@ abstract class BaseService implements IRequestHandler, IService
 
         $odataModelInstance = null;
         $hasResponseBody = true;
+
+        $write = function ($service, $request, $odataModelInstance) use ($hasResponseBody, $responseContentType) {
+            //Note: Response content type can be null for named stream
+            if ($hasResponseBody && !is_null($responseContentType)) {
+                if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
+                    //append charset for everything except:
+                    //stream resources as they have their own content type
+                    //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
+                    //
+                    $responseContentType .= ';charset=utf-8';
+                }
+            }
+
+            if ($hasResponseBody) {
+                ResponseWriter::write(
+                    $service,
+                    $request,
+                    $odataModelInstance,
+                    $responseContentType
+                );
+            }
+        };
+
         // Execution required at this point if request target to any resource other than
         //
         // (1) media resource - For Media resource 'getResponseContentType' already performed execution as it needs to know the mime type of the stream
@@ -382,13 +407,54 @@ abstract class BaseService implements IRequestHandler, IService
                     );
                 } else {
                     if (!empty($request->getParts())) {
+                        $context = $this->_serviceHost->getOperationContext();
+                        $response = $context->outgoingResponse();
+                        $boundary = uniqid('batch_');
+                        $streams = [];
                         foreach ($request->getParts() as $key => $part) {
-                            $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects[$key]);
-                            self::assert(
-                                $odataModelInstance instanceof \POData\ObjectModel\ODataFeed,
-                                '$odataModelInstance instanceof ODataFeed'
-                            );
+                            $_objectModelSerializer = new ObjectModelSerializer($this, $part);
+                            try {
+                                if (is_iterable($entryObjects[$key])) {
+                                    $_odataModelInstance = $_objectModelSerializer->writeTopLevelElements($entryObjects[$key]);
+                                } else {
+                                    $_odataModelInstance = $_objectModelSerializer->writeTopLevelElement($entryObjects[$key]);
+                                }
+                                self::assert(
+                                    $_odataModelInstance instanceof \POData\ObjectModel\ODataFeed || $_odataModelInstance instanceof \POData\ObjectModel\ODataEntry,
+                                    '$odataModelInstance instanceof ODataFeed'
+                                );
+                                $write($this, $part, $_odataModelInstance);
+                            } catch (Exception $exception) {
+                                ErrorHandler::handleException($exception, $this);
+                            }
+                            $body = $response->getStream();
+                            $stream = [
+                                'body' => $body,
+                                'length' => strlen($body),
+                                'content_id' => $part->getContentID()
+                            ];
+                            $streams[] = $stream;
                         }
+
+                        $output_stream = '';
+                        foreach($streams as $stream) {
+                            $output_stream.="--{$boundary}\r\n";
+                            if (!is_null($stream['content_id'])) $output_stream.="Content-ID: {$stream['content_id']}\r\n";
+                            $output_stream.="Content-Type: application/http\r\n";
+                            $output_stream.="Content-Transfer-Encoding: binary\r\n";
+                            $output_stream.="\r\n";
+                            $output_stream.="{$_SERVER['SERVER_PROTOCOL']} 200 Ok\r\n";
+                            $output_stream.="Content-Type: {$responseContentType}\r\n";
+                            $output_stream.="Content-Length: {$stream['length']}\r\n";
+                            $output_stream.="\r\n";
+                            $output_stream.=$stream['body']."\r\n";
+                            $output_stream.="\r\n";
+                        }
+                        $output_stream.="--{$boundary}--\r\n";
+                        $response->setStream($output_stream);
+                        $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_ACCEPTED);
+                        $this->_serviceHost->setResponseContentType("multipart/mixed; boundary={$boundary}");
+                        return;
                     } else {
                         $odataModelInstance = $objectModelSerializer->writeTopLevelElements($entryObjects);
                         self::assert(
@@ -482,25 +548,7 @@ abstract class BaseService implements IRequestHandler, IService
             }
         }
 
-        //Note: Response content type can be null for named stream
-        if ($hasResponseBody && !is_null($responseContentType)) {
-            if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
-                //append charset for everything except:
-                //stream resources as they have their own content type
-                //binary properties (they content type will be App Octet for those...is this a good way? we could also decide based upon the projected property
-                //
-                $responseContentType .= ';charset=utf-8';
-            }
-        }
-
-        if ($hasResponseBody) {
-            ResponseWriter::write(
-                $this,
-                $request,
-                $odataModelInstance,
-                $responseContentType
-            );
-        }
+        $write($this, $request, $odataModelInstance);
     }
 
     /**
@@ -528,7 +576,7 @@ abstract class BaseService implements IRequestHandler, IService
         $requestVersion = $request->getResponseVersion();
 
         //if the $format header is present it overrides the accepts header
-        $format = $host->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
+        $format = $request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT);
         if (!is_null($format)) {
 
             //There's a strange edge case..if application/json is supplied and it's V3

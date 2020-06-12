@@ -195,7 +195,7 @@ class QueryProcessor
      */
     private function _processOrderBy()
     {
-        $orderBy = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY);
+        $orderBy = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY);
 
         if (!is_null($orderBy)) {
             $this->_checkSetQueryApplicable();
@@ -259,7 +259,8 @@ class QueryProcessor
      */
     private function _processFilter()
     {
-        $filter = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER);
+        $filter = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER);
+
         if (is_null($filter)) {
             return;
         }
@@ -293,7 +294,7 @@ class QueryProcessor
      */
     private function _processCount()
     {
-        $inlineCount = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT);
+        $inlineCount = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT);
 
         //If it's not specified, we're done
         if (is_null($inlineCount)) {
@@ -356,7 +357,7 @@ class QueryProcessor
      */
     private function _processSkipToken()
     {
-        $skipToken = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN);
+        $skipToken = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN);
         if (is_null($skipToken)) {
             return;
         }
@@ -403,13 +404,13 @@ class QueryProcessor
      */
     private function _processExpandAndSelect()
     {
-        $expand = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND);
+        $expand = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND);
 
         if (!is_null($expand)) {
             $this->_checkExpandOrSelectApplicable(ODataConstants::HTTPQUERY_STRING_EXPAND);
         }
 
-        $select = $this->service->getHost()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT);
+        $select = $this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT);
 
         if (!is_null($select)) {
             if (!$this->service->getConfiguration()->getAcceptProjectionRequests()) {
@@ -485,7 +486,7 @@ class QueryProcessor
      */
     private function _readSkipOrTopOption($queryItem, &$value)
     {
-        $value = $this->service->getHost()->getQueryStringItem($queryItem);
+        $value = $this->request->getQueryStringItem($queryItem);
         if (!is_null($value)) {
             $int = new Int32();
             if (!$int->validate($value, $outValue)) {
@@ -524,15 +525,14 @@ class QueryProcessor
      */
     private function _checkForEmptyQueryArguments()
     {
-        $serviceHost = $this->service->getHost();
-        if (!is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIP))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN))
-            || !is_null($serviceHost->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_TOP))
+        if (!is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FILTER))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_EXPAND))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_INLINECOUNT))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_ORDERBY))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SELECT))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIP))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_SKIPTOKEN))
+            || !is_null($this->request->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_TOP))
         ) {
             throw ODataException::createBadRequestError(
                 Messages::queryProcessorNoQueryOptionsApplicable()

@@ -26,10 +26,10 @@ class ExpressionToken
      * @var int
      */
     public $Position;
-    
+
     /**
      * Checks whether this token is a comparison operator.
-     * 
+     *
      * @return boolean True if this token represent a comparison operator
      *                 False otherwise.
      */
@@ -42,12 +42,13 @@ class ExpressionToken
                 strcmp($this->Text, ODataConstants::KEYWORD_LESSTHAN) == 0 ||
                 strcmp($this->Text, ODataConstants::KEYWORD_GREATERTHAN) == 0 ||
                 strcmp($this->Text, ODataConstants::KEYWORD_LESSTHAN_OR_EQUAL) == 0 ||
-                strcmp($this->Text, ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL) == 0);
+                strcmp($this->Text, ODataConstants::KEYWORD_GREATERTHAN_OR_EQUAL) == 0) ||
+                strcmp($this->Text, ODataConstants::KEYWORD_IN) == 0;
     }
 
     /**
      * Checks whether this token is an equality operator.
-     * 
+     *
      * @return boolean True if this token represent a equality operator
      *                 False otherwise.
      */
@@ -61,7 +62,7 @@ class ExpressionToken
 
     /**
      * Checks whether this token is a valid token for a key value.
-     * 
+     *
      * @return boolean True if this token represent valid key value
      *                 False otherwise.
      */
@@ -78,7 +79,7 @@ class ExpressionToken
 
     /**
      * Gets the current identifier text
-     * 
+     *
      * @return string
      */
     public function getIdentifier()
@@ -94,14 +95,14 @@ class ExpressionToken
 
     /**
      * Checks that this token has the specified identifier.
-     * 
+     *
      * @param ExpressionTokenId $id Identifier to check
-     * 
+     *
      * @return bool true if this is an identifier with the specified text
      */
     public function identifierIs($id)
     {
-        return $this->Id == ExpressionTokenId::IDENTIFIER 
+        return $this->Id == ExpressionTokenId::IDENTIFIER
             && strcmp($this->Text, (string)$id) == 0;
     }
 }

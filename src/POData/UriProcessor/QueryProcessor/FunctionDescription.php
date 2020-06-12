@@ -15,6 +15,7 @@ use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\StringType;
+use POData\Providers\Metadata\Type\ArrayType;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\IType;
@@ -405,6 +406,10 @@ class FunctionDescription
                 new FunctionDescription(
                     'F', new Boolean(),
                     array(new Binary(), new Binary())
+                ),
+                new FunctionDescription(
+                    'F', new Boolean(),
+                    array(new StringType(), new ArrayType())
                 )
             )
         );

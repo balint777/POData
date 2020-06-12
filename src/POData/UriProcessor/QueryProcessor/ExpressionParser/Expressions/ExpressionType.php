@@ -113,5 +113,10 @@ class ExpressionType
      */
     const SUBTRACT = 19;
     
+    /**
+     * Comparison expression with 'in' operator
+     */
+    const IN = 20;
+    
     
 }

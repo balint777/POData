@@ -36,6 +36,22 @@ Class ServiceHost
      *
      * @var Url
      */
+    private $_fullAbsoluteRequestUri;
+
+    /**
+     * The absolute request Uri as string
+     * Note: This will not contain query string
+     *
+     * @var string
+     */
+    private $_fullAbsoluteRequestUriAsString = null;
+
+    /**
+     * The absolute request Uri as Url instance.
+     * Note: This will not contain query string
+     *
+     * @var Url
+     */
     private $_absoluteRequestUri;
 
     /**
@@ -61,13 +77,6 @@ Class ServiceHost
      * @var string
      */
     private $_absoluteServiceUriAsString = null;
-
-    /**
-     * array of query-string parameters
-     *
-     * @var array(string, string)
-     */
-    private $_queryOptions;
 
     /**
      * Gets reference to the operation context.
@@ -123,7 +132,8 @@ Class ServiceHost
             $this->_absoluteRequestUriAsString = $this->_operationContext->incomingRequest()->getRawUrl();
             // Validate the uri first
             try {
-                new Url($this->_absoluteRequestUriAsString);
+                $this->_fullAbsoluteRequestUriAsString = $this->_absoluteRequestUriAsString;
+                $this->_fullAbsoluteRequestUri = new Url($this->_fullAbsoluteRequestUriAsString);
             } catch (UrlFormatException $exception) {
                 throw ODataException::createBadRequestError($exception->getMessage());
             }
@@ -266,81 +276,6 @@ Class ServiceHost
         return $this->_absoluteServiceUriAsString;
     }
 
-
-    /**
-     * This method verfies the client provided url query parameters and check whether
-     * any of the odata query option specified more than once or check any of the
-     * non-odata query parameter start will $ symbol or check any of the odata query
-     * option specified with out value. If any of the above check fails throws
-     * ODataException, else set _queryOptions member variable
-     *
-     * @return void
-     *
-     * @throws ODataException
-     */
-    public function validateQueryParameters()
-    {
-        $queryOptions = $this->_operationContext->incomingRequest()->getQueryParameters();
-
-        reset($queryOptions);
-        $namesFound = array();
-        while ($queryOption = current($queryOptions)) {
-            $optionName = key($queryOption);
-            $optionValue = current($queryOption);
-            if (empty($optionName)) {
-                if (!empty($optionValue)) {
-                    if (isset($optionValue[0]) && $optionValue[0] == '$') {
-                        if ($this->_isODataQueryOption($optionValue)) {
-                            throw ODataException::createBadRequestError(
-                                Messages::hostODataQueryOptionFoundWithoutValue(
-                                    $optionValue
-                                )
-                            );
-                        } else {
-                            throw ODataException::createBadRequestError(
-                                Messages::hostNonODataOptionBeginsWithSystemCharacter(
-                                    $optionValue
-                                )
-                            );
-                        }
-                    }
-                }
-            } else {
-                if ($optionName[0] == '$') {
-                    if (!$this->_isODataQueryOption($optionName)) {
-                        throw ODataException::createBadRequestError(
-                            Messages::hostNonODataOptionBeginsWithSystemCharacter(
-                                $optionName
-                            )
-                        );
-                    }
-
-                    if (array_search($optionName, $namesFound) !== false) {
-                        throw ODataException::createBadRequestError(
-                            Messages::hostODataQueryOptionCannotBeSpecifiedMoreThanOnce(
-                                $optionName
-                            )
-                        );
-                    }
-
-                    if (empty($optionValue) && $optionValue !== '0') {
-                        throw ODataException::createBadRequestError(
-                            Messages::hostODataQueryOptionFoundWithoutValue(
-                                $optionName
-                            )
-                        );
-                    }
-
-                    $namesFound[] = $optionName;
-                }
-            }
-
-            next($queryOptions);
-        }
-
-        $this->_queryOptions = $queryOptions;
-    }
-
     /**
      * Dev Note: Andrew Clinton
      * 5/19/16
@@ -358,48 +293,6 @@ Class ServiceHost
         }
 
         return $this->_absoluteRequestUriAsString;
-    }
-
-    /**
-     * Verifies the given url option is a valid odata query option.
-     *
-     * @param string $optionName option to validate
-     *
-     * @return boolean True if the given option is a valid odata option False otherwise.
-     *
-     */
-    private function _isODataQueryOption($optionName)
-    {
-        return ($optionName === ODataConstants::HTTPQUERY_STRING_FILTER ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_EXPAND ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_INLINECOUNT ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_ORDERBY ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SELECT ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SKIP ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_SKIPTOKEN ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_TOP ||
-                $optionName === ODataConstants::HTTPQUERY_STRING_FORMAT);
-    }
-
-    /**
-     * Gets the value for the specified item in the request query string
-     * Remark: This method assumes 'validateQueryParameters' has already been
-     * called.
-     *
-     * @param string $item The query item to get the value of.
-     *
-     * @return string|null The value for the specified item in the request
-     *                     query string NULL if the query option is absent.
-     */
-    public function getQueryStringItem($item)
-    {
-        foreach ($this->_queryOptions as $queryOption) {
-            if (array_key_exists($item, $queryOption)) {
-                return $queryOption[$item];
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -710,5 +603,9 @@ Class ServiceHost
     }
 
 
+    public function getFullAbsoluteRequestUri()
+    {
+        return $this->_fullAbsoluteRequestUri;
+    }
 
 }
