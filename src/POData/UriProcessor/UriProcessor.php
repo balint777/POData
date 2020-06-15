@@ -136,7 +136,6 @@ class UriProcessor
         $request->setUriProcessor($uriProcessor);
 
 
-        $service->getProvidersWrapper()->getExpressionProvider()->clear();
         //Parse the query string options of the request Uri.
         QueryProcessor::process($uriProcessor->request, $service);
 
@@ -311,6 +310,8 @@ class UriProcessor
                     foreach ($segments as $segment) {
 
                         $requestTargetKind = $segment->getTargetKind();
+
+                        $this->providers->getExpressionProvider()->clear();
 
                         if ($segment->getTargetSource() == TargetSource::ENTITY_SET) {
                             $this->handleSegmentTargetsToResourceSet($segment, $request);
