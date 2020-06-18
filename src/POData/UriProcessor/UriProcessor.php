@@ -194,14 +194,14 @@ class UriProcessor
      */
     protected function executePut($request)
     {
-        return $this->executeBase($request, function($uriProcessor, $segment) {
-            $requestMethod = $uriProcessor->service->getOperationContext()->incomingRequest()->getMethod();
+        $callback = function($uriProcessor, $segment) use ($request) {
+            $requestMethod = $request->getRequestMethod();
             $resourceSet = $segment->getTargetResourceSetWrapper();
             $keyDescriptor = $segment->getKeyDescriptor();
             $data = $uriProcessor->request->getData();
 
             if (!$resourceSet || !$keyDescriptor) {
-                $url = $uriProcessor->service->getHost()->getAbsoluteRequestUri()->getUrlAsString();
+                $url = $request->getRequestUrl()->getUrlAsString();
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
             }
 
@@ -209,8 +209,26 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            return $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data);
-        });
+            $result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data);
+
+            $segment->setSingleResult(true);
+            $segment->setResult($result);
+
+            return $result;
+        };
+
+        $segments = $request->getSegments();
+
+        foreach ($segments as $segment) {
+            if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
+                $this->applyQueryOptions($segment, $callback);
+            }
+        }
+            //?? TODO : TEST
+            // Apply $select and $expand options to result set, this function will be always applied
+            // irrespective of return value of IDSQP2::canApplyQueryOptions which means library will
+            // not delegate $expand/$select operation to IDSQP2 implementation
+        $this->handleExpansion($request);
     }
 
     /**
@@ -309,7 +327,7 @@ class UriProcessor
                     $this->executeGet($request);
                     break;
                 case HTTPRequestMethod::PUT:
-                    $this->executePut($this->request);
+                    $this->executePut($request);
                 case HTTPRequestMethod::POST:
                     $this->executePost($request);
                     break;
