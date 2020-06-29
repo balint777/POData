@@ -199,7 +199,7 @@ class ODataConstants
     const JSON_METADATA_STRING = '__metadata';
 
     //metadata element name in json payload.
-    const JSON_LIGHT_METADATA_STRING = 'odata.metadata';
+    const JSON_LIGHT_METADATA_STRING = '@odata.metadata';
 
     //uri element name in json payload.
     const JSON_URI_STRING = 'uri';
@@ -210,10 +210,10 @@ class ODataConstants
     //type element name in json payload.
     const JSON_TYPE_STRING = 'type';
 
-    const JSON_LIGHT_METADATA_TYPE_STRING = 'odata.type';
-    const JSON_LIGHT_METADATA_ID_STRING = 'odata.id';
-    const JSON_LIGHT_METADATA_ETAG_STRING = 'odata.etag';
-    const JSON_LIGHT_METADATA_EDIT_LINK_STRING = 'odata.editLink';
+    const JSON_LIGHT_METADATA_TYPE_STRING = '@odata.type';
+    const JSON_LIGHT_METADATA_ID_STRING = '@odata.id';
+    const JSON_LIGHT_METADATA_ETAG_STRING = '@odata.etag';
+    const JSON_LIGHT_METADATA_EDIT_LINK_STRING = '@odata.editLink';
     const JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING = '@odata.type';
     const JSON_LIGHT_METADATA_LINK_NAVIGATION_SUFFIX_STRING = '@odata.navigationLinkUrl';
 
@@ -239,7 +239,7 @@ class ODataConstants
     const JSON_ROWCOUNT_STRING = '__count';
 
     //row count element name in json payload
-    const JSON_LIGHT_ROWCOUNT_STRING = 'odata.count';
+    const JSON_LIGHT_ROWCOUNT_STRING = '@odata.count';
 
     //next page link element name in json payload
     const JSON_NEXT_STRING = '__next';

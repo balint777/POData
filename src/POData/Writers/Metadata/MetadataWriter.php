@@ -110,11 +110,12 @@ class MetadataWriter
                 $uniqueAssociationsInThisNamespace = $this->_metadataManager->getUniqueResourceAssociationTypesForNamespace($resourceTypeNamespace);
                 $this->_writeResourceTypes(array_values($resourceTypesWithName), $associationsInThisNamespace);
                 $this->_writeAssociationTypes($uniqueAssociationsInThisNamespace);
+                $this->_xmlWriter->endElement();
             }
         }
 
         //write Container schema node and define required nmaespaces
-        $this->_writeSchemaElement($resourceTypeNamespace, $edmSchemaVersion);
+        $this->_writeSchemaElement($containerNamespace, $edmSchemaVersion);
         if (!empty($resourceTypesInContainerNamespace)) {
             //Get assocation types in container namespace as array of
             //key-value pairs (with key as association type

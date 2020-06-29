@@ -281,16 +281,17 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             //According to atom standard an empty entry must have an Author
             //node.
         } else {
+            $actualResourceType = $this->service->getProvidersWrapper()->resolveResourceTypeByClassname(get_class($entryObject));
+            $actualResourceSet = $actualResourceType->getCustomState();
             $relativeUri = $this->getEntryInstanceKey(
                 $entryObject,
-                $resourceType,
-                $this->getCurrentResourceSetWrapper()->getName()
+                $actualResourceType,
+                $actualResourceSet->getName()
             );
+            $entry->resourceSetName = $actualResourceSet->getName();
 
             $absoluteUri = rtrim($this->absoluteServiceUri, '/') . '/' . $relativeUri;
             $title = $resourceType->getName();
-            //TODO Resolve actual resource type
-            $actualResourceType = $resourceType;
             $this->_writeMediaResourceMetadata(
                 $entryObject,
                 $actualResourceType,

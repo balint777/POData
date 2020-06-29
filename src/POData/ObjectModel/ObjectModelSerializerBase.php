@@ -428,7 +428,12 @@ class ObjectModelSerializerBase
         $queryParameterString .= '$skiptoken=' . $skipToken;
         $odalaLink = new ODataLink();
         $odalaLink->name = ODataConstants::ATOM_LINK_NEXT_ATTRIBUTE_STRING;
-        $odalaLink->url = rtrim($absoluteUri, '/') . '?' . $queryParameterString;
+        $uri_parts = explode('?', $absoluteUri);
+        $query = [];
+        parse_str(isset($uri_parts[1]) ? $uri_parts[1] : '', $query);
+        $query['$skiptoken'] = $skipToken;
+
+        $odalaLink->url = rtrim($uri_parts[0], '/') . '?' . urldecode(http_build_query($query));
         return $odalaLink;
     }
 
@@ -450,7 +455,7 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
             ODataConstants::HTTPQUERY_STRING_SELECT) as $queryOption
         ) {
-            $value = $this->service->getHost()->getQueryStringItem($queryOption);
+            $value = $this->request->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
                     $queryParameterString = $queryParameterString . '&';

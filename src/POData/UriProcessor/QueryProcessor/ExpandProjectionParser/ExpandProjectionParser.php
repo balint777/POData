@@ -189,87 +189,85 @@ class ExpandProjectionParser
             foreach ($expandSubPathSegments as $expandSubPathSegment) {
                 $resourceSetWrapper = $currentNode->getResourceSetWrapper();
                 $resourceType = $currentNode->getResourceType();
-                $resourceProperty
-                    = $resourceType->resolveProperty(
-                        $expandSubPathSegment
-                    );
-                if (is_null($resourceProperty)) {
-                    throw ODataException::createSyntaxError(
-                        Messages::expandProjectionParserPropertyNotFound(
-                            $resourceType->getFullName(),
-                            $expandSubPathSegment,
-                            false
-                        )
-                    );
-                } else if ($resourceProperty->getTypeKind() != ResourceTypeKind::ENTITY) {
-                    throw ODataException::createBadRequestError(
-                        Messages::expandProjectionParserExpandCanOnlyAppliedToEntity(
-                            $resourceType->getFullName(),
-                            $expandSubPathSegment
-                        )
-                    );
-                }
+                $derivedTypes = $this->_providerWrapper->getDerivedTypes($resourceType);
 
-                $resourceSetWrapper = $this->_providerWrapper
-                    ->getResourceSetWrapperForNavigationProperty(
-                        $resourceSetWrapper,
-                        $resourceType,
-                        $resourceProperty
-                    );
-                if (is_null($resourceSetWrapper)) {
-                    throw ODataException::createBadRequestError(
-                        Messages::badRequestInvalidPropertyNameSpecified(
-                            $resourceType->getFullName(),
-                            $expandSubPathSegment
-                        )
-                    );
-                }
-
-                $singleResult
-                    = $resourceProperty->isKindOf(
-                        ResourcePropertyKind::RESOURCE_REFERENCE
-                    );
-                $resourceSetWrapper->checkResourceSetRightsForRead($singleResult);
-                $pageSize = $resourceSetWrapper->getResourceSetPageSize();
-                $internalOrderByInfo = null;
-                if ($pageSize != 0 && !$singleResult) {
-                    $this->_rootProjectionNode->setPagedExpandedResult(true);
-                    $rt = $resourceSetWrapper->getResourceType();
-                    //assert($rt != null)
-                    $keys = array_keys($rt->getKeyProperties());
-                    //assert(!empty($keys))
-                    $orderBy = null;
-                    foreach ($keys as $key) {
-                        $orderBy = $orderBy . $key . ', ';
+                if (isset($derivedTypes[$expandSubPathSegment])) {
+                    $currentNode->setDerivedType($derivedTypes[$expandSubPathSegment]);
+                } else {
+                    $resourceProperty = $resourceType->resolveProperty($expandSubPathSegment);
+                    if (is_null($resourceProperty)) {
+                        throw ODataException::createSyntaxError(
+                            Messages::expandProjectionParserPropertyNotFound(
+                                $resourceType->getFullName(),
+                                $expandSubPathSegment,
+                                false
+                            )
+                        );
+                    } else if ($resourceProperty->getTypeKind() != ResourceTypeKind::ENTITY) {
+                        throw ODataException::createBadRequestError(
+                            Messages::expandProjectionParserExpandCanOnlyAppliedToEntity(
+                                $resourceType->getFullName(),
+                                $expandSubPathSegment
+                            )
+                        );
                     }
 
-                    $orderBy = rtrim($orderBy, ', ');
-                    $internalOrderByInfo = OrderByParser::parseOrderByClause(
-                        $resourceSetWrapper,
-                        $rt,
-                        $orderBy,
-                        $this->_providerWrapper
-                    );
+                    $resourceSetWrapper = $this->_providerWrapper
+                        ->getResourceSetWrapperForNavigationProperty(
+                            $resourceSetWrapper,
+                            $resourceType,
+                            $resourceProperty
+                        );
+                    if (is_null($resourceSetWrapper)) {
+                        throw ODataException::createBadRequestError(
+                            Messages::badRequestInvalidPropertyNameSpecified(
+                                $resourceType->getFullName(),
+                                $expandSubPathSegment
+                            )
+                        );
+                    }
 
+                    $singleResult
+                        = $resourceProperty->isKindOf(
+                            ResourcePropertyKind::RESOURCE_REFERENCE
+                        );
+                    $resourceSetWrapper->checkResourceSetRightsForRead($singleResult);
+                    $pageSize = $resourceSetWrapper->getResourceSetPageSize();
+                    $internalOrderByInfo = null;
+                    if ($pageSize != 0 && !$singleResult) {
+                        $this->_rootProjectionNode->setPagedExpandedResult(true);
+                        $rt = $derivedType ?? $resourceSetWrapper->getResourceType();
+                        //assert($rt != null)
+                        $keys = array_keys($rt->getKeyProperties());
+                        //assert(!empty($keys))
+                        $orderBy = implode(', ', $keys);
+                        $internalOrderByInfo = OrderByParser::parseOrderByClause(
+                            $resourceSetWrapper,
+                            $rt,
+                            $orderBy,
+                            $this->_providerWrapper
+                        );
+
+                    }
+
+                    $node = $currentNode->findNode($expandSubPathSegment);
+                    if (is_null($node)) {
+                        $maxResultCount = $this->_providerWrapper
+                            ->getConfiguration()->getMaxResultsPerCollection();
+                        $node = new ExpandedProjectionNode(
+                            $expandSubPathSegment,
+                            $resourceProperty,
+                            $resourceSetWrapper,
+                            $internalOrderByInfo,
+                            null,
+                            $pageSize == 0 ? null : $pageSize,
+                            $maxResultCount == PHP_INT_MAX ? null : $maxResultCount
+                        );
+                        $currentNode->addNode($node);
+                    }
+
+                    $currentNode = $node;
                 }
-
-                $node = $currentNode->findNode($expandSubPathSegment);
-                if (is_null($node)) {
-                    $maxResultCount = $this->_providerWrapper
-                        ->getConfiguration()->getMaxResultsPerCollection();
-                    $node = new ExpandedProjectionNode(
-                        $expandSubPathSegment,
-                        $resourceProperty,
-                        $resourceSetWrapper,
-                        $internalOrderByInfo,
-                        null,
-                        $pageSize == 0 ? null : $pageSize,
-                        $maxResultCount == PHP_INT_MAX ? null : $maxResultCount
-                    );
-                    $currentNode->addNode($node);
-                }
-
-                $currentNode = $node;
             }
         }
     }
