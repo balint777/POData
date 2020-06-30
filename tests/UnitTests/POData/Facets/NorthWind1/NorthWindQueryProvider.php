@@ -13,7 +13,7 @@ use POData\Common\ODataException;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindExpressionProvider;
 
-// Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality 
+// Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality
 // we will not test the actual data, instead the sql query generated.
 
 class NorthWindQueryProvider implements IQueryProvider
@@ -156,5 +156,9 @@ class NorthWindQueryProvider implements IQueryProvider
 	)
 	{
 		// TODO: Implement getRelatedResourceReference() method.
+	}
+
+	public function getCustomProperties($entryObject) {
+		return [];
 	}
 }
