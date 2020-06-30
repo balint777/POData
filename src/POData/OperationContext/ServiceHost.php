@@ -288,7 +288,7 @@ Class ServiceHost
     private function _getServiceUri()
     {
         if (($pos = strpos($this->_absoluteRequestUriAsString, ".svc")) !== FALSE) {
-            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc"));
+            $serviceUri = substr($this->_absoluteRequestUriAsString, 0, $pos + strlen(".svc")).'/';
             return $serviceUri;
         }
 
