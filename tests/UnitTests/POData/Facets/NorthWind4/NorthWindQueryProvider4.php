@@ -172,7 +172,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
 		// TODO: Implement getRelatedResourceReference() method.
 	}
 
-	public function getCustomProperties() {
+	public function getCustomProperties($entryObject) {
 		return [];
 	}
 }
