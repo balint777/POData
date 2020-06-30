@@ -36,6 +36,8 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     private $_resourceSetWrapper;
 
+    private $_derivedType;
+
     /**
      * The sort information associated with the expanded navigation property or
      * root of 'Projection Tree', when this node represents root of the
@@ -188,12 +190,13 @@ class ExpandedProjectionNode extends ProjectionNode
      */
     public function __construct($propertyName, $resourceProperty,
         ResourceSetWrapper $resourceSetWrapper, $internalOrderByInfo,
-        $skipCount, $takeCount, $maxResultCount
+        $skipCount, $takeCount, $maxResultCount, ResourceType $derivedType = null
     ) {
         $this->_resourceSetWrapper = $resourceSetWrapper;
         $this->_internalOrderByInfo = $internalOrderByInfo;
         $this->_skipCount = $skipCount;
         $this->_takeCount = $takeCount;
+        $this->_derivedType = $derivedType;
         parent::__construct($propertyName, $resourceProperty);
     }
 
@@ -211,6 +214,16 @@ class ExpandedProjectionNode extends ProjectionNode
     public function getResourceSetWrapper()
     {
         return $this->_resourceSetWrapper;
+    }
+
+    public function getDerivedType()
+    {
+        return $this->_derivedType;
+    }
+
+    public function setDerivedType($derivedType)
+    {
+        return $this->_derivedType = $derivedType;
     }
 
     /**

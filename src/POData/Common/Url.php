@@ -60,7 +60,7 @@ class Url
             }
         }
 
-        $this->_urlAsString = $url;
+        $this->_urlAsString = urldecode($url);
 
         $this->_queryOptions = [];
         if (!empty($this->_parts['query'])) {

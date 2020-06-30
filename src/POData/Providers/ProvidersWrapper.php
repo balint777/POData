@@ -264,6 +264,16 @@ class ProvidersWrapper
         return $this->_validateResourceType($resourceType);
     }
 
+    public function resolveResourceTypeByClassname($classname)
+    {
+        $resourceType = $this->metaProvider->resolveResourceTypeByClassname($classname);
+        if (is_null($resourceType)) {
+            return null;
+        }
+
+        return $this->_validateResourceType($resourceType);
+    }
+
     /**
      * The method must return a collection of all the types derived from
      * $resourceType The collection returned should NOT include the type

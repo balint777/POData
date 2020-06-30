@@ -1165,7 +1165,6 @@ class RequestDescription
         $version = new Version($major, $minor);
 
         //TODO: move this somewhere...
-        /*
         $isSupportedVersion = false;
         foreach (self::getKnownDataServiceVersions() as $version1) {
             if ($version->compare($version1) == 0) {
@@ -1189,7 +1188,6 @@ class RequestDescription
                 )
             );
         }
-	    */
 
         return $version;
     }

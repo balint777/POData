@@ -96,7 +96,7 @@ class ResourceAssociationSetEnd
     public function isBelongsTo(ResourceSet $resourceSet,
         ResourceType $resourceType, ResourceProperty $resourceProperty
     ) {
-        return (strcmp($resourceSet->getName(), $this->_resourceSet->getName()) == 0
+        return ((strcmp($resourceSet->getName(), $this->_resourceSet->getName()) == 0 || $resourceSet->getResourceType()->getInstanceType()->isSubclassOf($this->_resourceSet->getResourceType()->getInstanceType()))
             && $this->_resourceType->isAssignableFrom($resourceType)
             && ((is_null($resourceProperty) && is_null($this->_resourceProperty)) ||
                   (!is_null($resourceProperty) && !is_null($this->_resourceProperty) && (strcmp($resourceProperty->getName(), $this->_resourceProperty->getName()) == 0)))

@@ -166,11 +166,11 @@ class JsonODataV1Writer implements IODataWriter
     {
 
         $this->writeEntryMetadata($entry);
+        $this->writeCustomProperties($entry->customProperties);
+
         foreach ($entry->links as $link) {
             $this->writeLink($link);
         }
-
-        $this->writeCustomProperties($entry->customProperties);
 
         $this->writeProperties($entry->propertyContent);
 

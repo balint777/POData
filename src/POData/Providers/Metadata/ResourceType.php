@@ -803,9 +803,9 @@ class ResourceType
      */
     public function isAssignableFrom(ResourceType $resourceType)
     {
-        $base = $this;
+        $base = $resourceType;
         while ($base != null) {
-            if ($resourceType == $base) {
+            if ($this == $base) {
                 return true;
             }
 
