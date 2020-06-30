@@ -360,7 +360,7 @@ abstract class BaseService implements IRequestHandler, IService
         $odataModelInstance = null;
         $hasResponseBody = true;
 
-        $write = function ($service, $request, $odataModelInstance) use ($hasResponseBody, $responseContentType) {
+        $write = function($service, $request, $odataModelInstance) use ($hasResponseBody, $responseContentType) {
             //Note: Response content type can be null for named stream
             if ($hasResponseBody && !is_null($responseContentType)) {
                 if ($request->getTargetKind() != TargetKind::MEDIA_RESOURCE && $responseContentType != MimeTypes::MIME_APPLICATION_OCTETSTREAM) {
@@ -442,7 +442,9 @@ abstract class BaseService implements IRequestHandler, IService
                         $output_stream = '';
                         foreach($streams as $stream) {
                             $output_stream.="--{$boundary}\r\n";
-                            if (!is_null($stream['content_id'])) $output_stream.="Content-ID: {$stream['content_id']}\r\n";
+                            if (!is_null($stream['content_id'])) {
+                                $output_stream.="Content-ID: {$stream['content_id']}\r\n";
+                            }
                             $output_stream.="Content-Type: application/http\r\n";
                             $output_stream.="Content-Transfer-Encoding: binary\r\n";
                             $output_stream.="\r\n";

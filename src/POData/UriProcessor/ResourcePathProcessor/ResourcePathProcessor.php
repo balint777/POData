@@ -70,7 +70,7 @@ class ResourcePathProcessor
         }
 
 
-        $lambda = function (RequestDescription &$request) use (&$service, $segments) {
+        $lambda = function(RequestDescription &$request) use (&$service, $segments) {
             $kind = $request->getTargetKind();
 
             if ($kind == TargetKind::PRIMITIVE_VALUE || $kind == TargetKind::MEDIA_RESOURCE) {
@@ -116,7 +116,7 @@ class ResourcePathProcessor
         };
 
         // $uriProcessor = UriProcessor::process($this);
-        foreach($request->getParts() as &$part) {
+        foreach ($request->getParts() as &$part) {
 
             $uriProcessor = UriProcessor::processPart($service, $part);
 
