@@ -450,7 +450,7 @@ class ObjectModelSerializerBase
             ODataConstants::HTTPQUERY_STRING_INLINECOUNT,
             ODataConstants::HTTPQUERY_STRING_SELECT) as $queryOption
         ) {
-            $value = $this->service->getHost()->getQueryStringItem($queryOption);
+            $value = $this->service->getHost()->getFullAbsoluteRequestUri()->getQueryStringItem($queryOption);
             if (!is_null($value)) {
                 if (!is_null($queryParameterString)) {
                     $queryParameterString = $queryParameterString . '&';
