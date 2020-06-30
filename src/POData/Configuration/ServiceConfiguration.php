@@ -13,7 +13,7 @@ use POData\Common\InvalidOperationException;
 class ServiceConfiguration
 {
     /**
-     * Maximum number of segments to be expanded allowed in a request     
+     * Maximum number of segments to be expanded allowed in a request
      */
     private $_maxExpandCount;
 
@@ -29,14 +29,14 @@ class ServiceConfiguration
 
     /**
      * The provider for the web service
-     * 
+     *
      * @var IMetadataProvider
      */
     private $_provider;
 
     /**
      * Rights used for unspecified resource sets
-     * 
+     *
      * @var EntitySetRights
      */
     private $_defaultResourceSetRight;
@@ -48,27 +48,27 @@ class ServiceConfiguration
 
     /**
      * A mapping from entity set name to its right
-     * 
+     *
      * @var EntitySetRights[]
      */
     private $_resourceRights;
 
     /**
      * A mapping from entity sets to their page sizes
-     * 
+     *
      * @var int[]
      */
     private $_pageSizes;
 
     /**
      * Whether verbose errors should be returned by default
-     * 
+     *
      * @var boolean
      */
     private $_useVerboseErrors;
 
     /**
-     * Whether requests with the $count path segment or the $inlinecount 
+     * Whether requests with the $count path segment or the $inlinecount
      * query options are accepted
      */
     private $_acceptCountRequest;
@@ -88,10 +88,10 @@ class ServiceConfiguration
      * Boolean value indicating whether to validate ETag header or not
      */
     private $_validateETagHeader;
-    
+
     /**
      * Construct a new instance of ServiceConfiguration
-     * 
+     *
      * @param IMetadataProvider $metadataProvider The metadata
      * provider for the OData service
      */
@@ -113,10 +113,10 @@ class ServiceConfiguration
 
         $this->_validateETagHeader = true;
     }
-    
+
     /**
      * Gets maximum number of segments to be expanded allowed in a request
-     * 
+     *
      * @return int
      */
     public function getMaxExpandCount()
@@ -126,9 +126,9 @@ class ServiceConfiguration
 
     /**
      * Sets maximum number of segments to be expanded allowed in a request
-     * 
+     *
      * @param int $maxExpandCount Maximum number of segments to be expanded
-     * 
+     *
      * @return void
      */
     public function setMaxExpandCount($maxExpandCount)
@@ -140,7 +140,7 @@ class ServiceConfiguration
 
     /**
      * Gets the maximum number of segments in a single $expand path
-     * 
+     *
      * @return int
      */
     public function getMaxExpandDepth()
@@ -150,9 +150,9 @@ class ServiceConfiguration
 
     /**
      * Sets the maximum number of segments in a single $expand path
-     * 
+     *
      * @param int $maxExpandDepth Maximum number of segments in a single $expand path
-     * 
+     *
      * @return void
      */
     public function setMaxExpandDepth($maxExpandDepth)
@@ -164,11 +164,11 @@ class ServiceConfiguration
     }
 
     /**
-     * Gets maximum number of elements in each returned collection 
+     * Gets maximum number of elements in each returned collection
      * (top-level or expanded)
-     * 
+     *
      * @return int
-     * 
+     *
      * @return void
      */
     public function getMaxResultsPerCollection()
@@ -177,12 +177,12 @@ class ServiceConfiguration
     }
 
     /**
-     * Sets maximum number of elements in each returned collection 
+     * Sets maximum number of elements in each returned collection
      * (top-level or expanded)
-     * 
+     *
      * @param int $maxResultPerCollection Maximum number of elements
      *                                    in returned collection
-     * 
+     *
      * @return void
      */
     public function setMaxResultsPerCollection($maxResultPerCollection)
@@ -413,7 +413,7 @@ class ServiceConfiguration
          *
          * @return void
          */
-        function setValidateETagHeader($validate)
+        public function setValidateETagHeader($validate)
         {
             $this->_validateETagHeader = $validate;
         }
@@ -427,7 +427,7 @@ class ServiceConfiguration
          *                 in the response even though the requested resource
          *                 support ETag
          */
-        function getValidateETagHeader()
+        public function getValidateETagHeader()
         {
             return $this->_validateETagHeader;
         }
@@ -436,12 +436,12 @@ class ServiceConfiguration
 
     /**
      * Checks that the parameter to a function is numeric and is not negative
-     * 
+     *
      * @param int    $value        The value of parameter to check
      * @param string $functionName The name of the function that receives above value
-     * 
+     *
      * @throws \InvalidArgumentException
-     * 
+     *
      * @return int
      */
     private function _checkIntegerNonNegativeParameter($value, $functionName)
@@ -451,19 +451,19 @@ class ServiceConfiguration
                 Messages::commonArgumentShouldBeInteger($value, $functionName)
             );
         }
-        
+
         if ($value < 0) {
             throw new \InvalidArgumentException(
                 Messages::commonArgumentShouldBeNonNegative($value, $functionName)
             );
         }
-        
+
         return $value;
     }
 
     /**
      * Whether size of a page has been defined for any entity set.
-     * 
+     *
      * @return boolean
      */
     private function _isPageSizeDefined()
