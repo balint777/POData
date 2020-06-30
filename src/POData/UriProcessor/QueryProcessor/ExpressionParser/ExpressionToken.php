@@ -103,6 +103,6 @@ class ExpressionToken
     public function identifierIs($id)
     {
         return $this->Id == ExpressionTokenId::IDENTIFIER
-            && strcmp($this->Text, (string)$id) == 0;
+            && strcmp($this->Text, (string) $id) == 0;
     }
 }

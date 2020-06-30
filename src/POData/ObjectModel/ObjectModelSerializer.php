@@ -881,7 +881,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } else if ($type instanceof StringType && $primitiveValue instanceof \DateInterval) {
             $stringValue = (($primitiveValue->d * 86400) + ($primitiveValue->h * 3600) + ($primitiveValue->i * 60) + $primitiveValue->s) * 1000;
-           // $stringValue = intval($primitiveValue->format('%s'))*1000; // Miliszekundumokkáé
+            // $stringValue = intval($primitiveValue->format('%s'))*1000; // Miliszekundumokkáé
         } else if ($type instanceof StringType) {
             $stringValue = mb_convert_encoding($primitiveValue, 'UTF-8');
         } else {
