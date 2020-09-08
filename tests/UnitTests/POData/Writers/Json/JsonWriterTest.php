@@ -38,7 +38,7 @@ class JsonWriterTest extends TestCase {
 		// Escape some ASCII characters(0x08, 0x0c)
 		$processedString = str_replace(array(chr(0x08), chr(0x0C)), array('\b', '\f'), $processedString);
 		return $processedString;
-        */
+		*/
 		//$string = "\\  \n  \t  \r  \b  \f " . chr(0x08) . "  " . chr(0x0C);
 		//$writer = new JsonWriter("");
 		//$writer->writeValue($string, "afdaseefae");
@@ -319,13 +319,13 @@ class JsonWriterTest extends TestCase {
 		$writer->writeValue("1", "Edm.String");
 		$writer->writeValue(2, "Edm.Int16");
 
-		$expected = "[\n    \"1\",2";
+		$expected = "[\n	\"1\",2";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 		$result = $writer->endScope();
 		$this->assertSame($result, $writer);
 
-		$expected = "[\n    \"1\",2\n]";
+		$expected = "[\n	\"1\",2\n]";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}
@@ -340,13 +340,13 @@ class JsonWriterTest extends TestCase {
 		$writer->writeName("1");
 		$writer->writeValue(2, "Edm.Int16");
 
-		$expected = "{\n    \"1\":2";
+		$expected = "{\n	\"1\":2";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 		$result = $writer->endScope();
 		$this->assertSame($result, $writer);
 
-		$expected = "{\n    \"1\":2\n}";
+		$expected = "{\n	\"1\":2\n}";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}
@@ -373,7 +373,7 @@ class JsonWriterTest extends TestCase {
 		$writer->endScope();
 
 
-		$expected = "{\n    \"1\":2,\"child\":{\n        \"array\":[\n            \"100.00155\",\"2012-03-03T11:14:32\"\n        ]\n    }\n}";
+		$expected = "{\n	\"1\":2,\"child\":{\n		\"array\":[\n			\"100.00155\",\"2012-03-03T11:14:32\"\n		]\n	}\n}";
 		$this->assertEquals($expected, $writer->getJsonOutput());
 
 	}

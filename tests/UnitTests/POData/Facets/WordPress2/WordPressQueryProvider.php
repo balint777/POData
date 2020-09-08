@@ -3,9 +3,9 @@
 namespace UnitTests\POData\Facets\WordPress2;
 
 
-/** 
+/**
  * Implementation of IDataServiceQueryProvider.
- * 
+ *
  */
 
 use POData\Providers\Query\QueryResult;
@@ -45,7 +45,7 @@ class WordPressQueryProvider implements IQueryProvider
      * @var IExpressionProvider
      */
     private $_wordPressMySQLExpressionProvider;
-    
+
 
 
     /**
@@ -57,7 +57,7 @@ class WordPressQueryProvider implements IQueryProvider
     	if (is_null($this->_wordPressMySQLExpressionProvider)) {
     		$this->_wordPressMySQLExpressionProvider = new WordPressDSExpressionProvider();
     	}
-    	
+
     	return $this->_wordPressMySQLExpressionProvider;
     }
 
@@ -193,5 +193,9 @@ class WordPressQueryProvider implements IQueryProvider
 	)
 	{
 		// TODO: Implement getRelatedResourceReference() method.
+	}
+
+	public function getCustomProperties($entryObject) {
+		return [];
 	}
 }

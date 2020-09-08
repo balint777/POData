@@ -390,7 +390,7 @@ class RequestDescription
                         $requestUrl = new Url(trim($m[2]), false);
                         $reader_state = RequestDescription::STATE_HEADERS;
                     } else if ($reader_state = RequestDescription::STATE_BODY) {
-                        $body .= $line."\n";
+                        $body .= $line . "\n";
                     }
                 }
 
@@ -1184,7 +1184,7 @@ class RequestDescription
                 Messages::requestDescriptionUnSupportedVersion(
                     $headerName,
                     $versionHeader,
-	                $availableVersions
+                    $availableVersions
                 )
             );
         }

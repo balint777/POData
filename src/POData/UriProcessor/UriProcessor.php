@@ -209,7 +209,8 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            $result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data);
+            $expand = $this->_getExpandedProjectionNodes($request);
+            $result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data, $expand);
 
             $segment->setSingleResult(true);
             $segment->setResult($result);
@@ -455,7 +456,8 @@ class UriProcessor
         if ($segment->isSingleResult()) {
             $entityInstance = $this->providers->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
-                $segment->getKeyDescriptor()
+                $segment->getKeyDescriptor(),
+                $this->_getExpandedProjectionNodes($request)
             );
 
             $segment->setResult($entityInstance);

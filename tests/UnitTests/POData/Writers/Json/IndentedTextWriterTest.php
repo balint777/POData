@@ -70,7 +70,7 @@ class IndentedTextWriterTest extends TestCase {
 
 
 		$writer->writeValue("indented0x");
-		$expected = "indented1x\n        indented2x\n    indented1xtrimmed\nindented0x";
+		$expected = "indented1x\n		indented2x\n	indented1xtrimmed\nindented0x";
 
 		$this->assertEquals($expected, $writer->getResult());
 	}

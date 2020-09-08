@@ -24,9 +24,9 @@ class NorthWindService extends BaseService
 
     /**
      * This method is called only once to initialize service-wide policies
-     * 
+     *
      * @param ServiceConfiguration $config Data service configuration object
-     * 
+     *
      * @return void
      */
     public function initialize(ServiceConfiguration $config)
@@ -66,7 +66,7 @@ class NorthWindService extends BaseService
 	}
 
 
-    
+
     // For testing we overridden the BaseService::handleRequest method, one thing is the
     // private member variable BaseService::_dataServiceHost is not accessible in this class,
     // so we are using getHost() below.
@@ -74,7 +74,7 @@ class NorthWindService extends BaseService
     {
 
         $this->createProviders();
-        $this->getHost()->validateQueryParameters();
+        $this->getHost()->getFullAbsoluteRequestUri()->validateQueryParameters();
         $requestMethod = $this->getOperationContext()->incomingRequest()->getMethod();
         if ($requestMethod != HTTPRequestMethod::GET) {
             throw ODataException::createNotImplementedError(Messages::onlyReadSupport($requestMethod));

@@ -281,8 +281,13 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             //According to atom standard an empty entry must have an Author
             //node.
         } else {
-            $actualResourceType = $this->service->getProvidersWrapper()->resolveResourceTypeByClassname(get_class($entryObject)) ?? $resourceType;
-            $actualResourceSet = $actualResourceType ? $actualResourceType->getCustomState() : $this->getCurrentResourceSetWrapper();
+            $actualResourceType = $this->service->getProvidersWrapper()->resolveResourceTypeByClassname(get_class($entryObject));
+            if ($actualResourceType) {
+                $actualResourceSet = $actualResourceType->getCustomState();
+            } else {
+                $actualResourceType = $resourceType;
+                $actualResourceSet = $this->getCurrentResourceSetWrapper();
+            }
             $relativeUri = $this->getEntryInstanceKey(
                 $entryObject,
                 $actualResourceType,
@@ -876,7 +881,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } else if ($type instanceof StringType && $primitiveValue instanceof \DateInterval) {
             $stringValue = (($primitiveValue->d * 86400) + ($primitiveValue->h * 3600) + ($primitiveValue->i * 60) + $primitiveValue->s) * 1000;
-           // $stringValue = intval($primitiveValue->format('%s'))*1000; // Miliszekundumokkáé
+            // $stringValue = intval($primitiveValue->format('%s'))*1000; // Miliszekundumokkáé
         } else if ($type instanceof StringType) {
             $stringValue = mb_convert_encoding($primitiveValue, 'UTF-8');
         } else {
