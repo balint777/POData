@@ -37,7 +37,7 @@ class ResourceType
      *
      * @var string
      */
-    private $_name;
+    protected $_name;
 
     /**
      * Namespace name in which resource described by this class instance
@@ -45,14 +45,14 @@ class ResourceType
      *
      * @var string
      */
-    private $_namespaceName;
+    protected $_namespaceName;
 
     /**
      * The fully qualified name of the resource described by this class instance.
      *
      * @var string
      */
-    private $_fullName;
+    protected $_fullName;
 
     /**
      * The type the resource described by this class instance.
@@ -60,19 +60,19 @@ class ResourceType
      *
      * @var ResourceTypeKind|int
      */
-    private $_resourceTypeKind;
+    protected $_resourceTypeKind;
 
     /**
      * @var boolean
      */
-    private $_abstractType;
+    protected $_abstractType;
 
     /**
      * Refrence to ResourceType instance for base type, if any.
      *
      * @var ResourceType
      */
-    private $_baseType;
+    protected $_baseType;
 
     /**
      * Collection of ResourceProperty for all properties declared on the
@@ -81,7 +81,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_propertiesDeclaredOnThisType = array();
+    protected $_propertiesDeclaredOnThisType = array();
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on
@@ -90,7 +90,7 @@ class ResourceType
      *
      * @var ResourceStreamInfo[] indexed by name
      */
-    private $_namedStreamsDeclaredOnThisType = array();
+    protected $_namedStreamsDeclaredOnThisType = array();
 
     /**
      * Collection of ReflectionProperty instances for each property declared
@@ -98,7 +98,7 @@ class ResourceType
      *
      * @var array(ResourceProperty, ReflectionProperty)
      */
-    private $_propertyInfosDeclaredOnThisType = array();
+    protected $_propertyInfosDeclaredOnThisType = array();
 
     /**
      * Collection of ResourceProperty for all properties declared on this type.
@@ -106,7 +106,7 @@ class ResourceType
      *
      * @var ResourceProperty[] indexed by name
      */
-    private $_allProperties = array();
+    protected $_allProperties = array();
 
     /**
      * Collection of ResourceStreamInfo for all named streams declared on this type.
@@ -114,27 +114,27 @@ class ResourceType
      *
      * @var ResourceStreamInfo[]
      */
-    private $_allNamedStreams = array();
+    protected $_allNamedStreams = array();
 
     /**
      * Collection of properties which has etag defined subset of $_allProperties
      * @var ResourceProperty[]
      */
-    private $_etagProperties = array();
+    protected $_etagProperties = array();
 
     /**
      * Collection of key properties subset of $_allProperties
      *
      * @var ResourceProperty[]
      */
-    private $_keyProperties = array();
+    protected $_keyProperties = array();
 
     /**
      * Whether the resource type described by this class instance is a MLE or not
      *
      * @var boolean
      */
-    private $_isMediaLinkEntry = false;
+    protected $_isMediaLinkEntry = false;
 
     /**
      * Whether the resource type described by this class instance has bag properties
@@ -143,7 +143,7 @@ class ResourceType
      *
      * @var boolean
      */
-    private $_hasBagProperty = null;
+    protected $_hasBagProperty = null;
 
     /**
      * Whether the resource type described by this class instance has named streams
@@ -152,7 +152,7 @@ class ResourceType
      *
      * @var boolean
      */
-    private $_hasNamedStreams = null;
+    protected $_hasNamedStreams = null;
 
     /**
      * ReflectionClass (for complex/Entity) or IType (for Primitive) instance for
@@ -160,21 +160,21 @@ class ResourceType
      *
      * @var ReflectionClass|IType
      */
-    private $_type;
+    protected $_type;
 
     /**
      * To store any custom information related to this class instance
      *
      * @var Object
      */
-    private $_customState;
+    protected $_customState;
 
     /**
      * Array to detect looping in bag's complex type
      *
      * @var array
      */
-    private $_arrayToDetectLoopInComplexBag;
+    protected $_arrayToDetectLoopInComplexBag;
 
     /**
      * Create new instance of ResourceType
@@ -938,5 +938,52 @@ class ResourceType
         if ($this->_type instanceof ReflectionClass) {
             $this->_type = new ReflectionClass($this->_type->name);
         }
+    }
+
+    public function __serialize() : array
+    {
+        return [
+            '_name' => $this->_name,
+            '_namespaceName' => $this->_namespaceName,
+            '_fullName' => $this->_fullName,
+            '_resourceTypeKind' => $this->_resourceTypeKind,
+            '_abstractType' => $this->_abstractType,
+            '_baseType' => $this->_baseType,
+            '_propertiesDeclaredOnThisType' => $this->_propertiesDeclaredOnThisType,
+            '_namedStreamsDeclaredOnThisType' => $this->_namedStreamsDeclaredOnThisType,
+            '_propertyInfosDeclaredOnThisType' => $this->_propertyInfosDeclaredOnThisType,
+            '_allProperties' => $this->_allProperties,
+            '_allNamedStreams' => $this->_allNamedStreams,
+            '_etagProperties' => $this->_etagProperties,
+            '_keyProperties' => $this->_keyProperties,
+            '_isMediaLinkEntry' => $this->_isMediaLinkEntry,
+            '_hasBagProperty' => $this->_hasBagProperty,
+            '_hasNamedStreams' => $this->_hasNamedStreams,
+            '_type' => $this->_type instanceof ReflectionClass ? $this->_type->getName() : $this->_type,
+            '_customState' => $this->_customState,
+            '_arrayToDetectLoopInComplexBag' => $this->_arrayToDetectLoopInComplexBag
+        ];
+    }
+
+    public function __unserialize(array $data) {
+        $this->_name = $data["_name"];
+        $this->_namespaceName = $data["_namespaceName"];
+        $this->_fullName = $data["_fullName"];
+        $this->_resourceTypeKind = $data["_resourceTypeKind"];
+        $this->_abstractType = $data["_abstractType"];
+        $this->_baseType = $data["_baseType"];
+        $this->_propertiesDeclaredOnThisType = $data["_propertiesDeclaredOnThisType"];
+        $this->_namedStreamsDeclaredOnThisType = $data["_namedStreamsDeclaredOnThisType"];
+        $this->_propertyInfosDeclaredOnThisType = $data["_propertyInfosDeclaredOnThisType"];
+        $this->_allProperties = $data["_allProperties"];
+        $this->_allNamedStreams = $data["_allNamedStreams"];
+        $this->_etagProperties = $data["_etagProperties"];
+        $this->_keyProperties = $data["_keyProperties"];
+        $this->_isMediaLinkEntry = $data["_isMediaLinkEntry"];
+        $this->_hasBagProperty = $data["_hasBagProperty"];
+        $this->_hasNamedStreams = $data["_hasNamedStreams"];
+        $this->_type = is_string($data["_type"]) ? new ReflectionClass($data["_type"]) : $data["_type"];
+        $this->_customState = $data["_customState"];
+        $this->_arrayToDetectLoopInComplexBag = $data["_arrayToDetectLoopInComplexBag"];
     }
 }

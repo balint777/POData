@@ -52,9 +52,9 @@ class HttpStatus
 
     /**
      * Get status description from status code.
-     * 
+     *
      * @param int $statusCode status code
-     * 
+     *
      * @return string|null
      */
     public static function getStatusDescription($statusCode)
@@ -91,7 +91,7 @@ class HttpStatus
             case self::CODE_USE_PROXY;
                     return 'Use Proxy';
             case self::CODE_UNUSED;
-                    return 'Unused';    
+                    return 'Unused';
             case self::CODE_TEMP_REDIRECT;
                     return 'Temporary Redirect';
             case self::CODE_BAD_REQUEST;
