@@ -414,6 +414,7 @@ abstract class BaseService implements IRequestHandler, IService
                         foreach ($request->getParts() as $key => $part) {
                             $_objectModelSerializer = new ObjectModelSerializer($this, $part);
                             $status = "200 Ok";
+                            $_odataModelInstance = null;
                             try {
                                 if (is_iterable($entryObjects[$key])) {
                                     $_odataModelInstance = $_objectModelSerializer->writeTopLevelElements($entryObjects[$key]);

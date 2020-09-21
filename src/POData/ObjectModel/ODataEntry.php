@@ -86,7 +86,13 @@ class ODataEntry
 
     /**
      * Array of custom properties to serialize in key => value format.
-     * @var array
+     * @var ODataPropertyContent
      */
-    public $customProperties = array();
+    public $customProperties = null;
+
+    public function __construct()
+    {
+        $this->customProperties = new ODataPropertyContent();
+        $this->propertyContent = new ODataPropertyContent();
+    }
 }
