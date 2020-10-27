@@ -184,7 +184,7 @@ class UriProcessor
 	/**
 	 * Execute the client submitted request against the data source (GET)
 	 */
-	protected function executeGet($request)
+	protected function executeGet(RequestDescription $request)
 	{
 		return $this->executeBase($request);
 	}
@@ -192,7 +192,7 @@ class UriProcessor
 	/**
 	 * Execute the client submitted request against the data source (PUT)
 	 */
-	protected function executePut($request)
+	protected function executePut(RequestDescription $request)
 	{
 		$callback = function($uriProcessor, $segment) use ($request) {
 			$requestMethod = $request->getRequestMethod();
@@ -222,7 +222,7 @@ class UriProcessor
 
 		foreach ($segments as $segment) {
 			if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-				$this->applyQueryOptions($segment, $callback);
+				$this->applyQueryOptions($request, $segment, $callback);
 			}
 		}
 			//?? TODO : TEST
@@ -235,7 +235,7 @@ class UriProcessor
 	/**
 	 * Execute the client submitted request against the data source (POST)
 	 */
-	protected function executePost($request)
+	protected function executePost(RequestDescription $request)
 	{
 		$callback = function($uriProcessor, $segment) use ($request) {
 			$requestMethod = $request->getRequestMethod();
@@ -263,7 +263,7 @@ class UriProcessor
 
 		foreach ($segments as $segment) {
 			if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-				$this->applyQueryOptions($segment, $callback);
+				$this->applyQueryOptions($request, $segment, $callback);
 			}
 		}
 			//?? TODO : TEST
@@ -276,7 +276,7 @@ class UriProcessor
 	/**
 	 * Execute the client submitted request against the data source (DELETE)
 	 */
-	protected function executeDelete($request)
+	protected function executeDelete(RequestDescription $request)
 	{
 		return $this->executeBase($request, function($uriProcessor, $segment) use ($request) {
 			$requestMethod = $request->getRequestMethod();
@@ -297,7 +297,7 @@ class UriProcessor
 	/**
 	 * Execute the client submitted batch request against the data source (POST)
 	 */
-	protected function executeBatch()
+	protected function executeBatch(RequestDescription $request)
 	{
 		$callback = null;
 		$post_callback = function($uriProcessor, $segment) {
@@ -322,7 +322,7 @@ class UriProcessor
 			return $entity;
 		};
 
-		foreach ($this->request->getParts() as $request) {
+		foreach ($request->getParts() as $request) {
 			$this->providers->getExpressionProvider()->clear();
 
 			switch ($request->getRequestMethod()) {
@@ -369,7 +369,7 @@ class UriProcessor
 	 *
 	 * @param callable $callback Function, what must be called
 	 */
-	protected function executeBase($request, $callback = null)
+	protected function executeBase(RequestDescription $request, $callback = null)
 	{
 		$segments = $request->getSegments();
 
@@ -385,7 +385,7 @@ class UriProcessor
 						$segment->getPrevious()->getIdentifier()
 					);
 				}
-				$this->_handleSegmentTargetsToRelatedResource($segment);
+				$this->_handleSegmentTargetsToRelatedResource($request, $segment);
 			} else if ($requestTargetKind == TargetKind::LINK) {
 				$segment->setResult($segment->getPrevious()->getResult());
 			} else if ($segment->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
@@ -437,7 +437,7 @@ class UriProcessor
 			}
 
 			if (is_null($segment->getNext()) || $segment->getNext()->getIdentifier() == ODataConstants::URI_COUNT_SEGMENT) {
-				$this->applyQueryOptions($segment, $callback);
+				$this->applyQueryOptions($request, $segment, $callback);
 			}
 		}
 
@@ -491,7 +491,7 @@ class UriProcessor
 	 *
 	 * @return void
 	 */
-	private function _handleSegmentTargetsToRelatedResource(SegmentDescriptor $segment) {
+	private function _handleSegmentTargetsToRelatedResource(RequestDescription $request, SegmentDescriptor $segment) {
 		$projectedProperty = $segment->getProjectedProperty();
 		$projectedPropertyKind = $projectedProperty->getKind();
 
@@ -508,12 +508,12 @@ class UriProcessor
 				$segment->setResult($entityInstance);
 			} else {
 				$queryResult = $this->providers->getRelatedResourceSet(
-					$this->request->queryType,
+					$request->queryType,
 					$segment->getPrevious()->getTargetResourceSetWrapper(),
 					$segment->getPrevious()->getResult(),
 					$segment->getTargetResourceSetWrapper(),
 					$segment->getProjectedProperty(),
-					$this->request->getFilterInfo(),
+					$request->getFilterInfo(),
 					//TODO: why are these null?  see #98
 					null, // $orderby
 					null, // $top
@@ -543,7 +543,7 @@ class UriProcessor
 	 * @param callable $callback Function, what must be called
 	 *
 	 */
-	private function applyQueryOptions(SegmentDescriptor $segment, $callback = null)
+	private function applyQueryOptions(RequestDescription $request, SegmentDescriptor $segment, $callback = null)
 	{
 		// For non-GET methods
 		if ($callback) {
@@ -564,26 +564,26 @@ class UriProcessor
 
 		// Note $inlinecount=allpages means include the total count regardless of paging..so we set the counts first
 		// regardless if POData does the paging or not.
-		if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT) {
+		if ($request->queryType == QueryType::ENTITIES_WITH_COUNT) {
 			if ($this->providers->handlesOrderedPaging()) {
-				$this->request->setCountValue($result->count);
+				$request->setCountValue($result->count);
 			} else {
-				$this->request->setCountValue(count($result->results));
+				$request->setCountValue(count($result->results));
 			}
 		}
 
 		//Have POData perform paging if necessary
 		if (!$this->providers->handlesOrderedPaging() && !empty($result->results)) {
-			$result->results = $this->performPaging($result->results);
+			$result->results = $this->performPaging($request, $result->results);
 		}
 
 		//a bit surprising, but $skip and $top affects $count so update it here, not above
 		//IE  data.svc/Collection/$count?$top=10 returns 10 even if Collection has 11+ entries
-		if ($this->request->queryType == QueryType::COUNT) {
+		if ($request->queryType == QueryType::COUNT) {
 			if ($this->providers->handlesOrderedPaging()) {
-				$this->request->setCountValue($result->count);
+				$request->setCountValue($result->count);
 			} else {
-				$this->request->setCountValue(count($result->results));
+				$request->setCountValue(count($result->results));
 			}
 		}
 
@@ -596,17 +596,17 @@ class UriProcessor
 	 * @param array $result
 	 * @return array
 	 */
-	private function performPaging(array $result)
+	private function performPaging(RequestDescription $request, array $result)
 	{
 		//Apply (implicit and explicit) $orderby option
-		$internalOrderByInfo = $this->request->getInternalOrderByInfo();
+		$internalOrderByInfo = $request->getInternalOrderByInfo();
 		if (!is_null($internalOrderByInfo)) {
 			$orderByFunction = $internalOrderByInfo->getSorterFunction()->getReference();
 			usort($result, $orderByFunction);
 		}
 
 		//Apply $skiptoken option
-		$internalSkipTokenInfo = $this->request->getInternalSkipTokenInfo();
+		$internalSkipTokenInfo = $request->getInternalSkipTokenInfo();
 		if (!is_null($internalSkipTokenInfo)) {
 			$matchingIndex = $internalSkipTokenInfo->getIndexOfFirstEntryInTheNextPage($result);
 			$result = array_slice($result, $matchingIndex);
@@ -614,8 +614,8 @@ class UriProcessor
 
 		//Apply $top and $skip option
 		if (!empty($result)) {
-			$top  = $this->request->getTopCount();
-			$skip = $this->request->getSkipCount();
+			$top = $request->getTopCount();
+			$skip = $request->getSkipCount();
 			if (is_null($skip)) {
 				$skip = 0;
 			}
@@ -632,14 +632,14 @@ class UriProcessor
 	 *
 	 * @return void
 	 */
-	private function handleExpansion($request)
+	private function handleExpansion(RequestDescription $request)
 	{
 		$node = $request->getRootProjectionNode();
 		if (!is_null($node) && $node->isExpansionSpecified()) {
 			$result = $request->getTargetResult();
 			if (!is_null($result) || is_iterable($result) && !empty($result)) {
 				$needPop = $this->_pushSegmentForRoot($request);
-				$this->_executeExpansion($result);
+				$this->_executeExpansion($request, $result);
 				$this->_popSegment($needPop);
 			}
 		}
@@ -653,9 +653,9 @@ class UriProcessor
 	 *
 	 * @return void
 	 */
-	private function _executeExpansion($result)
+	private function _executeExpansion(RequestDescription $request, $result)
 	{
-		$expandedProjectionNodes = $this->_getExpandedProjectionNodes($this->request);
+		$expandedProjectionNodes = $this->_getExpandedProjectionNodes($request);
 		foreach ($expandedProjectionNodes as $expandedProjectionNode) {
 			$isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
 			$expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
@@ -663,7 +663,7 @@ class UriProcessor
 				foreach ($result as $entry) {
 					// Check for null entry
 					if ($isCollection) {
-						$currentResourceSet = $this->_getCurrentResourceSetWrapper()->getResourceSet();
+						$currentResourceSet = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
 						$resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
 						$projectedProperty1 = $expandedProjectionNode->getResourceProperty();
 						$result1 = $this->providers->getRelatedResourceSet(
@@ -692,15 +692,16 @@ class UriProcessor
 							$entry->$expandedPropertyName = $result1;
 							$projectedProperty = $expandedProjectionNode->getResourceProperty();
 							$needPop = $this->_pushSegmentForNavigationProperty(
+								$request,
 								$projectedProperty
 							);
-							$this->_executeExpansion($result1);
+							$this->_executeExpansion($request, $result1);
 							$this->_popSegment($needPop);
 						} else {
 							$entry->$expandedPropertyName = array();
 						}
 					} else {
-						$currentResourceSet1 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
+						$currentResourceSet1 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
 						$resourceSetOfProjectedProperty1 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
 						$projectedProperty2 = $expandedProjectionNode->getResourceProperty();
 						$result1 = $this->providers->getRelatedResourceReference(
@@ -713,16 +714,17 @@ class UriProcessor
 						if (!is_null($result1)) {
 							$projectedProperty3 = $expandedProjectionNode->getResourceProperty();
 							$needPop = $this->_pushSegmentForNavigationProperty(
+								$request,
 								$projectedProperty3
 							);
-							$this->_executeExpansion($result1);
+							$this->_executeExpansion($request, $result1);
 							$this->_popSegment($needPop);
 						}
 					}
 				}
 			} else {
 				if ($isCollection) {
-					$currentResourceSet2 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
+					$currentResourceSet2 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
 					$resourceSetOfProjectedProperty2 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
 					$projectedProperty4 = $expandedProjectionNode->getResourceProperty();
 					$result1 = $this->providers->getRelatedResourceSet(
@@ -753,15 +755,16 @@ class UriProcessor
 						$result->$expandedPropertyName = $result1;
 						$projectedProperty7 = $expandedProjectionNode->getResourceProperty();
 						$needPop = $this->_pushSegmentForNavigationProperty(
+							$request,
 							$projectedProperty7
 						);
-						$this->_executeExpansion($result1);
+						$this->_executeExpansion($request, $result1);
 						$this->_popSegment($needPop);
 					} else {
 						$result->$expandedPropertyName = array();
 					}
 				} else {
-					$currentResourceSet3 = $this->_getCurrentResourceSetWrapper()->getResourceSet();
+					$currentResourceSet3 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
 					$resourceSetOfProjectedProperty3 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
 					$projectedProperty5 = $expandedProjectionNode->getResourceProperty();
 					$result1 = $this->providers->getRelatedResourceReference(
@@ -774,9 +777,10 @@ class UriProcessor
 					if (!is_null($result1)) {
 						$projectedProperty6 = $expandedProjectionNode->getResourceProperty();
 						$needPop = $this->_pushSegmentForNavigationProperty(
+							$request,
 							$projectedProperty6
 						);
-						$this->_executeExpansion($result1);
+						$this->_executeExpansion($request, $result1);
 						$this->_popSegment($needPop);
 					}
 				}
@@ -789,11 +793,11 @@ class UriProcessor
 	 *
 	 * @return ResourceSetWrapper
 	 */
-	private function _getCurrentResourceSetWrapper()
+	private function _getCurrentResourceSetWrapper(RequestDescription $request)
 	{
 		$count = count($this->_segmentResourceSetWrappers);
 		if ($count == 0) {
-			return $this->request->getTargetResourceSetWrapper();
+			return $request->getTargetResourceSetWrapper();
 		} else {
 			return $this->_segmentResourceSetWrappers[$count - 1];
 		}
@@ -827,14 +831,14 @@ class UriProcessor
 	 * @throws InvalidOperationException If this function invoked with non-navigation
 	 *                                   property instance.
 	 */
-	private function _pushSegmentForNavigationProperty(ResourceProperty &$resourceProperty)
+	private function _pushSegmentForNavigationProperty(RequestDescription $request, ResourceProperty &$resourceProperty)
 	{
 		if ($resourceProperty->getTypeKind() == ResourceTypeKind::ENTITY) {
 			$this->assert(
 				!empty($this->_segmentNames),
 				'!is_empty($this->_segmentNames'
 			);
-			$currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper();
+			$currentResourceSetWrapper = $this->_getCurrentResourceSetWrapper($request);
 			$currentResourceType = $currentResourceSetWrapper->getResourceType();
 			$currentResourceSetWrapper = $this->service
 				->getProvidersWrapper()
@@ -849,7 +853,7 @@ class UriProcessor
 				'!null($currentResourceSetWrapper)'
 			);
 			return $this->_pushSegment(
-				$this->request,
+				$request,
 				$resourceProperty->getName(),
 				$currentResourceSetWrapper
 			);
@@ -866,7 +870,7 @@ class UriProcessor
 	 * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
 	 *
 	 */
-	private function _getExpandedProjectionNodes($request)
+	private function _getExpandedProjectionNodes(RequestDescription $request)
 	{
 		$expandedProjectionNode = $this->_getCurrentExpandedProjectionNode($request);
 		$expandedProjectionNodes = array();
@@ -887,7 +891,7 @@ class UriProcessor
 	 *
 	 * @return ExpandedProjectionNode|null
 	 */
-	private function _getCurrentExpandedProjectionNode($request)
+	private function _getCurrentExpandedProjectionNode(RequestDescription $request)
 	{
 		$expandedProjectionNode
 			= $request->getRootProjectionNode();
@@ -923,7 +927,7 @@ class UriProcessor
 	 *
 	 * @return bool true if the segment was push, false otherwise
 	 */
-	private function _pushSegment($request, $segmentName, ResourceSetWrapper &$resourceSetWrapper)
+	private function _pushSegment(RequestDescription $request, $segmentName, ResourceSetWrapper &$resourceSetWrapper)
 	{
 		$rootProjectionNode = $request->getRootProjectionNode();
 		if (!is_null($rootProjectionNode)

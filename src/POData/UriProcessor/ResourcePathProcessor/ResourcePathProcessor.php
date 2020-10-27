@@ -70,8 +70,9 @@ class ResourcePathProcessor
         }
 
 
-        $lambda = function(RequestDescription &$request) use (&$service, $segments) {
+        $lambda = function(RequestDescription &$request) use (&$service) {
             $kind = $request->getTargetKind();
+            $segments = $request->getSegments();
 
             if ($kind == TargetKind::PRIMITIVE_VALUE || $kind == TargetKind::MEDIA_RESOURCE) {
                 // http://odata/NW.svc/Orders/$count

@@ -414,18 +414,8 @@ abstract class BaseService implements IRequestHandler, IService
                         foreach ($request->getParts() as $key => $part) {
                             $_objectModelSerializer = new ObjectModelSerializer($this, $part);
                             $status = "200 Ok";
-                            $_odataModelInstance = null;
                             try {
-                                if (is_iterable($entryObjects[$key])) {
-                                    $_odataModelInstance = $_objectModelSerializer->writeTopLevelElements($entryObjects[$key]);
-                                } else {
-                                    $_odataModelInstance = $_objectModelSerializer->writeTopLevelElement($entryObjects[$key]);
-                                }
-                                self::assert(
-                                    $_odataModelInstance instanceof \POData\ObjectModel\ODataFeed || $_odataModelInstance instanceof \POData\ObjectModel\ODataEntry,
-                                    '$odataModelInstance instanceof ODataFeed'
-                                );
-                                $write($this, $part, $_odataModelInstance);
+                                $this->serializeResult($part, $uriProcessor);
                             } catch (Exception $exception) {
                                 ErrorHandler::handleException($exception, $this);
                                 $status = "500 Internal Server Error";
@@ -435,7 +425,8 @@ abstract class BaseService implements IRequestHandler, IService
                                 'body' => $body,
                                 'length' => strlen($body),
                                 'content_id' => $part->getContentID(),
-                                'status' => $status
+                                'status' => $status,
+                                'Content-Type' => $response->getHeaders()['Content-Type']
                             ];
                             $streams[] = $stream;
                         }
@@ -450,7 +441,7 @@ abstract class BaseService implements IRequestHandler, IService
                             $output_stream.="Content-Transfer-Encoding: binary\r\n";
                             $output_stream.="\r\n";
                             $output_stream.="{$_SERVER['SERVER_PROTOCOL']} {$stream['status']}\r\n";
-                            $output_stream.="Content-Type: {$responseContentType}\r\n";
+                            $output_stream.="Content-Type: {$stream['Content-Type']}\r\n";
                             $output_stream.="Content-Length: {$stream['length']}\r\n";
                             $output_stream.="\r\n";
                             $output_stream.=$stream['body']."\r\n";
