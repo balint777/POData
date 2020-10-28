@@ -387,8 +387,10 @@ abstract class BaseService implements IRequestHandler, IService
         // (1) media resource - For Media resource 'getResponseContentType' already performed execution as it needs to know the mime type of the stream
         // (2) metadata - internal resource
         // (3) service directory - internal resource
-        if ($request->needExecution()) {
-            $uriProcessor->execute();
+        if (!in_array($request->getTargetKind(), [TargetKind::MEDIA_RESOURCE, TargetKind::METADATA, TargetKind::SERVICE_DIRECTORY])) {
+
+            if ($request->needExecution()) $uriProcessor->execute();
+
             $objectModelSerializer = new ObjectModelSerializer($this, $request);
             if (!$request->isSingleResult()) {
                 // Code path for collection (feed or links)

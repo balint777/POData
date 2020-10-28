@@ -328,14 +328,18 @@ class UriProcessor
 			switch ($request->getRequestMethod()) {
 				case HTTPRequestMethod::GET:
 					$this->executeGet($request);
+					$request->setExecuted();
 					break;
 				case HTTPRequestMethod::PUT:
 					$this->executePut($request);
+					$request->setExecuted();
 				case HTTPRequestMethod::POST:
 					$this->executePost($request);
+					$request->setExecuted();
 					break;
 				case HTTPRequestMethod::DELETE:
 					$this->executeDelete($request);
+					$request->setExecuted();
 					break;
 			}
 		}
@@ -870,7 +874,7 @@ class UriProcessor
 	 * @return ExpandedProjectionNode[] List of nodes describing expansions for the current segment
 	 *
 	 */
-	private function _getExpandedProjectionNodes(RequestDescription $request)
+	private function _getExpandedProjectionNodes($request)
 	{
 		$expandedProjectionNode = $this->_getCurrentExpandedProjectionNode($request);
 		$expandedProjectionNodes = array();
@@ -891,7 +895,7 @@ class UriProcessor
 	 *
 	 * @return ExpandedProjectionNode|null
 	 */
-	private function _getCurrentExpandedProjectionNode(RequestDescription $request)
+	private function _getCurrentExpandedProjectionNode($request)
 	{
 		$expandedProjectionNode
 			= $request->getRootProjectionNode();
@@ -927,7 +931,7 @@ class UriProcessor
 	 *
 	 * @return bool true if the segment was push, false otherwise
 	 */
-	private function _pushSegment(RequestDescription $request, $segmentName, ResourceSetWrapper &$resourceSetWrapper)
+	private function _pushSegment($request, $segmentName, ResourceSetWrapper &$resourceSetWrapper)
 	{
 		$rootProjectionNode = $request->getRootProjectionNode();
 		if (!is_null($rootProjectionNode)
