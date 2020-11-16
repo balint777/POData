@@ -311,8 +311,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $entry->editLink = $relativeUri;
             $entry->type = $actualResourceType->getFullName();
 
-            $entry->customProperties = new ODataPropertyContent();
-
             $this->_writeCustomProperties(
                 $entryObject,
                 $entry->customProperties
@@ -362,6 +360,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $feed->selfLink->title = $title;
         $feed->selfLink->url = $relativeUri;
 
+        $this->_writeCustomFeedProperties($feed);
+
         if (empty($entryObjects)) {
             //TODO // ATOM specification: if a feed contains no entries,
             //then the feed should have at least one Author tag
@@ -388,9 +388,21 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         foreach ($properties as $name => $value) {
             $odataProperty = new ODataProperty();
             $odataProperty->name = $name;
-            $odataProperty->typeName = 'Edm.String';
-            $odataProperty->value = json_encode($value);
+            $odataProperty->value = $value;
             $odataPropertyContent->properties[] = $odataProperty;
+        }
+    }
+
+    private function _writeCustomFeedProperties(ODataFeed &$feed)
+    {
+        $properties = $this->service->getQueryProvider()->getCustomFeedProperties();
+
+        //First write out primitve types
+        foreach ($properties as $name => $value) {
+            $odataProperty = new ODataProperty();
+            $odataProperty->name = $name;
+            $odataProperty->value = $value;
+            $feed->customProperties->properties[] = $odataProperty;
         }
     }
 

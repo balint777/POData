@@ -43,9 +43,8 @@ class ODataEntry
      * Instance to hold entity properties.
      * Properties corresponding to "m:properties" under content element
      * in the case of Non-MLE. For MLE "m:properties" is direct child of entry
-     * @var ODataPropertyContent
      */
-    public $propertyContent;
+    public ODataPropertyContent $propertyContent;
     /**
      *
      * Collection of entry media links (Named Stream Links)
@@ -86,9 +85,8 @@ class ODataEntry
 
     /**
      * Array of custom properties to serialize in key => value format.
-     * @var ODataPropertyContent
      */
-    public $customProperties = null;
+    public ODataPropertyContent $customProperties;
 
     public function __construct()
     {

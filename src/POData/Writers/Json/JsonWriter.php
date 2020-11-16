@@ -194,7 +194,11 @@ class JsonWriter
 
 
             default:
-                $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
+                if (is_string($value)) {
+                    $this->_writeCore($this->_quoteJScriptString($value), /* quotes */ true);
+                } else {
+                    $this->_writeCore(json_encode($value), false);
+                }
         }
 
         return $this;
@@ -209,7 +213,7 @@ class JsonWriter
      *
      * @return string
      */
-    private function _quoteJScriptString($string)
+    private function _quoteJScriptString(string $string) : string
     {
         // Escape ( " \ / \n \r \t \b \f) characters with a backslash.
         $search  = array('\\', "\n", "\t", "\r", "\b", "\f", '"');
@@ -228,7 +232,7 @@ class JsonWriter
      *
      * @return void
      */
-    private function _writeCore($text, $quotes)
+    private function _writeCore(string $text, bool $quotes)
     {
         if (count($this->_scopes) != 0) {
             $currentScope = end($this->_scopes);
