@@ -70,6 +70,10 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $this->request->getRequestUrl()->getUrlAsString(),
             $this->request->getContainerName()
         );
+
+        $toplevel_properties = $this->_writeCustomTopLevelProperties();
+        array_push($entry->customProperties->properties,...$toplevel_properties);
+
         $this->popSegment($needPop);
         return $entry;
     }
@@ -107,6 +111,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         if ($this->request->queryType == QueryType::ENTITIES_WITH_COUNT) {
             $feed->rowCount = $this->request->getCountValue();
         }
+
+        $toplevel_properties =  $this->_writeCustomTopLevelProperties();
+        array_push($feed->customProperties->properties,...$toplevel_properties);
 
         $needPop = $this->pushSegmentForRoot();
         $targetResourceType = $this->request->getTargetResourceType();
@@ -360,8 +367,6 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         $feed->selfLink->title = $title;
         $feed->selfLink->url = $relativeUri;
 
-        $this->_writeCustomFeedProperties($feed);
-
         if (empty($entryObjects)) {
             //TODO // ATOM specification: if a feed contains no entries,
             //then the feed should have at least one Author tag
@@ -393,8 +398,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         }
     }
 
-    private function _writeCustomFeedProperties(ODataFeed &$feed)
+    private function _writeCustomTopLevelProperties()
     {
+        $odataProperties= [];
         $properties = $this->service->getQueryProvider()->getCustomFeedProperties();
 
         //First write out primitve types
@@ -402,8 +408,9 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataProperty = new ODataProperty();
             $odataProperty->name = $name;
             $odataProperty->value = $value;
-            $feed->customProperties->properties[] = $odataProperty;
+            $odataProperties[] = $odataProperty;
         }
+        return $odataProperties;
     }
 
     /**
