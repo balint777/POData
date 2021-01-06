@@ -5,6 +5,8 @@ namespace UnitTests\POData\Facets\NorthWind1;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
@@ -50,12 +52,14 @@ class NorthWindQueryProvider implements IQueryProvider
 	 * @return QueryResult
 	 */
 	public function getResourceSet(
-		$queryType,
+		string $queryType,
 		ResourceSet $resourceSet,
-		$filter = null,
-		$orderBy = null,
-		$top = null,
-		$skipToken = null
+		FilterInfo $filter = null,
+		InternalOrderByInfo $orderBy = null,
+		int $top = null,
+		int $skip = null,
+		SkipTokenInfo $skipToken = null,
+		array $expansion = []
 
 	)
 	{
