@@ -18,6 +18,7 @@ use POData\Providers\Metadata\IMetadataProvider;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Common\InvalidOperationException;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
@@ -663,7 +664,7 @@ class ProvidersWrapper
      *
      * @return QueryResult
      */
-    public function getResourceSet($queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip, $skiptoken = null, $expansion = null)
+    public function getResourceSet(string $queryType, ResourceSet $resourceSet, FilterInfo $filterInfo = null, InternalOrderByInfo $orderBy = null, int $top = null, int $skip = null, SkipTokenInfo $skiptoken = null, array $expansion = [])
     {
 
         $queryResult = $this->queryProvider->getResourceSet(

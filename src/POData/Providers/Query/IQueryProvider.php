@@ -8,6 +8,8 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 
 /**
  * Class IQueryProvider
@@ -43,17 +45,19 @@ interface IQueryProvider
      * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
      * @param mixed $orderBy sorted order if we want to get the data in some specific order
      * @param int $top number of records which  need to be skip
-     * @param String $skipToken value indicating what records to skip
+     * @param string $skipToken value indicating what records to skip
      *
      * @return QueryResult
      */
     public function getResourceSet(
-        $queryType,
+        string $queryType,
         ResourceSet $resourceSet,
-        $filterInfo = null,
-        $orderBy = null,
-        $top = null,
-        $skipToken = null
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
+        array $expansion = []
     );
 
 
