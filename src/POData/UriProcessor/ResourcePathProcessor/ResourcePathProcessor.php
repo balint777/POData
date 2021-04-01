@@ -119,9 +119,10 @@ class ResourcePathProcessor
         // $uriProcessor = UriProcessor::process($this);
         foreach ($request->getParts() as &$part) {
 
+            $lambda($part);
+            
             $uriProcessor = UriProcessor::processPart($service, $part);
 
-            $lambda($part);
         }
 
         $lambda($request);
