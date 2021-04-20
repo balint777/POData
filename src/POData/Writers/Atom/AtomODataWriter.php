@@ -422,6 +422,7 @@ class AtomODataWriter implements IODataWriter
     protected function beforeWriteValue($value, $type = null)
     {
         switch ($type) {
+            case 'Edm.Date':
             case 'Edm.DateTime':
                 $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
                 $result = $dateTime->format('Y-m-d\TH:i:s');

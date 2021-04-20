@@ -6,6 +6,7 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\Byte;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\DateTimeTz;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Guid;
@@ -847,9 +848,23 @@ class ResourceType
                     'Byte', 'Edm'
                 );
                 break;
+            case EdmPrimitiveType::DATE:
+                return new ResourceType(
+                    new DateTime(),
+                    ResourceTypeKind::PRIMITIVE,
+                    'Date', 'Edm'
+                );
+                break;
             case EdmPrimitiveType::DATETIME:
                 return new ResourceType(
                     new DateTime(),
+                    ResourceTypeKind::PRIMITIVE,
+                    'DateTime', 'Edm'
+                );
+                break;
+            case EdmPrimitiveType::DATETIMETZ:
+                return new ResourceType(
+                    new DateTimeTz(),
                     ResourceTypeKind::PRIMITIVE,
                     'DateTime', 'Edm'
                 );

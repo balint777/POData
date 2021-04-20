@@ -187,6 +187,7 @@ class JsonLightODataWriter extends JsonODataV2Writer
             //Note this also excludes Complex types
 
             case "Edm.Decimal":
+            case "Edm.Date":
             case "Edm.DateTime":
                 $this->_writer
                     ->writeName($property->name . ODataConstants::JSON_LIGHT_METADATA_PROPERTY_TYPE_SUFFIX_STRING)

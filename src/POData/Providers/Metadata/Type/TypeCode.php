@@ -29,4 +29,6 @@ class TypeCode
     const TIME       = 19;
     const TIMESPAN   = 20;
     const ARRAY      = 21;
+    const DATETIMETZ = 22;
+    const DATE       = 23;
 }

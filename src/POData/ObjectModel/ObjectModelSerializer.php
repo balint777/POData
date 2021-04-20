@@ -16,8 +16,11 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\Type\Boolean;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\DateTimeTz;
+use POData\Providers\Metadata\Type\Date;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use DateTimeZone;
 use ArrayAccess;
 
 /**
@@ -896,6 +899,11 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $stringValue = ($primitiveValue === true) ? 'true' : 'false';
         } else if ($type instanceof Binary) {
             $stringValue = base64_encode($primitiveValue);
+        /*} else if (($type instanceof DateTimeTz) && ($primitiveValue instanceof \DateTime || $primitiveValue instanceof \DateTimeImmutable)) {
+            $stringValue = $primitiveValue->format(\DateTime::ATOM);*/
+        } else if (($type instanceof Date) && ($primitiveValue instanceof \DateTime || $primitiveValue instanceof \DateTimeImmutable)) {
+            $str_without_timezone = $primitiveValue->format('Y-m-d H:i:s');
+            $stringValue = (new \DateTime($str_without_timezone, new DateTimeZone('UTC')))->format(\DateTime::ATOM);
         } else if (($type instanceof DateTime || $type instanceof StringType) && ($primitiveValue instanceof \DateTime || $primitiveValue instanceof \DateTimeImmutable)) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } else if ($type instanceof StringType && $primitiveValue instanceof \DateInterval) {
