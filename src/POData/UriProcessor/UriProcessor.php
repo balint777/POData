@@ -662,20 +662,24 @@ class UriProcessor
 		$expandedProjectionNodes = $this->_getExpandedProjectionNodes($request);
 		foreach ($expandedProjectionNodes as $expandedProjectionNode) {
 			$isCollection = $expandedProjectionNode->getResourceProperty()->getKind() == ResourcePropertyKind::RESOURCESET_REFERENCE;
-			$expandedPropertyName = $expandedProjectionNode->getResourceProperty()->getName();
+			$projectedProperty = $expandedProjectionNode->getResourceProperty();
+			$expandedPropertyName = $projectedProperty->getName();
+			$currentResourceSet = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
+			$currentResourceSetType = $currentResourceSet->getResourceType()->getInstanceType();
+			$expandedPropertyReflection = $currentResourceSetType->getProperty($expandedPropertyName);
+			$expandedPropertyReflection->setAccessible(true);
+			$resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
+
 			if (is_iterable($result)) {
 				foreach ($result as $entry) {
 					// Check for null entry
 					if ($isCollection) {
-						$currentResourceSet = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
-						$resourceSetOfProjectedProperty = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
-						$projectedProperty1 = $expandedProjectionNode->getResourceProperty();
 						$result1 = $this->providers->getRelatedResourceSet(
 							QueryType::ENTITIES, //it's always entities for an expansion
 							$currentResourceSet,
 							$entry,
 							$resourceSetOfProjectedProperty,
-							$projectedProperty1,
+							$projectedProperty,
 							null, // $filter
 							null, // $orderby
 							null, // $top
@@ -693,7 +697,9 @@ class UriProcessor
 								}
 							}*/
 
-							$entry->$expandedPropertyName = $result1;
+							$expandedPropertyReflection->setValue($entry, $result1);
+							// $entry->$expandedPropertyName = $result1;
+
 							$projectedProperty = $expandedProjectionNode->getResourceProperty();
 							$needPop = $this->_pushSegmentForNavigationProperty(
 								$request,
@@ -702,19 +708,19 @@ class UriProcessor
 							$this->_executeExpansion($request, $result1);
 							$this->_popSegment($needPop);
 						} else {
-							$entry->$expandedPropertyName = array();
+							$expandedPropertyReflection->setValue($entry, array());
 						}
 					} else {
-						$currentResourceSet1 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
-						$resourceSetOfProjectedProperty1 = $expandedProjectionNode->getResourceSetWrapper()->getResourceSet();
-						$projectedProperty2 = $expandedProjectionNode->getResourceProperty();
 						$result1 = $this->providers->getRelatedResourceReference(
-							$currentResourceSet1,
+							$currentResourceSet,
 							$entry,
-							$resourceSetOfProjectedProperty1,
-							$projectedProperty2
+							$resourceSetOfProjectedProperty,
+							$projectedProperty
 						);
-						$entry->$expandedPropertyName = $result1;
+
+						$expandedPropertyReflection->setValue($entry, $result1);
+						// $entry->$expandedPropertyName = $result1;
+
 						if (!is_null($result1)) {
 							$projectedProperty3 = $expandedProjectionNode->getResourceProperty();
 							$needPop = $this->_pushSegmentForNavigationProperty(
