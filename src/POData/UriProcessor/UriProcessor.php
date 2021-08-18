@@ -210,7 +210,8 @@ class UriProcessor
 			}
 
 			$expand = $this->_getExpandedProjectionNodes($request);
-			$result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data, $expand);
+			$filter = $request->getFilterInfo();
+			$result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data, $filter, $expand);
 
 			$segment->setSingleResult(true);
 			$segment->setResult($result);

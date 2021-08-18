@@ -716,12 +716,14 @@ class ProvidersWrapper
         ResourceSet $resourceSet,
         KeyDescriptor $keyDescriptor,
         $data,
+        $filter,
         $expand
     ) {
         $queryResult = $this->queryProvider->putResource(
             $resourceSet,
             $keyDescriptor,
             $data,
+            $filter,
             $expand
         );
 
