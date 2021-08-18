@@ -13,6 +13,7 @@ use POData\Providers\Metadata\Type\Single;
 use POData\Providers\Metadata\Type\Double;
 use POData\Providers\Metadata\Type\Decimal;
 use POData\Providers\Metadata\Type\DateTime;
+use POData\Providers\Metadata\Type\DateTimeTz;
 use POData\Providers\Metadata\Type\Int32;
 use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\ArrayType;
@@ -398,6 +399,14 @@ class FunctionDescription
                 new FunctionDescription(
                     'F', new DateTime(),
                     array(new DateTime(), new DateTime())
+                ),
+                new FunctionDescription(
+                    'F', new DateTimeTz(),
+                    array(new DateTimeTz(), new DateTimeTz())
+                ),
+                new FunctionDescription(
+                    'F', new DateTimeTz(),
+                    array(new DateTimeTz(), new DateTime())
                 ),
                 new FunctionDescription(
                     'F', new Guid(),
