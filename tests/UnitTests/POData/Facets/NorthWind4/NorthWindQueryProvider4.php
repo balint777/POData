@@ -55,12 +55,14 @@ class NorthWindQueryProvider4 implements IQueryProvider
 	 * IE: http://host/EntitySet
 	 *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
 	 *
-	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-	 * @param String $filter filter condition if any need to be apply in the query
-	 * @param mixed $orderBy sorted order if we want to get the data in some specific order
-	 * @param int $top number of records which  need to be skip
-	 * @param String $skipToken value indicating what records to skip
 	 * @param string $queryType indicates if this is a query for a count, entities, or entities with a count
+	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
+	 * @param FilterInfo|null $filterInfo represents the $filter parameter of the OData query. NULL if no $filter specified
+	 * @param mixed $orderby sorted order if we want to get the data in some specific order
+	 * @param int $top number of records which need to be shown
+	 * @param int $skip number of records which need to be skipped
+	 * @param SkipTokenInfo|null $skipToken value indicating what records to skip
+	 * @param ExpandedProjectionNode[]|null $expansion represents the $expand parameter of the OData query
 	 *
 	 * @return QueryResult
 	 */
@@ -70,7 +72,9 @@ class NorthWindQueryProvider4 implements IQueryProvider
 		$filter = null,
 		$orderBy = null,
 		$top = null,
-		$skipToken = null
+		$skip = null,
+		$skipToken = null,
+		$expansion = null
 	)
 	{
 		// TODO: Implement getResourceSet() method.
