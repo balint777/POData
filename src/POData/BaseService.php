@@ -389,7 +389,9 @@ abstract class BaseService implements IRequestHandler, IService
         // (3) service directory - internal resource
         if (!in_array($request->getTargetKind(), [TargetKind::MEDIA_RESOURCE, TargetKind::METADATA, TargetKind::SERVICE_DIRECTORY])) {
 
-            if ($request->needExecution()) $uriProcessor->execute();
+            if ($request->needExecution()) {
+                $uriProcessor->execute();
+            }
 
             $objectModelSerializer = new ObjectModelSerializer($this, $request);
             if (!$request->isSingleResult()) {
@@ -434,22 +436,22 @@ abstract class BaseService implements IRequestHandler, IService
                         }
 
                         $output_stream = '';
-                        foreach($streams as $stream) {
-                            $output_stream.="--{$boundary}\r\n";
+                        foreach ($streams as $stream) {
+                            $output_stream .= "--{$boundary}\r\n";
                             if (!is_null($stream['content_id'])) {
-                                $output_stream.="Content-ID: {$stream['content_id']}\r\n";
+                                $output_stream .= "Content-ID: {$stream['content_id']}\r\n";
                             }
-                            $output_stream.="Content-Type: application/http\r\n";
-                            $output_stream.="Content-Transfer-Encoding: binary\r\n";
-                            $output_stream.="\r\n";
-                            $output_stream.="{$_SERVER['SERVER_PROTOCOL']} {$stream['status']}\r\n";
-                            $output_stream.="Content-Type: {$stream['Content-Type']}\r\n";
-                            $output_stream.="Content-Length: {$stream['length']}\r\n";
-                            $output_stream.="\r\n";
-                            $output_stream.=$stream['body']."\r\n";
-                            $output_stream.="\r\n";
+                            $output_stream .= "Content-Type: application/http\r\n";
+                            $output_stream .= "Content-Transfer-Encoding: binary\r\n";
+                            $output_stream .= "\r\n";
+                            $output_stream .= "{$_SERVER['SERVER_PROTOCOL']} {$stream['status']}\r\n";
+                            $output_stream .= "Content-Type: {$stream['Content-Type']}\r\n";
+                            $output_stream .= "Content-Length: {$stream['length']}\r\n";
+                            $output_stream .= "\r\n";
+                            $output_stream .= $stream['body'] . "\r\n";
+                            $output_stream .= "\r\n";
                         }
-                        $output_stream.="--{$boundary}--\r\n";
+                        $output_stream .= "--{$boundary}--\r\n";
                         $response->setStream($output_stream);
                         $this->_serviceHost->setResponseStatusCode(HttpStatus::CODE_ACCEPTED);
                         $this->_serviceHost->setResponseContentType("multipart/mixed; boundary={$boundary}");
