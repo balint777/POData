@@ -75,7 +75,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         );
 
         $toplevel_properties = $this->_writeCustomTopLevelProperties();
-        array_push($entry->customProperties->properties,...$toplevel_properties);
+        array_push($entry->customProperties->properties, ...$toplevel_properties);
 
         $this->popSegment($needPop);
         return $entry;
@@ -115,8 +115,8 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $feed->rowCount = $this->request->getCountValue();
         }
 
-        $toplevel_properties =  $this->_writeCustomTopLevelProperties();
-        array_push($feed->customProperties->properties,...$toplevel_properties);
+        $toplevel_properties = $this->_writeCustomTopLevelProperties();
+        array_push($feed->customProperties->properties, ...$toplevel_properties);
 
         $needPop = $this->pushSegmentForRoot();
         $targetResourceType = $this->request->getTargetResourceType();
@@ -403,7 +403,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
 
     private function _writeCustomTopLevelProperties()
     {
-        $odataProperties= [];
+        $odataProperties = [];
         $properties = $this->service->getQueryProvider()->getCustomFeedProperties();
 
         //First write out primitve types
@@ -907,7 +907,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
         } else if (($type instanceof DateTime || $type instanceof StringType) && ($primitiveValue instanceof \DateTime || $primitiveValue instanceof \DateTimeImmutable)) {
             $stringValue = $primitiveValue->format(\DateTime::ATOM);
         } else if ($type instanceof StringType && $primitiveValue instanceof \DateInterval) {
-            $stringValue = (($primitiveValue->d * 86400) + ($primitiveValue->h * 3600) + ($primitiveValue->i * 60) + $primitiveValue->s) * 1000;
+            $stringValue = (($primitiveValue->d*86400) + ($primitiveValue->h*3600) + ($primitiveValue->i*60) + $primitiveValue->s)*1000;
             // $stringValue = intval($primitiveValue->format('%s'))*1000; // Miliszekundumokkáé
         } else if ($type instanceof StringType) {
             $stringValue = mb_convert_encoding($primitiveValue, 'UTF-8');
