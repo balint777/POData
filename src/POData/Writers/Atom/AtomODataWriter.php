@@ -49,7 +49,7 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'utf-8', 'yes');
-        $this->xmlWriter->setIndent(4);
+        $this->xmlWriter->setIndent(true);
     }
 
     /**
@@ -624,7 +624,7 @@ class AtomODataWriter implements IODataWriter
         $xmlWriter = new \XMLWriter();
         $xmlWriter->openMemory();
         $xmlWriter->startDocument('1.0', 'utf-8', 'yes');
-        $xmlWriter->setIndent(4);
+        $xmlWriter->setIndent(true);
 
         $xmlWriter->startElement(ODataConstants::XML_ERROR_ELEMENT_NAME);
         //$xmlWriter->writeAttributeNs(
@@ -639,7 +639,7 @@ class AtomODataWriter implements IODataWriter
         );
         $xmlWriter->endAttribute();
         $xmlWriter->startElement(ODataConstants::XML_ERROR_CODE_ELEMENT_NAME);
-        if ($exception->getCode() != null) {
+        if ($exception->getCode() !== null) {
             $xmlWriter->text($exception->getCode());
         }
         $xmlWriter->endElement();
@@ -816,6 +816,6 @@ class AtomODataWriter implements IODataWriter
         $this->xmlWriter = new \XMLWriter();
         $this->xmlWriter->openMemory();
         $this->xmlWriter->startDocument('1.0', 'utf-8', 'yes');
-        $this->xmlWriter->setIndent(4);
+        $this->xmlWriter->setIndent(true);
     }
 }
