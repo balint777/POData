@@ -21,6 +21,8 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
 
 /**
  * Class ProvidersWrapper
@@ -654,17 +656,25 @@ class ProvidersWrapper
      *
      * @param string $queryType indicates if this is a query for a count, entities, or entities with a count
      * @param ResourceSet $resourceSet The entity set containing the entities that need to be fetched
-     * @param FilterInfo $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
-     * @param InternalOrderByInfo $orderBy The orderBy information
-     * @param int $top The top count
-     * @param int $skip The skip count
-     * @param \POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo $skiptoken
-     * @param \POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode[] $expansion
+     * @param FilterInfo|null $filterInfo represents the $filter parameter of the OData query.  NULL if no $filter specified
+     * @param InternalOrderByInfo|null $orderBy The orderBy information
+     * @param int|null $top The top count
+     * @param int|null $skip The skip count
+     * @param SkipTokenInfo|null $skiptoken
+     * @param ExpandedProjectionNode[] $expansion
      *
      * @return QueryResult
      */
-    public function getResourceSet($queryType, ResourceSet $resourceSet, $filterInfo, $orderBy, $top, $skip, $skiptoken = null, $expansion = null)
-    {
+    public function getResourceSet(
+        string $queryType,
+        ResourceSet $resourceSet,
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skiptoken = null,
+        array $expansion = []
+    ) {
 
         $queryResult = $this->queryProvider->getResourceSet(
             $queryType,
