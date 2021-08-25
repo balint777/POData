@@ -769,9 +769,9 @@ abstract class BaseService implements IRequestHandler, IService
         if (is_null($ifMatch) && is_null($ifNoneMatch)) {
             // No request eTag header, we need to write the response
             // and eTag header
-        } else if (strcmp($ifMatch, '*') == 0) {
+        } else if (is_string($ifMatch) && strcmp($ifMatch, '*') == 0) {
             // If-Match:* => we need to write the response and eTag header
-        } else if (strcmp($ifNoneMatch, '*') == 0) {
+        } else if (is_string($ifNoneMatch) && strcmp($ifNoneMatch, '*') == 0) {
             // if-None-Match:* => Do not write the response (304 not modified),
             // but write eTag header
             $needToSerializeResponse = false;
@@ -792,7 +792,7 @@ abstract class BaseService implements IRequestHandler, IService
                         Messages::eTagValueDoesNotMatch()
                     );
                 }
-            } else if (strcmp($eTag, $ifNoneMatch) == 0) {
+            } else if (is_string($ifNoneMatch) && strcmp($eTag, $ifNoneMatch) == 0) {
                 //304 not modified, but in write eTag header
                 $needToSerializeResponse = false;
             }

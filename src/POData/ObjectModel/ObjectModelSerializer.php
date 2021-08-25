@@ -711,7 +711,12 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
 
 
         $odataProperty->name = $resourceProperty->getName();
-        $odataProperty->typeName = $resourceProperty->getInstanceType()->getFullTypeName();
+        $instanceType = $resourceProperty->getInstanceType();
+        if ($instanceType instanceof ReflectionClass) {
+            $odataProperty->typeName = $instanceType->getName();
+        } else {
+            $odataProperty->typeName = $instanceType->getFullTypeName();
+        }
         if (is_null($primitiveValue)) {
             $odataProperty->value = null;
         } else {

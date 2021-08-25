@@ -2,6 +2,7 @@
 
 namespace POData\Providers\Query;
 
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
@@ -42,23 +43,23 @@ interface IQueryProvider
      * @param string $queryType indicates if this is a query for a count, entities, or entities with a count
      * @param ResourceSet $resourceSet The entity set containing the entities to fetch
      * @param FilterInfo|null $filterInfo represents the $filter parameter of the OData query. NULL if no $filter specified
-     * @param mixed $orderby sorted order if we want to get the data in some specific order
-     * @param int $top number of records which need to be shown
-     * @param int $skip number of records which need to be skipped
+     * @param InternalOrderByInfo|null $orderby sorted order if we want to get the data in some specific order
+     * @param int|null $top number of records which need to be shown
+     * @param int|null $skip number of records which need to be skipped
      * @param SkipTokenInfo|null $skipToken value indicating what records to skip
-     * @param ExpandedProjectionNode[]|null $expansion represents the $expand parameter of the OData query
+     * @param ExpandedProjectionNode[] $expansion represents the $expand parameter of the OData query
      *
      * @return QueryResult
      */
     public function getResourceSet(
-        $queryType,
+        string $queryType,
         ResourceSet $resourceSet,
-        $filterInfo = null,
-        $orderBy = null,
-        $top = null,
-        $skip = null,
-        $skipToken = null,
-        $expansion = null
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
+        array $expansion = []
     );
 
 

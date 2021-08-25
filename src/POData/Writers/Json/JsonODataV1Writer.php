@@ -470,7 +470,7 @@ class JsonODataV1Writer implements IODataWriter
             ->startObjectScope();
 
         // "code"
-        if ($exception->getCode() != null) {
+        if ($exception->getCode() !== null) {
             $writer
                 ->writeName(ODataConstants::JSON_ERROR_CODE)
                 ->writeValue($exception->getCode());

@@ -2,6 +2,8 @@
 
 namespace POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions;
 
+use POData\Providers\Metadata\Type\IType;
+
 /**
  * Class ConstantExpression
  * @package POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions
@@ -10,17 +12,17 @@ class ConstantExpression extends AbstractExpression
 {
     /**
      * The value hold by the expression
-     * @var string
+     * @var mixed
      */
     protected $value;
 
     /**
      * Create new inatnce of ConstantExpression.
      * 
-     * @param string $value The constant value
-     * @param \POData\Providers\Metadata\Type\IType  $type  The expression node type
+     * @param mixed $value The constant value
+     * @param IType $type The expression node type
      */
-    public function __construct($value, $type)
+    public function __construct($value, IType $type)
     {
         $this->value = $value;
         $this->nodeType = ExpressionType::CONSTANT;
@@ -30,7 +32,7 @@ class ConstantExpression extends AbstractExpression
     /**
      * Get the value associated with the expression
      * 
-     * @return string
+     * @return mixed
      */
     public function getValue()
     {
