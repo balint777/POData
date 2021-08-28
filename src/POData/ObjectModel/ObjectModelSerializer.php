@@ -22,6 +22,7 @@ use POData\Common\ODataException;
 use POData\Common\Messages;
 use DateTimeZone;
 use ArrayAccess;
+use ReflectionClass;
 
 /**
  * Class ObjectModelSerializer
