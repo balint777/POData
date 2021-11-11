@@ -105,7 +105,7 @@ class ServiceHostTest extends BaseUnitTestCase {
     {
         $actual = ServiceHost::translateFormatToMime(Version::v3(), ODataConstants::FORMAT_JSON);
 
-        $expected = "application/json;odata=minimal;q=1.0";
+        $expected = "application/json;odata=minimalmetadata;q=1.0";
 
         $this->assertEquals($expected, $actual);
     }

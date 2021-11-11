@@ -2,11 +2,12 @@
 
 namespace POData\ObjectModel;
 
-use POData\Common\ODataConstants;
+use ArrayAccess;
+use DateTimeZone;
 use POData\Common\InvalidOperationException;
-use POData\Providers\Query\QueryType;
-use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
-use POData\UriProcessor\RequestDescription;
+use POData\Common\Messages;
+use POData\Common\ODataException;
+use POData\Common\ODataConstants;
 use POData\IService;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourceTypeKind;
@@ -18,10 +19,10 @@ use POData\Providers\Metadata\Type\StringType;
 use POData\Providers\Metadata\Type\DateTime;
 use POData\Providers\Metadata\Type\DateTimeTz;
 use POData\Providers\Metadata\Type\Date;
-use POData\Common\ODataException;
-use POData\Common\Messages;
-use DateTimeZone;
-use ArrayAccess;
+use POData\Providers\Query\QueryType;
+use POData\UriProcessor\ResourcePathProcessor\SegmentParser\TargetSource;
+use POData\UriProcessor\RequestDescription;
+use POData\Writers\Json\JsonLightMetadataLevel;
 
 /**
  * Class ObjectModelSerializer
@@ -321,10 +322,24 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $entry->editLink = $relativeUri;
             $entry->type = $actualResourceType->getFullName();
 
-            $this->_writeCustomProperties(
-                $entryObject,
-                $entry->customProperties
-            );
+            // Do not calculate the custom properties if the metadata level is none
+            $responseContentType = $this->service->getResponseContentType($this->request, $this->request->getUriProcessor(), $this->service);
+            $matches = [];
+            preg_match('/[^;]+(?<accept_ext>;[^;]+)*/', $responseContentType, $matches);
+            $accept_ext = $matches['accept_ext'];
+            $accept_extensions_tmp = explode(';', trim($accept_ext, ' \n\r\t\v\0;'));
+            $accept_extensions = [];
+            foreach($accept_extensions_tmp as $accept_extension) {
+                $parts = explode('=', $accept_extension);
+                $accept_extensions[$parts[0]] = $accept_extension;
+            }
+
+            if ($accept_extensions['odata'] != JsonLightMetadataLevel::NONE) {
+                $this->_writeCustomProperties(
+                    $entryObject,
+                    $entry->customProperties
+                );
+            }
 
             $odataPropertyContent = new ODataPropertyContent();
             $this->_writeObjectProperties(

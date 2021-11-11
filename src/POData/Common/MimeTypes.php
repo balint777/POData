@@ -13,7 +13,7 @@ class MimeTypes
     //(http://www.iana.org/assignments/media-types/application/).
     const MIME_APPLICATION_JSON = 'application/json';
 
-    const MIME_APPLICATION_JSON_MINIMAL_META = 'application/json;odata=minimal';
+    const MIME_APPLICATION_JSON_MINIMAL_META = 'application/json;odata=minimalmetadata';
 
     const MIME_APPLICATION_JSON_NO_META = 'application/json;odata=nometadata';
 
