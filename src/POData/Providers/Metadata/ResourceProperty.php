@@ -5,7 +5,7 @@ namespace POData\Providers\Metadata;
 use POData\Common\Messages;
 use POData\Providers\Metadata\Type\IType;
 use InvalidArgumentException;
-
+use ReflectionClass;
 
 class ResourceProperty
 {
