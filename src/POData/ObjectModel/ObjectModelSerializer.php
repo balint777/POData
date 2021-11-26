@@ -328,7 +328,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $responseContentType = $this->service->getResponseContentType($this->request, $this->request->getUriProcessor(), $this->service);
             $matches = [];
             preg_match('/[^;]+(?<accept_ext>;[^;]+)*/', $responseContentType, $matches);
-            $accept_ext = $matches['accept_ext'];
+            $accept_ext = isset($matches['accept_ext']) ? $matches['accept_ext'] : '';
             $accept_extensions_tmp = explode(';', trim($accept_ext, ' \n\r\t\v\0;'));
             $accept_extensions = [];
             foreach($accept_extensions_tmp as $accept_extension) {
@@ -336,7 +336,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
                 $accept_extensions[$parts[0]] = $accept_extension;
             }
 
-            if ($accept_extensions['odata'] != JsonLightMetadataLevel::NONE) {
+            if (!isset($accept_extensions['odata']) || $accept_extensions['odata'] != JsonLightMetadataLevel::NONE) {
                 $this->_writeCustomProperties(
                     $entryObject,
                     $entry->customProperties
