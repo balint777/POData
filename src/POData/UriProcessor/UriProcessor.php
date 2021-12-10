@@ -478,7 +478,7 @@ class UriProcessor
                 $segment->getTargetResourceSetWrapper(),
                 $request->getFilterInfo(),
                 $request->getInternalOrderByInfo(),
-                $request->getTopCount(),
+                $request->getTopOptionCount() ?? $request->getTopCount(),
                 $request->getSkipCount(),
                 $internalskiptokentinfo ? $internalskiptokentinfo->getSkipTokenInfo() : null,
                 $this->_getExpandedProjectionNodes($request)

@@ -188,14 +188,14 @@ class JsonODataV1Writer implements IODataWriter
     protected function writeEntryMetadata(ODataEntry $entry)
     {
         // __metadata : { uri: "Uri", type: "Type" [Media Link Properties] }
-        if ($entry->id != null || $entry->type != null || $entry->eTag != null) {
+        if ($entry->id !== null || $entry->type != null || $entry->eTag != null) {
             // "__metadata"
             $this->_writer
                 ->writeName(ODataConstants::JSON_METADATA_STRING)
                 ->startObjectScope();
 
             // Write uri value only for entity types
-            if ($entry->id != null) {
+            if ($entry->id !== null) {
                 $this->_writer
                     ->writeName($this->urlKey)
                     ->writeValue($entry->id);

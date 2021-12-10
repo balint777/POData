@@ -132,7 +132,7 @@ class JsonODataV2Writer extends JsonODataV1Writer
      */
     protected function writeRowCount($count)
     {
-        if ($count != null) {
+        if ($count !== null) {
             $this->_writer->writeName($this->rowCountName);
             $this->_writer->writeValue($count);
         }
