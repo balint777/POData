@@ -2,11 +2,14 @@
 
 namespace POData\Common;
 
+use Exception;
+use Throwable;
+
 /**
  * Class ODataException
  * @package POData\Common
  */
-class ODataException extends \Exception
+class ODataException extends Exception
 {
     /**
      * The error code
@@ -31,11 +34,11 @@ class ODataException extends \Exception
      *
      * @return ODataException
      */
-    public function __construct($message, $statusCode, $errorCode = null)
+    public function __construct(string $message, int $statusCode, int $errorCode = 0, ?Throwable $previous = null)
     {
+        parent::__construct($message, $errorCode, $previous);
         $this->_errorCode = $errorCode;
         $this->_statusCode = $statusCode;
-        parent::__construct($message, $errorCode);
     }
 
     /**

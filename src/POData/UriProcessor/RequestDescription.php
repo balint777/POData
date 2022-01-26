@@ -330,7 +330,7 @@ class RequestDescription
     const STATE_HEADERS = 'STATE_HEADERS';
     const STATE_BODY = 'STATE_BODY';
 
-    private function _processData($string, $dataType)
+    private function _processData(string $string, string $dataType)
     {
         if ($dataType === MimeTypes::MIME_APPLICATION_XML) {
             $data = Xml2Array::createArray($string);
@@ -408,7 +408,7 @@ class RequestDescription
                     true
                 );
 
-                $contentType = $part_headers['Content-Type'] ?? null;
+                $contentType = $part_headers['Content-Type'] ?? '';
 
                 // you'll have to var_dump $block to understand this and maybe replace \n or \r with a visibile char
                 $request = new RequestDescription(
@@ -434,7 +434,7 @@ class RequestDescription
      * Define request data from body
      * @param string $dataType
      */
-    private function _readData($dataType) {
+    private function _readData(string $dataType) {
         $this->_data = null;
         $string = file_get_contents('php://input');
         $this->_processData($string, $dataType);
@@ -443,7 +443,7 @@ class RequestDescription
     /**
      * Get request data from body
      */
-    private function _setBody($string, $dataType) {
+    private function _setBody(string $string, string $dataType) {
         $this->_data = null;
         $this->_processData($string, $dataType);
     }

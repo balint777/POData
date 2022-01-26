@@ -20,15 +20,14 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.0",
-        "illuminate/http": "^5.1"
+        "php": ">=5.3.0"
     },
     "require-dev": {
         "balihoo/phockito-unit" : "1.0.0",
         "hafriedlander/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "php-coveralls/php-coveralls": "2.*",
-        "phpunit/phpunit": "7.*"
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-0": {

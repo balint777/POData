@@ -7,7 +7,6 @@ namespace UnitTests\POData\Facets;
  * BaseService and UriProcessor.
  */
 
-use Illuminate\Http\Request;
 use POData\Common\ODataConstants;
 use POData\OperationContext\ServiceHost;
 use POData\HttpProcessUtility;
@@ -47,7 +46,7 @@ class ServiceHostTestFake extends ServiceHost
         //print_r($_SERVER); 
         parse_str($hostInfo['QueryString'], $_GET);
         parse_str($hostInfo['QueryString'], $_REQUEST);
-        parent::__construct(null, new Request($_GET, $_REQUEST, array(), array(), $_FILES, $_SERVER, null));
+        parent::__construct(null);
 
         if (array_key_exists('AbsoluteServiceUri', $this->_hostInfo)) {
             $this->setServiceUri($this->_hostInfo['AbsoluteServiceUri']->getUrlAsString());

@@ -34,7 +34,6 @@ use POData\Writers\Json\JsonODataV2Writer;
 use POData\Writers\ODataWriterRegistry;
 use POData\Writers\ResponseWriter;
 use POData\OperationContext\IOperationContext;
-use POData\OperationContext\Web\Illuminate\IlluminateOperationContext;
 use POData\Common\Url;
 
 
