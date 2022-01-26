@@ -364,7 +364,7 @@ class RequestDescription
                 $requestUrl = null;
 
                 $reader_state = RequestDescription::STATE_PART_START;
-                $body = null;
+                $body = '';
                 $headers = [];
                 $part_headers = [];
 
