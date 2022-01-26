@@ -396,7 +396,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             }
 
             if ($this->needNextPageLink(count($entryObjects))) {
-                $end = method_exists($entryObjects, 'last') ? $entryObjects->last() : end($entryObjects);
+                $end = is_array($entryObjects) ? end($entryObjects) : (method_exists($entryObjects, 'last') ? $entryObjects->last() : null);
                 $feed->nextPageLink = $this->getNextLinkUri($end, $absoluteUri);
             }
         }

@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class BaseUnitTestCase extends TestCase
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		Phockito::include_hamcrest();
 		$this->generateMocksAndSpies();
