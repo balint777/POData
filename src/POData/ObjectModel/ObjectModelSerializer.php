@@ -346,7 +346,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             $odataPropertyContent = new ODataPropertyContent();
             $this->_writeObjectProperties(
                 $entryObject,
-                $actualResourceType,
+                $resourceType,
                 $absoluteUri,
                 $relativeUri,
                 $entry,
