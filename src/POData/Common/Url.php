@@ -44,7 +44,7 @@ class Url
             }
         }
 
-        $this->_parts = parse_url($url);
+        $this->_parts = parse_url(preg_replace('(\t|\n)', '', $url));
         if ($this->_parts === false) {
             throw new UrlFormatException(Messages::urlMalformedUrl($url));
         }
