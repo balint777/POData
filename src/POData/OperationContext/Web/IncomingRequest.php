@@ -17,37 +17,37 @@ class IncomingRequest implements IHTTPRequest
 {
     /**
      * The request headers
-     * 
+     *
      * @var array
      */
     private $_headers;
-    
+
     /**
      * The incoming url in raw format
-     * 
+     *
      * @var string
      */
     private $_rawUrl = null;
-    
+
 
     /**
      * The request method (GET, POST, PUT, DELETE or MERGE)
-     * 
+     *
      * @var string HttpVerb
      */
     private $_method;
 
     /**
      * The query options as key value.
-     * 
+     *
      * @var array(string, string);
      */
     private $_queryOptions;
 
     /**
-     * A collection that represents mapping between query 
+     * A collection that represents mapping between query
      * option and its count.
-     * 
+     *
      * @var array(string, int)
      */
     private $_queryOptionsCount;
@@ -96,7 +96,7 @@ class IncomingRequest implements IHTTPRequest
      * CONTENT_LENGTH
      * We may get user defined customized headers also like
      * HTTP_DATASERVICEVERSION, HTTP_MAXDATASERVICEVERSION
-     * 
+     *
      * @return string[]
      */
     private function getHeaders()
@@ -105,9 +105,9 @@ class IncomingRequest implements IHTTPRequest
             $this->_headers = array();
 
             foreach ($_SERVER as $key => $value) {
-                if ((strpos($key, 'HTTP_') === 0) 
+                if ((strpos($key, 'HTTP_') === 0)
                     || (strpos($key, 'REQUEST_') === 0)
-                    || (strpos($key, 'SERVER_') === 0) 
+                    || (strpos($key, 'SERVER_') === 0)
                     || (strpos($key, 'CONTENT_') === 0)
                 ) {
                     $trimmedValue = trim($value);
@@ -122,9 +122,9 @@ class IncomingRequest implements IHTTPRequest
 
     /**
      * get the raw incoming url
-     * 
+     *
      * @return string RequestURI called by User with the value of QueryString
-     */  
+     */
     public function getRawUrl()
     {
         if (is_null($this->_rawUrl)) {
@@ -135,7 +135,7 @@ class IncomingRequest implements IHTTPRequest
             }
 
             $this->_rawUrl .= "://" . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
-            $this->_rawUrl .= utf8_decode(urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]));
+            $this->_rawUrl .= urldecode($_SERVER[ODataConstants::HTTPREQUEST_URI]);
         }
 
         return $this->_rawUrl;
@@ -143,9 +143,9 @@ class IncomingRequest implements IHTTPRequest
 
     /**
      * get the specific request headers
-     * 
+     *
      * @param string $key The header name
-     * 
+     *
      * @return string|null value of the header, NULL if header is absent.
      */
     public function getRequestHeader($key)
@@ -166,7 +166,7 @@ class IncomingRequest implements IHTTPRequest
     /**
      * Get the QUERY_STRING
      * Note: This method will return empty string if no query string present.
-     * 
+     *
      * @return string $_header[HttpRequestHeaderQueryString]
      */
     private function getQueryString()
@@ -177,10 +177,10 @@ class IncomingRequest implements IHTTPRequest
             return "";
         }
     }
-    
+
     /**
      * Split the QueryString and assigns them as array element in KEY=VALUE
-     * 
+     *
      * @return string[]
      */
     public function getQueryParameters()
@@ -191,7 +191,7 @@ class IncomingRequest implements IHTTPRequest
 
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
-                if (!empty($queryOptionAsString)) {    
+                if (!empty($queryOptionAsString)) {
                     $result = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
@@ -209,12 +209,12 @@ class IncomingRequest implements IHTTPRequest
     }
 
 
-    
+
     /**
      * Get the HTTP method
-     * Value will be set from the value of the HTTP method of the 
+     * Value will be set from the value of the HTTP method of the
      * incoming Web request.
-     * 
+     *
      * @return string $_header[HttpRequestHeaderMethod]
      */
     public function getMethod()
