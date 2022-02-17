@@ -419,6 +419,10 @@ class FunctionDescription
                 new FunctionDescription(
                     'F', new Boolean(),
                     array(new StringType(), new ArrayType())
+                ),
+                new FunctionDescription(
+                    'F', new Boolean(),
+                    array(new Int32(), new ArrayType())
                 )
             )
         );
