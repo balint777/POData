@@ -275,7 +275,7 @@ class QueryProcessor
             );
         }
         $resourceType = $this->request->getTargetResourceType();
-        $expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider();
+        $expressionProvider = $this->service->getProvidersWrapper()->getExpressionProvider($this->request);
         $filterInfo = ExpressionParser2::parseExpression2($filter, $resourceType, $expressionProvider);
         $this->request->setFilterInfo($filterInfo);
 

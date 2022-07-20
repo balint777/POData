@@ -23,6 +23,7 @@ use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\ExpandedProjectionNode;
+use POData\UriProcessor\RequestDescription;
 
 /**
  * Class ProvidersWrapper
@@ -589,9 +590,9 @@ class ProvidersWrapper
      * @return IExpressionProvider Instance of IExpressionProvider implementation.
      *
      */
-    public function getExpressionProvider()
+    public function getExpressionProvider(RequestDescription $request)
     {
-        $expressionProvider = $this->queryProvider->getExpressionProvider();
+        $expressionProvider = $this->queryProvider->getExpressionProvider($request);
         if (is_null($expressionProvider)) {
             throw ODataException::createInternalServerError(Messages::providersWrapperExpressionProviderMustNotBeNullOrEmpty());
         }
@@ -668,6 +669,7 @@ class ProvidersWrapper
     public function getResourceSet(
         string $queryType,
         ResourceSet $resourceSet,
+        RequestDescription $request,
         FilterInfo $filterInfo = null,
         InternalOrderByInfo $orderBy = null,
         int $top = null,
@@ -679,6 +681,7 @@ class ProvidersWrapper
         $queryResult = $this->queryProvider->getResourceSet(
             $queryType,
             $resourceSet,
+            $request,
             $filterInfo,
             $orderBy,
             $top,

@@ -10,6 +10,8 @@ use POData\Providers\Expression\IExpressionProvider;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
+use POData\UriProcessor\RequestDescription;
+
 
 /**
  * Class IQueryProvider
@@ -32,7 +34,7 @@ interface IQueryProvider
      *
      * @return IExpressionProvider
      */
-    public function getExpressionProvider();
+    public function getExpressionProvider(RequestDescription $request);
 
 
     /**
@@ -54,6 +56,7 @@ interface IQueryProvider
     public function getResourceSet(
         string $queryType,
         ResourceSet $resourceSet,
+		RequestDescription $request,
         FilterInfo $filterInfo = null,
         InternalOrderByInfo $orderBy = null,
         int $top = null,
