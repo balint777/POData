@@ -211,7 +211,7 @@ class UriProcessor
 
             $expand = $this->_getExpandedProjectionNodes($request);
             $filter = $request->getFilterInfo();
-            $result = $uriProcessor->providers->putResource($resourceSet, $keyDescriptor, $data, $filter, $expand);
+            $result = $uriProcessor->providers->putResource($resourceSet, $request, $keyDescriptor, $data, $filter, $expand);
 
             $segment->setSingleResult(true);
             $segment->setResult($result);
@@ -719,7 +719,8 @@ class UriProcessor
                             $projectedProperty
                         );
 
-                        $expandedPropertyReflection->setValue($entry, $result1);
+                        if (is_array($entry)) $entry[$expandedPropertyName] = $result1;
+                        else $expandedPropertyReflection->setValue($entry, $result1);
 
                         if (!is_null($result1)) {
                             $projectedProperty3 = $expandedProjectionNode->getResourceProperty();

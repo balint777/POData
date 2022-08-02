@@ -727,6 +727,7 @@ class ProvidersWrapper
      */
     public function putResource(
         ResourceSet $resourceSet,
+        RequestDescription $request,
         KeyDescriptor $keyDescriptor,
         $data,
         $filter,
@@ -734,6 +735,7 @@ class ProvidersWrapper
     ) {
         $queryResult = $this->queryProvider->putResource(
             $resourceSet,
+            $request,
             $keyDescriptor,
             $data,
             $filter,
@@ -896,9 +898,8 @@ class ProvidersWrapper
                     ->getResourceType()
                     ->getInstanceType()
                     ->getName();
-            if (!is_object($entityInstance)
-                || !($entityInstance instanceof $entityName)
-            ) {
+            if (!(is_array($entityInstance) || (is_object($entityInstance) && $entityInstance instanceof $entityName)))
+            {
                 throw ODataException::createInternalServerError(
                     Messages::providersWrapperIDSQPMethodReturnsUnExpectedType(
                         $entityName,
@@ -907,15 +908,18 @@ class ProvidersWrapper
                 );
             }
 
-            foreach ($targetProperty->getResourceType()->getKeyProperties()
-            as $keyName => $resourceProperty) {
+            foreach ($targetProperty->getResourceType()->getKeyProperties() as $keyName => $resourceProperty) {
                 try {
-                    $keyProperty = new \ReflectionProperty(
-                        $entityInstance,
-                        $keyName
-                    );
-                    $keyProperty->setAccessible(true);
-                    $keyValue = $keyProperty->getValue($entityInstance);
+                    if (is_array($entityInstance)) {
+                        $keyValue = $entityInstance[$keyName];
+                    } else {
+                        $keyProperty = new \ReflectionProperty(
+                            $entityInstance,
+                            $keyName
+                        );
+                        $keyProperty->setAccessible(true);
+                        $keyValue = $keyProperty->getValue($entityInstance);
+                    }
                     if (is_null($keyValue)) {
                         throw ODataException::createInternalServerError(
                             Messages::providersWrapperIDSQPMethodReturnsInstanceWithNullKeyProperties('IDSQP::getRelatedResourceReference')

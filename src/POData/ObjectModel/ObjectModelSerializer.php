@@ -294,7 +294,7 @@ class ObjectModelSerializer extends ObjectModelSerializerBase
             //According to atom standard an empty entry must have an Author
             //node.
         } else {
-            $actualResourceType = $this->service->getProvidersWrapper()->resolveResourceTypeByClassname(get_class($entryObject));
+            $actualResourceType = $this->service->getProvidersWrapper()->resolveResourceTypeByClassname($resourceType->getName());
             if ($actualResourceType) {
                 $actualResourceSet = $actualResourceType->getCustomState();
             } else {

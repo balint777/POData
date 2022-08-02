@@ -160,6 +160,8 @@ class ObjectModelSerializerBase
      */
     protected function getPropertyValue($entity, ResourceType $resourceType, ResourceProperty $resourceProperty)
     {
+        if (is_array($entity)) return $entity[$resourceProperty->getName()];
+
         return $entity->{$resourceProperty->getName()};
     }
 
