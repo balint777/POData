@@ -78,6 +78,7 @@ interface IQueryProvider
      */
     public function getResourceFromResourceSet(
         ResourceSet $resourceSet,
+        RequestDescription $request,
         KeyDescriptor $keyDescriptor
     );
 

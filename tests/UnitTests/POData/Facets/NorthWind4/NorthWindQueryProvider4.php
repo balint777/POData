@@ -92,6 +92,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
 	 */
 	public function getResourceFromResourceSet(
 		ResourceSet $resourceSet,
+		RequestDescription $request,
 		KeyDescriptor $keyDescriptor
 	)
 	{

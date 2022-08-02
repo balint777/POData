@@ -252,7 +252,7 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::noDataForThisVerb($requestMethod));
             }
 
-            $result = $uriProcessor->providers->postResource($resourceSet, $data);
+            $result = $uriProcessor->providers->postResource($resourceSet, $request, $data);
 
             $segment->setSingleResult(true);
             $segment->setResult($result);
@@ -459,10 +459,11 @@ class UriProcessor
      * @return void
      *
      */
-    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, $request) {
+    private function handleSegmentTargetsToResourceSet(SegmentDescriptor $segment, RequestDescription $request) {
         if ($segment->isSingleResult()) {
             $entityInstance = $this->providers->getResourceFromResourceSet(
                 $segment->getTargetResourceSetWrapper(),
+                $request,
                 $segment->getKeyDescriptor(),
                 $this->_getExpandedProjectionNodes($request)
             );

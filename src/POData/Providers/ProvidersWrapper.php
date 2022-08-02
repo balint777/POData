@@ -705,9 +705,9 @@ class ProvidersWrapper
      *
      * @return object|null Returns entity instance if found else null
      */
-    public function getResourceFromResourceSet(ResourceSet $resourceSet, KeyDescriptor $keyDescriptor, $expand)
+    public function getResourceFromResourceSet(ResourceSet $resourceSet, RequestDescription $request, KeyDescriptor $keyDescriptor, $expand)
     {
-        $entityInstance = $this->queryProvider->getResourceFromResourceSet($resourceSet, $keyDescriptor, $expand);
+        $entityInstance = $this->queryProvider->getResourceFromResourceSet($resourceSet, $request, $keyDescriptor, $expand);
         $this->_validateEntityInstance(
             $entityInstance,
             $resourceSet,
@@ -754,10 +754,12 @@ class ProvidersWrapper
      */
     public function postResource(
         ResourceSet $resourceSet,
+        RequestDescription $request,
         $data
     ) {
         $queryResult = $this->queryProvider->postResource(
             $resourceSet,
+            $request,
             $data
         );
 
