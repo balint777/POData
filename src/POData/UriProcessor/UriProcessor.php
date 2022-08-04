@@ -289,7 +289,7 @@ class UriProcessor
                 throw ODataException::createBadRequestError(Messages::badRequestInvalidUriForThisVerb($url, $requestMethod));
             }
 
-            $result = $uriProcessor->providers->deleteResource($resourceSet, $keyDescriptor);
+            $result = $uriProcessor->providers->deleteResource($resourceSet, $request, $keyDescriptor);
             $segment->setResult($result);
             return $result;
         });

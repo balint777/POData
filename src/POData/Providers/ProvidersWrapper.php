@@ -776,10 +776,12 @@ class ProvidersWrapper
      */
     public function deleteResource(
         ResourceSet $resourceSet,
+        RequestDescription $request,
         $keyDescriptor
     ) {
         $queryResult = $this->queryProvider->deleteResource(
             $resourceSet,
+            $request,
             $keyDescriptor
         );
 
