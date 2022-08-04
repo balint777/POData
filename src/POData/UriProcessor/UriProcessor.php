@@ -764,7 +764,7 @@ class UriProcessor
                         }
                         */
 
-                        $result->$expandedPropertyName = $result1;
+                        $expandedPropertyReflection->setValue($result, $result1);
                         $projectedProperty7 = $expandedProjectionNode->getResourceProperty();
                         $needPop = $this->_pushSegmentForNavigationProperty(
                             $request,
@@ -773,7 +773,7 @@ class UriProcessor
                         $this->_executeExpansion($request, $result1);
                         $this->_popSegment($needPop);
                     } else {
-                        $result->$expandedPropertyName = array();
+                        $expandedPropertyReflection->setValue($result, array());
                     }
                 } else {
                     $currentResourceSet3 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
@@ -785,7 +785,7 @@ class UriProcessor
                         $resourceSetOfProjectedProperty3,
                         $projectedProperty5
                     );
-                    $result->$expandedPropertyName = $result1;
+                    $expandedPropertyReflection->setValue($result, $result1);
                     if (!is_null($result1)) {
                         $projectedProperty6 = $expandedProjectionNode->getResourceProperty();
                         $needPop = $this->_pushSegmentForNavigationProperty(
