@@ -710,7 +710,7 @@ class UriProcessor
                             $this->_executeExpansion($request, $result1);
                             $this->_popSegment($needPop);
                         } else {
-                            $expandedPropertyReflection->setValue($entry, array());
+                            $expandedPropertyReflection->setValue($entry, $result1);
                         }
                     } else {
                         $result1 = $this->providers->getRelatedResourceReference(
@@ -773,7 +773,7 @@ class UriProcessor
                         $this->_executeExpansion($request, $result1);
                         $this->_popSegment($needPop);
                     } else {
-                        $expandedPropertyReflection->setValue($result, array());
+                        $expandedPropertyReflection->setValue($result, $result1);
                     }
                 } else {
                     $currentResourceSet3 = $this->_getCurrentResourceSetWrapper($request)->getResourceSet();
