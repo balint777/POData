@@ -3,6 +3,8 @@
 
 namespace POData\Providers\Metadata\Type;
 
+use DateTimeInterface;
+
 /**
  * Class DateTime
  * @package POData\Providers\Metadata\Type
@@ -99,7 +101,7 @@ class DateTime implements IType
      */
     public function convertToOData($value)
     {
-        if ($value instanceof DateTimeInterface) return 'datetime\'' . urlencode($value->format(DateTimeInterface::ATOM)) . '\'';
+		if ($value instanceof DateTimeInterface) return 'datetime\'' . urlencode($value->format(DateTimeInterface::ATOM)) . '\'';
         return 'datetime\'' . urlencode($value) . '\'';
     }
 
