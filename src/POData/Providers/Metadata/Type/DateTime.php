@@ -99,7 +99,8 @@ class DateTime implements IType
      */
     public function convertToOData($value)
     {
-		return 'datetime\'' . urlencode(date(DATE_ATOM)) . '\'';
+        if ($value instanceof DateTimeInterface) return 'datetime\'' . urlencode($value->format(DateTimeInterface::ATOM)) . '\'';
+        return 'datetime\'' . urlencode($value) . '\'';
     }
 
     /**
