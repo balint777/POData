@@ -419,7 +419,7 @@ class RequestDescription
                     null, // $this->requestMaxVersion,
                     $contentType,
                     null,
-                    $headers['Content-ID'],
+                    $headers['Content-ID'] ?? null,
                     $requestMethod
                 );
 
