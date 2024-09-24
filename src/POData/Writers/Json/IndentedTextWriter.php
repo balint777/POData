@@ -32,6 +32,8 @@ class IndentedTextWriter
      */
     private $tabString;
 
+	private $_writer;
+
     /**
      * Creates a new instance of IndentedTextWriter
      *

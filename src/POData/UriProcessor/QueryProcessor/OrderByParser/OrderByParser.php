@@ -63,6 +63,7 @@ class OrderByParser
      */
     private $_dummyObject;
 
+	private $_rootOrderByNode;
     /**
      * Creates new instance of OrderByParser
      *

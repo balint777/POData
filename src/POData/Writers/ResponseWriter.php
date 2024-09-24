@@ -47,7 +47,7 @@ class ResponseWriter
             //This second part is to exclude binary properties
             // /Customer('ALFKI')/CompanyName/$value
             // /Customers/$count
-            $responseBody = utf8_encode($request->getTargetResult());
+            $responseBody = mb_convert_encoding($request->getTargetResult(), 'UTF-8');
         } else if ($responseContentType == MimeTypes::MIME_APPLICATION_OCTETSTREAM || $targetKind == TargetKind::MEDIA_RESOURCE) {
             // Binary property or media resource
             if ($request->getTargetKind() == TargetKind::MEDIA_RESOURCE) {
