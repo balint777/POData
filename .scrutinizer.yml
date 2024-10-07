@@ -11,3 +11,8 @@ build:
             coverage:
               file: build/logs/clover.xml
               format: clover
+  environment:
+    # Languages
+    php:
+      version: "8.2"
+        
