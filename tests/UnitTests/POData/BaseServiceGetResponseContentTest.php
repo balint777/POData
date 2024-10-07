@@ -34,7 +34,8 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 	/** @var  ServiceHost */
 	protected $mockHost;
 
-	public function setUp(){
+	public function setUp() : void
+	{
 		parent::setUp();
 
 		Phockito::when($this->mockService->getHost())
