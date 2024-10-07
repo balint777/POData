@@ -15,4 +15,5 @@ build:
     # Languages
     php:
       version: "8.2"
-        
+  commands:
+    idle_timeout: 360
