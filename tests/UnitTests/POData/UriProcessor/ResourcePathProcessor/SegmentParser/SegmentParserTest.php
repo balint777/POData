@@ -25,7 +25,7 @@ class SegmentParserTest extends TestCase
 	/** @var  IQueryProvider */
 	protected $mockQueryProvider;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->_metadataProvider = NorthWindMetadata::Create();
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);

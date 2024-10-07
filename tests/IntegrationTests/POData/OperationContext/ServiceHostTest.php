@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class ServiceHostTest extends TestCase
 {	
-    protected function setUp()
+    protected function setUp() : void
     {
     	ob_start();
     }

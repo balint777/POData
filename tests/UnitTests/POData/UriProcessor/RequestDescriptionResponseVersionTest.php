@@ -50,7 +50,7 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
 	protected $mockServiceConfiguration;
 
 
-	public function setUp()
+	public function setUp() : void
 	{
 		parent::setUp();
 

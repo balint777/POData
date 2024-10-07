@@ -17,7 +17,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 class ExpandTest extends TestCase
 {   
-    protected function setUp()
+    protected function setUp() : void
     {
     }
 

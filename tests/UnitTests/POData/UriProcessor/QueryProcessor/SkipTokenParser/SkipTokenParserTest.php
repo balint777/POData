@@ -24,7 +24,7 @@ class SkipTokenParserTest extends TestCase
 	/** @var  IQueryProvider */
 	protected $mockQueryProvider;
 
-	protected function setUp()
+	protected function setUp() : void
 	{
 		$this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
 	}

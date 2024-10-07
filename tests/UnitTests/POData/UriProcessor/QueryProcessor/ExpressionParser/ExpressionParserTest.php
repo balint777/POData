@@ -39,7 +39,7 @@ class ExpressionParserTest extends TestCase
 	 */
 	private $customersResourceType;
 
-    protected function setUp()
+    protected function setUp() : void
     {        
         $this->northWindMetadata = NorthWindMetadata::Create();
 

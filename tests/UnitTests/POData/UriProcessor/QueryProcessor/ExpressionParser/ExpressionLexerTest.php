@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ExpressionLexerTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
 
     }

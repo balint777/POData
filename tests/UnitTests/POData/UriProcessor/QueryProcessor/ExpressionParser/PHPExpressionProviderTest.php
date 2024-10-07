@@ -26,7 +26,7 @@ class PHPExpressionProviderTest extends TestCase
      */
     private $northWindMetadata;
     
-    protected function setUp()
+    protected function setUp() : void
     {        
          $this->northWindMetadata = NorthWindMetadata::Create();
     }

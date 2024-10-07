@@ -24,7 +24,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ResourceClassesTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
 	    //TODO: move the entity types into their own files
 	    //unit then we need to ensure they are "in scope"

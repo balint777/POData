@@ -16,7 +16,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindQueryProvider;
 
 class SelectTest extends TestCase
 {   
-    protected function setUp()
+    protected function setUp() : void
     {
     }
 

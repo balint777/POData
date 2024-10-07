@@ -20,7 +20,7 @@ class TestETag extends TestCase
 {	
     const BASE_SERIVE_URL = 'http://localhost:8089/NorthWind.svc';
 
-    protected function setUp()
+    protected function setUp() : void
     {        
     }
 

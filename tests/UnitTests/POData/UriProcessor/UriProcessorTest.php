@@ -51,7 +51,8 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 class UriProcessorTest extends BaseUnitTestCase
 {
 
-    public function setUp(){
+    public function setUp() : void
+	{
         parent::setUp();
 
         //setup some general navigation between POData types

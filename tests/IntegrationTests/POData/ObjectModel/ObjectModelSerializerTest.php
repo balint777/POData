@@ -20,7 +20,7 @@ use POData\HttpProcessUtility;
 
 class TestObjectModelSerializer extends TestCase
 {	
-    protected function setUp()
+    protected function setUp() : void
     {
         ob_start();
     }

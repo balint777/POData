@@ -12,7 +12,7 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class KeyDescriptorTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {        
     }
 
