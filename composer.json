@@ -19,8 +19,13 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {
-        "php": ">=8.2.0"
+	"config": {
+        "platform": {
+            "php": ">=8.2"
+        },
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "require-dev": {
         "balihoo/phockito-unit" : "1.0.0",
