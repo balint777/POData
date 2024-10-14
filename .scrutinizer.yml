@@ -8,6 +8,7 @@ build:
       tests:
         override:
           - command: mkdir -p build/logs && vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+            idle_timeout: 360
             coverage:
               file: build/logs/clover.xml
               format: clover
@@ -15,5 +16,3 @@ build:
     # Languages
     php:
       version: "8.2"
-  commands:
-    idle_timeout: 360
