@@ -29,7 +29,7 @@ class SkipTokenParserTest extends TestCase
 		$this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
 	}
 
-	protected function tearDown()
+	protected function tearDown() : void
 	{
 
 	}

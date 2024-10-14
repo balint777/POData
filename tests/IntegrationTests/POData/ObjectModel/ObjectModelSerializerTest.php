@@ -25,7 +25,8 @@ class TestObjectModelSerializer extends TestCase
         ob_start();
     }
 
-    public function tearDown(){
+    public function tearDown() : void
+	{
         ob_end_clean();
     }
 

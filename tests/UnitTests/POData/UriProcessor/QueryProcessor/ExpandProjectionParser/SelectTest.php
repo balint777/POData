@@ -611,7 +611,7 @@ class SelectTest extends TestCase
         $this->assertTrue($childNodes['UnitPrice'] instanceof ProjectionNode);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
     }
 }
