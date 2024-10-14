@@ -424,7 +424,7 @@ class TestETag extends TestCase
 	    return (in_array(strtolower($needle), array_map('strtolower', array_keys($haystack)))) ;
 	}
 
-	protected function tearDown()
+	protected function tearDown() : void
 	{
 
 	}
