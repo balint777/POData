@@ -2274,16 +2274,11 @@ class UriProcessorTest extends BaseUnitTestCase
 
 	public function testProcessRequestForCollection()
 	{
-
-
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 
 		$requestURI = new Url('http://host.com/data.svc/Collection');
 		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
 			->return($requestURI);
-
-
-
 
 		$uriProcessor = UriProcessor::process($this->mockService);
 		$request = $uriProcessor->getRequest();
@@ -2314,7 +2309,6 @@ class UriProcessorTest extends BaseUnitTestCase
 
 	public function testProcessRequestForCollectionCountThrowsWhenServiceVersionIs10()
 	{
-
 		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
 		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
 			->return($requestURI);
@@ -2323,7 +2317,6 @@ class UriProcessorTest extends BaseUnitTestCase
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
         $this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1); //because this is V1 and $count requires V2, this will fail
 
-
 		try{
 			UriProcessor::process($this->mockService);
 			$this->fail("Expected exception not thrown");
@@ -2331,20 +2324,15 @@ class UriProcessorTest extends BaseUnitTestCase
 			$expected = Messages::requestVersionTooLow("1.0", "2.0");
 			$this->assertEquals($expected, $ex->getMessage(), $ex->getTraceAsString());
 		}
-
-
-
 	}
 
 	public function testProcessRequestForCollectionCountThrowsWhenCountsAreDisabled()
 	{
-
 		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
 		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri())
 			->return($requestURI);
 
 		$this->fakeServiceConfig->setAcceptCountRequests(false);
-
 
 		try{
 			UriProcessor::process($this->mockService);

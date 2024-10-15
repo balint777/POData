@@ -70,7 +70,7 @@ class NorthWindService extends BaseService
     // For testing we overridden the BaseService::handleRequest method, one thing is the
     // private member variable BaseService::_dataServiceHost is not accessible in this class,
     // so we are using getHost() below.
-    public function handleRequest()
+    public function handleRequest() : UriProcessor
     {
 
         $this->createProviders();
