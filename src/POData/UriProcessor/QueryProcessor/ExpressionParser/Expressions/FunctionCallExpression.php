@@ -37,7 +37,7 @@ class FunctionCallExpression extends AbstractExpression
     /**
      * To get the array of expressions represents arguments of function
      * 
-     * @return array<ParamExpression>
+     * @return array<AbstractExpression>
      */
     public function getParamExpressions()
     {

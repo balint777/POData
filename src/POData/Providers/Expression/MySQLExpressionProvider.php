@@ -356,4 +356,6 @@ class MySQLExpressionProvider implements IExpressionProvider
     {
         return $operator . self::OPEN_BRACKET . $child . self::CLOSE_BRACKET;
     }
+
+	public function clear() {}
 }

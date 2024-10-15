@@ -128,4 +128,6 @@ class NorthWindExpressionProvider implements IExpressionProvider
 	{
 		// TODO: Implement onFunctionCallExpression() method.
 	}
+
+	public function clear(){}
 }
