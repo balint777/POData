@@ -10,7 +10,7 @@ use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
-
+use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\Facets\NorthWind1\NorthWindExpressionProvider;
 
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality
@@ -30,7 +30,7 @@ class NorthWindQueryProvider implements IQueryProvider
 		throw ODataException::createNotImplementedError($this->_message);
 	}
 
-	public function getExpressionProvider()
+	public function getExpressionProvider(RequestDescription|null $request)
 	{
 		return new NorthWindExpressionProvider();
 	}

@@ -11,6 +11,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
+use POData\UriProcessor\RequestDescription;
 
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality
 // we will not test the actual data, instead the sql query generated.
@@ -29,12 +30,13 @@ class NorthWindQueryProvider4 implements IQueryProvider
      * (non-PHPdoc)
      * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
-    public function getExpressionProvider()
+    public function getExpressionProvider(RequestDescription|null $request)
     {
+			
     	if (is_null($this->_northWindSQLSRVExpressionProvider)) {
     		$this->_northWindSQLSRVExpressionProvider = new NorthWindDSExpressionProvider4();
     	}
-
+		
     	return $this->_northWindSQLSRVExpressionProvider;
     }
 

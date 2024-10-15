@@ -17,6 +17,7 @@ use POData\Providers\Metadata\ResourceProperty;
 use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 use POData\Providers\Expression\IExpressionProvider;
+use POData\UriProcessor\RequestDescription;
 
 /** The name of the database for WordPress */
 define('DB_NAME', 'wordpress');
@@ -52,7 +53,7 @@ class WordPressQueryProvider implements IQueryProvider
      * (non-PHPdoc)
      * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
-    public function getExpressionProvider()
+    public function getExpressionProvider(RequestDescription|null $request)
     {
     	if (is_null($this->_wordPressMySQLExpressionProvider)) {
     		$this->_wordPressMySQLExpressionProvider = new WordPressDSExpressionProvider();
@@ -74,32 +75,32 @@ class WordPressQueryProvider implements IQueryProvider
 	}
 
 	/**
-	 * Gets collection of entities belongs to an entity set
-	 * IE: http://host/EntitySet
-	 *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
-	 *
-	 * @param string $queryType indicates if this is a query for a count, entities, or entities with a count
-	 * @param ResourceSet $resourceSet The entity set containing the entities to fetch
-	 * @param FilterInfo|null $filterInfo represents the $filter parameter of the OData query. NULL if no $filter specified
-	 * @param mixed $orderby sorted order if we want to get the data in some specific order
-	 * @param int $top number of records which need to be shown
-	 * @param int $skip number of records which need to be skipped
-	 * @param SkipTokenInfo|null $skipToken value indicating what records to skip
-	 * @param ExpandedProjectionNode[]|null $expansion represents the $expand parameter of the OData query
-	 *
-	 * @return QueryResult
-	 */
+     * Gets collection of entities belongs to an entity set
+     * IE: http://host/EntitySet
+     *  http://host/EntitySet?$skip=10&$top=5&filter=Prop gt Value
+     *
+     * @param string $queryType indicates if this is a query for a count, entities, or entities with a count
+     * @param ResourceSet $resourceSet The entity set containing the entities to fetch
+     * @param FilterInfo|null $filterInfo represents the $filter parameter of the OData query. NULL if no $filter specified
+     * @param InternalOrderByInfo|null $orderby sorted order if we want to get the data in some specific order
+     * @param int|null $top number of records which need to be shown
+     * @param int|null $skip number of records which need to be skipped
+     * @param SkipTokenInfo|null $skipToken value indicating what records to skip
+     * @param ExpandedProjectionNode[] $expansion represents the $expand parameter of the OData query
+     *
+     * @return QueryResult
+     */
 	public function getResourceSet(
-		$queryType,
-		ResourceSet $resourceSet,
-		$filter = null,
-		$orderBy = null,
-		$top = null,
-		$skip = null,
-		$skipToken = null,
-		$expansion = null
-	)
-	{
+		string $queryType,
+        ResourceSet $resourceSet,
+        RequestDescription $request,
+        FilterInfo $filterInfo = null,
+        InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
+        array $expansion = []
+	){
 		// TODO: Implement getResourceSet() method.
 	}
 
