@@ -34,7 +34,7 @@ interface IQueryProvider
      *
      * @return IExpressionProvider
      */
-    public function getExpressionProvider(RequestDescription|null $request);
+    public function getExpressionProvider(?RequestDescription $request);
 
 
     /**
