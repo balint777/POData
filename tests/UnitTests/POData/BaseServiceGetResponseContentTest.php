@@ -61,7 +61,8 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 
 		Phockito::when($this->mockRequest->getResponseVersion())
 			->return($version);
-
+		Phockito::when($this->mockUriProcessor->process($this->mockService))
+			->return($this->mockRequest);
 		$actual = BaseService::getResponseContentType($this->mockRequest, $this->mockUriProcessor, $this->mockService);
 
 		//accepts doesn't match any possibles actual for that format..so it should return null
