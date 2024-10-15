@@ -10,7 +10,9 @@ namespace UnitTests\POData\Facets\WordPress2;
 
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
