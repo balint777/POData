@@ -37,7 +37,7 @@ class BaseUnitTestCase extends TestCase
 					continue;
 				}
 
-				$classType = $parser->getPropertyType( $property);
+				$classType = $parser->getPropertyClass($property);
 
 				//Create the mock and assign it to the member
 				if($property->name[0] === 's'){

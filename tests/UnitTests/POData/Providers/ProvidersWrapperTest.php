@@ -601,6 +601,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $actual = $wrapper->getResourceSet(
             QueryType::ENTITIES,
             $this->mockResourceSet,
+			$this->mockRequest,
             $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -634,6 +635,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $wrapper->getResourceSet(
                 QueryType::ENTITIES,
                 $this->mockResourceSet,
+				$this->mockRequest,
                 $this->mockFilterInfo,
                 $orderBy,
                 $top,
@@ -679,6 +681,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$wrapper->getResourceSet(
 				QueryType::COUNT,
 				$this->mockResourceSet,
+				$this->mockRequest,
 				$this->mockFilterInfo,
 				$orderBy,
 				$top,
@@ -722,6 +725,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $wrapper->getResourceSet(
                 QueryType::COUNT,
                 $this->mockResourceSet,
+				$this->mockRequest,
                 $this->mockFilterInfo,
                 $orderBy,
                 $top,
@@ -766,6 +770,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $wrapper->getResourceSet(
                 QueryType::ENTITIES_WITH_COUNT,
                 $this->mockResourceSet,
+				$this->mockRequest,
                 $this->mockFilterInfo,
                 $orderBy,
                 $top,
@@ -811,6 +816,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$wrapper->getResourceSet(
 				QueryType::ENTITIES_WITH_COUNT,
 				$this->mockResourceSet,
+				$this->mockRequest,
 				$this->mockFilterInfo,
 				$orderBy,
 				$top,
@@ -853,6 +859,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $wrapper->getResourceSet(
                 QueryType::ENTITIES,
                 $this->mockResourceSet,
+				$this->mockRequest,
                 $this->mockFilterInfo,
                 $orderBy,
                 $top,
@@ -894,6 +901,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $wrapper->getResourceSet(
                 QueryType::ENTITIES_WITH_COUNT,
                 $this->mockResourceSet,
+				$this->mockRequest,
                 $this->mockFilterInfo,
                 $orderBy,
                 $top,

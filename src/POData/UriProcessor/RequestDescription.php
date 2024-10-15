@@ -23,8 +23,6 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\UriProcessor\QueryProcessor\ExpandProjectionParser\RootProjectionNode;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Query\QueryType;
-
-
 /**
  * Class RequestDescription
  * @package POData\UriProcessor

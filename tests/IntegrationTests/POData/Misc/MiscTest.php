@@ -7,7 +7,7 @@
 use POData\ObjectModel\ODataBagContent;
 use POData\Common\ODataConstants;
 use POData\Common\Messages;
-use POData\Common\HttpStatus                             ;
+use POData\Common\HttpStatus;
 use POData\Common\Url;
 use POData\Common\UrlFormatException;
 use POData\Common\ODataException;
@@ -312,7 +312,8 @@ class TestETag extends TestCase
     // Test if-Match
 	function testETag_For_Entry1()
 	{
-
+		$order_entry1 = [];
+		$order_entry2 = [];
         // Get ETag of an entry
         $responseHeaders = get_headers(self::BASE_SERIVE_URL . '/Orders(OrderID=10248)', 1);
         $this->assertTrue(array_key_exists('ETag', $responseHeaders));
@@ -419,7 +420,7 @@ class TestETag extends TestCase
 
 	}
 
-	function in_array($haystack)
+	function in_array($needle, $haystack)
 	{
 	    return (in_array(strtolower($needle), array_map('strtolower', array_keys($haystack)))) ;
 	}
