@@ -24,6 +24,7 @@ use POData\Providers\Query\QueryResult;
 
 
 use Phockito;
+use POData\UriProcessor\RequestDescription;
 use UnitTests\BaseUnitTestCase;
 
 class ProvidersWrapperTest extends BaseUnitTestCase
@@ -43,6 +44,9 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
 	/** @var  ResourceSet */
 	protected $mockResourceSet;
+
+	/** @var  RequestDescription */
+	protected $mockRequest;
 
 	/** @var  ResourceSet */
 	protected $mockResourceSet2;
@@ -585,6 +589,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES,
             $this->mockResourceSet,
+			$this->mockRequest,
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -616,6 +621,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES,
             $this->mockResourceSet,
+			$this->mockRequest,
             $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -660,6 +666,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		Phockito::when($this->mockQueryProvider->getResourceSet(
 			QueryType::COUNT,
 			$this->mockResourceSet,
+			$this->mockRequest,
 			$this->mockFilterInfo,
 			$orderBy,
 			$top,
@@ -702,6 +709,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::COUNT,
             $this->mockResourceSet,
+			$this->mockRequest,
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -745,6 +753,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
+			$this->mockRequest,
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -789,6 +798,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		Phockito::when($this->mockQueryProvider->getResourceSet(
 			QueryType::ENTITIES_WITH_COUNT,
 			$this->mockResourceSet,
+			$this->mockRequest,
 			$this->mockFilterInfo,
 			$orderBy,
 			$top,
@@ -830,6 +840,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES,
             $this->mockResourceSet,
+			$this->mockRequest,
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
@@ -870,6 +881,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         Phockito::when($this->mockQueryProvider->getResourceSet(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
+			$this->mockRequest,
 	        $this->mockFilterInfo,
             $orderBy,
             $top,
