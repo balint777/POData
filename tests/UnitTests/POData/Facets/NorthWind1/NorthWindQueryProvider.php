@@ -5,6 +5,7 @@ namespace UnitTests\POData\Facets\NorthWind1;
 use POData\Providers\Query\QueryResult;
 use POData\Providers\Query\QueryType;
 use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
+use POData\UriProcessor\QueryProcessor\OrderByParser\InternalOrderByInfo;
 use POData\UriProcessor\ResourcePathProcessor\SegmentParser\KeyDescriptor;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceProperty;
@@ -12,6 +13,7 @@ use POData\Providers\Query\IQueryProvider;
 use POData\Common\ODataException;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\POData\Facets\NorthWind1\NorthWindExpressionProvider;
+use POData\UriProcessor\QueryProcessor\SkipTokenParser\SkipTokenInfo;
 
 // Note: This QP2 implementation is to test IDSQP2::getExpressionProvider functionality
 // we will not test the actual data, instead the sql query generated.
@@ -52,14 +54,15 @@ class NorthWindQueryProvider implements IQueryProvider
 	 * @return QueryResult
 	 */
 	public function getResourceSet(
-		$queryType,
+		string $queryType,
 		ResourceSet $resourceSet,
-		$filter = null,
-		$orderBy = null,
-		$top = null,
-		$skip = null,
-		$skipToken = null,
-		$expansion = null
+		RequestDescription $request,
+		FilterInfo $filterInfo = null,
+		InternalOrderByInfo $orderBy = null,
+        int $top = null,
+        int $skip = null,
+        SkipTokenInfo $skipToken = null,
+        array $expansion = []
 	)
 	{
 		// TODO: Implement getResourceSet() method.
