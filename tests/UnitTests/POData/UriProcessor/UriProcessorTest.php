@@ -2,6 +2,7 @@
 
 namespace UnitTests\POData\UriProcessor;
 
+use GuzzleHttp\Psr7\Request;
 use POData\Configuration\ServiceConfiguration;
 use POData\Providers\Metadata\ResourceSet;
 use POData\Providers\Metadata\ResourceType;
@@ -40,6 +41,7 @@ use POData\Providers\Metadata\ResourceProperty;
 
 use Phockito;
 use POData\IService;
+use POData\UriProcessor\RequestDescription;
 use UnitTests\BaseUnitTestCase;
 
 use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
@@ -97,7 +99,9 @@ class UriProcessorTest extends BaseUnitTestCase
         $this->fakeServiceConfig = new ServiceConfiguration($this->mockMetadataProvider);
         Phockito::when($this->mockService->getConfiguration())
             ->return($this->fakeServiceConfig);
-
+		
+		Phockito::when(UriProcessor::process($this->mockService))
+			->return($this->mockRequest);
     }
 
     /**
@@ -2271,6 +2275,9 @@ class UriProcessorTest extends BaseUnitTestCase
 
     /** @var ResourceProperty */
     protected $mockRelatedCollectionKeyProperty;
+
+	/** @var RequestDescription */
+	protected $mockRequest;
 
 	public function testProcessRequestForCollection()
 	{
