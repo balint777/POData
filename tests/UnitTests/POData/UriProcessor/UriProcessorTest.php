@@ -1875,6 +1875,9 @@ class UriProcessorTest extends BaseUnitTestCase
 
         $customerExpandedNode = $childNodes['Customer'];
         //Sort info will not be there for expanded 'Customer' as its resource set reference
+		/**
+		 * @var ExpandedProjectionNode $customerExpandedNode
+		 **/
         $internalOrderByInfo = $customerExpandedNode->getInternalOrderByInfo();
         $this->assertNull($internalOrderByInfo);
 
@@ -1970,6 +1973,9 @@ class UriProcessorTest extends BaseUnitTestCase
 
         //Sort info will be there for expanded 'Orders' as paging is
         //enabled for this resource set
+		/**
+		 * @var ExpandedProjectionNode $ordersExpandedNode
+		 **/ 
         $internalOrderByInfo = $ordersExpandedNode->getInternalOrderByInfo();
         $this->assertNotNull($internalOrderByInfo);
         $this->assertTrue($internalOrderByInfo instanceof InternalOrderByInfo);
@@ -2280,6 +2286,7 @@ class UriProcessorTest extends BaseUnitTestCase
 
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2288,6 +2295,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::ENTITIES,
 				$this->mockCollectionResourceSetWrapper,
+				$request,
 				null,
 				null,
 				null,
@@ -2298,7 +2306,6 @@ class UriProcessorTest extends BaseUnitTestCase
         $uriProcessor->execute();
 
 		$request = $uriProcessor->getRequest();
-
 		$actual = $request->getTargetResult();
 
 		$this->assertEquals(array(1,2,3), $actual);
@@ -2358,6 +2365,7 @@ class UriProcessorTest extends BaseUnitTestCase
 		$this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2365,7 +2373,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::COUNT,
 				$this->mockCollectionResourceSetWrapper,
-				null,
+				$request,
 				null,
 				null,
 				null
@@ -2398,6 +2406,7 @@ class UriProcessorTest extends BaseUnitTestCase
 		$this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2406,7 +2415,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::COUNT,
 				$this->mockCollectionResourceSetWrapper,
-				null,
+				$request,
 				null,
 				null,
 				null
@@ -2436,7 +2445,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			->return($requestURI);
 
 		//mock inline count as all pages
-		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
 			->return("allpages");
 
 		$this->fakeServiceConfig->setAcceptCountRequests(false);
@@ -2458,7 +2467,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			->return($requestURI);
 
 		//mock inline count as all pages
-		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
 			->return("allpages");
 
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
@@ -2484,13 +2493,14 @@ class UriProcessorTest extends BaseUnitTestCase
 			->return($requestURI);
 
 		//mock inline count as all pages
-		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
 			->return("none");
 
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
 		$this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V1);
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2499,7 +2509,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::ENTITIES,
 				$this->mockCollectionResourceSetWrapper,
-				null,
+				$request,
 				null,
 				null,
 				null
@@ -2529,13 +2539,14 @@ class UriProcessorTest extends BaseUnitTestCase
 			->return($requestURI);
 
 		//mock inline count as all pages
-		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
 			->return("allpages");
 
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
 		$this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2544,7 +2555,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::ENTITIES_WITH_COUNT,
 				$this->mockCollectionResourceSetWrapper,
-				null,
+				$request,
 				null,
 				null,
 				null
@@ -2574,13 +2585,14 @@ class UriProcessorTest extends BaseUnitTestCase
 			->return($requestURI);
 
 		//mock inline count as all pages
-		Phockito::when($this->mockServiceHost->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
+		Phockito::when($this->mockServiceHost->getAbsoluteRequestUri()->getQueryStringItem( ODataConstants::HTTPQUERY_STRING_INLINECOUNT ))
 			->return("allpages");
 
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
 		$this->fakeServiceConfig->setMaxDataServiceVersion(ProtocolVersion::V2);
 
 		$uriProcessor = UriProcessor::process($this->mockService);
+		$request = $uriProcessor->getRequest();
 
 		$fakeQueryResult = new QueryResult();
 		$fakeQueryResult->results = array(1,2,3);
@@ -2589,7 +2601,7 @@ class UriProcessorTest extends BaseUnitTestCase
 			$this->mockProvidersWrapper->getResourceSet(
 				QueryType::ENTITIES_WITH_COUNT,
 				$this->mockCollectionResourceSetWrapper,
-				null,
+				$request,
 				null,
 				null,
 				null

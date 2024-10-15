@@ -92,7 +92,7 @@ class UriProcessor
      *
      * @throws ODataException
      */
-    public static function process(IService $service)
+    public static function process(IService $service) : UriProcessor
     {
         $absoluteRequestUri = $service->getHost()->getAbsoluteRequestUri();
         $absoluteServiceUri = $service->getHost()->getAbsoluteServiceUri();

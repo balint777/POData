@@ -19,7 +19,7 @@ use POData\UriProcessor\UriProcessor;
 
 abstract class BaseServiceTestWrapper extends BaseService
 {
-	public function handleRequest()
+	public function handleRequest() : UriProcessor
 	{
 		$this->createProviders();
 		$this->getHost()->getFullAbsoluteRequestUri()->validateQueryParameters();
