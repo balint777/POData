@@ -23,6 +23,8 @@ interface IExpressionProvider
      */    
     public function getIteratorName();
 
+	public function clear();
+
     /**
      * call-back for setting the resource type.
      * 

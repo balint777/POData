@@ -168,4 +168,25 @@ class NorthWindQueryProvider implements IQueryProvider
 	public function getCustomProperties($entryObject) {
 		return [];
 	}
+
+	public function postResource(
+        ResourceSet $resourceSet,
+        RequestDescription $request,
+        $data
+    ){}
+
+	public function putResource(
+		ResourceSet $resourceSet,
+        RequestDescription $request,
+        KeyDescriptor $keyDescriptor,
+        $data,
+        $filter,
+        $expand
+    ){}
+
+	public function deleteResource(
+		ResourceSet $resourceSet,
+        RequestDescription $request,
+        $keyDescriptor
+    ){}
 }
