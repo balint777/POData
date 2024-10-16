@@ -1365,7 +1365,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual, $id);
 	}
 
-	public function canHandleProvider(){
+	public static function canHandleProvider(){
 
 
 		return array(

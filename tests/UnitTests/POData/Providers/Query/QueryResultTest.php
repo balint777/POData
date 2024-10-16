@@ -22,7 +22,7 @@ class QueryResultTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual, $id);
 	}
 
-	public function provider(){
+	public static function provider(){
 		return array(
 					    //count //top   //skip  //expected
 			array(101,  0,      null,   null,   0),

@@ -1173,7 +1173,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 		$this->assertEquals($expected, $actual, $id);
 	}
 
-	public function canHandleProvider(){
+	public static function canHandleProvider(){
 
 
 		return array(
