@@ -12,9 +12,8 @@ build:
               file: build/logs/clover.xml
               format: clover
             idle_timeout: 360
-  environment:
-    # Languages
-    php:
-      version: "8.2"
-      config:
-        coverage: true
+tools:
+  php:
+    version: "8.2"
+    config:
+      coverage: true
