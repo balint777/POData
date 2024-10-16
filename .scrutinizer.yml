@@ -16,4 +16,5 @@ build:
     # Languages
     php:
       version: "8.2"
-      XDEBUG_MODE: coverage
+      config:
+        coverage: true
