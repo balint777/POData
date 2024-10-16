@@ -69,7 +69,7 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 		$this->assertEquals($expectedValue, $actual, $id);
 	}
 
-	public function provider()
+	public static function provider()
 	{
 		$v1 = Version::v1();
 		$v2 = Version::v2();
