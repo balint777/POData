@@ -55,7 +55,7 @@ class WordPressQueryProvider implements IQueryProvider
      * (non-PHPdoc)
      * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
-    public function getExpressionProvider(?RequestDescription $request)
+    public function getExpressionProvider(RequestDescription $request)
     {
     	if (is_null($this->_wordPressMySQLExpressionProvider)) {
     		$this->_wordPressMySQLExpressionProvider = new WordPressDSExpressionProvider();

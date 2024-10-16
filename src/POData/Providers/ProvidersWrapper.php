@@ -590,7 +590,7 @@ class ProvidersWrapper
      * @return IExpressionProvider Instance of IExpressionProvider implementation.
      *
      */
-    public function getExpressionProvider(?RequestDescription $request)
+    public function getExpressionProvider(RequestDescription $request)
     {
         $expressionProvider = $this->queryProvider->getExpressionProvider($request);
         if (is_null($expressionProvider)) {

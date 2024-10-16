@@ -32,7 +32,7 @@ class NorthWindQueryProvider implements IQueryProvider
 		throw ODataException::createNotImplementedError($this->_message);
 	}
 
-	public function getExpressionProvider(?RequestDescription $request)
+	public function getExpressionProvider(RequestDescription $request)
 	{
 		return new NorthWindExpressionProvider();
 	}

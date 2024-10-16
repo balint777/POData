@@ -32,7 +32,7 @@ class NorthWindQueryProvider4 implements IQueryProvider
      * (non-PHPdoc)
      * @see POData\Providers\Query.IQueryProvider::getExpressionProvider()
      */
-    public function getExpressionProvider(?RequestDescription $request)
+    public function getExpressionProvider(RequestDescription $request)
     {
 			
     	if (is_null($this->_northWindSQLSRVExpressionProvider)) {
