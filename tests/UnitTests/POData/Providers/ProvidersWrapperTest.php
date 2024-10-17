@@ -67,6 +67,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
     /** @var  ResourceAssociationSetEnd */
     protected $mockResourceAssociationSetEnd;
+	/** @var Array */
+	protected $mockArray;
 	/**
 	 * @return ProvidersWrapper
 	 */
@@ -286,7 +288,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             ->return($fakeName);
 		
 		Phockito::when($this->mockResourceType->getName())->serialize()
-            ->return([]);
+            ->return($this->mockArray);
 
         $wrapper = $this->getMockedWrapper();
 
