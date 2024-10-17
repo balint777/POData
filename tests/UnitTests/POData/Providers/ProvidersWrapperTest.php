@@ -277,13 +277,16 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
     public function testGetDerivedTypesNonArrayReturnedThrows()
     {
-        $fakeName = "Array";
+        $fakeName = "FakeType";
 
         Phockito::when($this->mockMetadataProvider->getDerivedTypes($this->mockResourceType))
             ->return($this->mockResourceType);
 
         Phockito::when($this->mockResourceType->getName())
             ->return($fakeName);
+		
+		Phockito::when($this->mockResourceType->getName())->serialize()
+            ->return([]);
 
         $wrapper = $this->getMockedWrapper();
 
