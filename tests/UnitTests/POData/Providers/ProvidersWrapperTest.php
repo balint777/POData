@@ -67,7 +67,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
     /** @var  ResourceAssociationSetEnd */
     protected $mockResourceAssociationSetEnd;
-	
+
 	/** @var array */
 	protected $mockArray;
 	/**
@@ -177,7 +177,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testResolveResourceSet()
 	{
 		$fakeSetName = 'SomeSet';
-
 		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
 			->return($this->mockResourceSet);
 
