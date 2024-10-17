@@ -6,7 +6,8 @@
          stopOnFailure="false"
          bootstrap="./tests/bootstrap.php">
 
-	<coverage>
+	<coverage
+	 processUncoveredFiles="true">
 		<include>
             <!-- Include the source directory for coverage analysis -->
             <directory>src</directory>
