@@ -6,11 +6,10 @@
          stopOnFailure="false"
          bootstrap="./tests/bootstrap.php">
 
-	<coverage
-	 processUncoveredFiles="true">
+	<coverage processUncoveredFiles="true">
 		<include>
             <!-- Include the source directory for coverage analysis -->
-            <directory>src</directory>
+            <directory suffix=".php">src</directory>
         </include>
         <exclude>
             <!-- Exclude certain files or directories (e.g., tests) from the coverage report -->
