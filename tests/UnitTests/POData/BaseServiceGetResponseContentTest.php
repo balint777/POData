@@ -56,7 +56,7 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 		Phockito::when($this->mockHost->getRequestAccept())
 			->return($acceptsHeader);
 
-		Phockito::when($this->mockHost->getAbsoluteRequestUri()->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT))
+		Phockito::when($this->mockRequest->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT))
 			->return($format);
 
 		Phockito::when($this->mockRequest->getResponseVersion())
