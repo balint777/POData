@@ -7,7 +7,14 @@ build:
     coverage:
       tests:
         override:
-          - command: mkdir -p build/logs && php -d xdebug.mode=develop,coverage -d xdebug.start_with_request=yes && vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+          - command:  |
+              mkdir -p build/logs
+              # Install and enable Xdebug for code coverage
+              if ! php -m | grep -q 'xdebug'; then
+                  pecl install xdebug || true
+              fi
+              php -m  # Check Xdebug is enabled
+              php -d xdebug.mode=coverage,debug -d xdebug.start_with_request=yes vendor/bin/phpunit --coverage-clover build/logs/clover.xml
           #  - command: | 
           #     mkdir -p build/logs
           #     # Install and enable Xdebug for code coverage
