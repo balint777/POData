@@ -7,18 +7,18 @@ build:
     coverage:
       tests:
         override:
-          #- command: mkdir -p build/logs && vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-          - command: | 
-              mkdir -p build/logs
-              # Install and enable Xdebug for code coverage
-              if ! php -m | grep -q 'xdebug'; then
-                  pecl install xdebug || true
-                  echo "zend_extension=xdebug.so" >> "$(php -r 'echo php_ini_loaded_file();')"
-                  echo "xdebug.mode=coverage" >> "$(php -r 'echo php_ini_loaded_file();')"
-              fi
-              php -m  # Check Xdebug is enabled
-              php -i | grep xdebug.mode  # Verify Xdebug mode
-              vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+          - command: mkdir -p build/logs &&  php -d xdebug.mode=develop,coverage -d xdebug.start_with_request=yes && vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+          #  - command: | 
+          #     mkdir -p build/logs
+          #     # Install and enable Xdebug for code coverage
+          #     if ! php -m | grep -q 'xdebug'; then
+          #         pecl install xdebug || true
+          #         echo "zend_extension=xdebug.so" >> "$(php -r 'echo php_ini_loaded_file();')"
+          #         echo "xdebug.mode=coverage" >> "$(php -r 'echo php_ini_loaded_file();')"
+          #     fi
+          #     php -m  # Check Xdebug is enabled
+          #     php -i | grep xdebug.mode  # Verify Xdebug mode
+          #     vendor/bin/phpunit --coverage-clover build/logs/clover.xml
             coverage:
               file: build/logs/clover.xml
               format: clover
