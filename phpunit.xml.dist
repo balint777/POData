@@ -15,6 +15,7 @@
         <exclude>
             <!-- Exclude certain files or directories (e.g., tests) from the coverage report -->
             <directory>tests</directory>
+			<directory>vendor</directory>
         </exclude>
 	</coverage>
 	<testsuites>
