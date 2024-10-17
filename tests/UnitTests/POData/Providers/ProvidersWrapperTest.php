@@ -60,7 +60,9 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     /** @var  ResourceAssociationSet */
     protected $mockResourceAssociationSet;
 
-    /** @var  ResourceProperty */
+    /** @var  ResourceProperty
+	 *  @return array
+	 */
     protected $mockResourceProperty;
 
     /** @var  ResourceAssociationSetEnd */
