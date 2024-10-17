@@ -6,8 +6,17 @@
          stopOnFailure="false"
          bootstrap="./tests/bootstrap.php">
 
-
-    <testsuites>
+	<coverage>
+		<include>
+            <!-- Include the source directory for coverage analysis -->
+            <directory>src</directory>
+        </include>
+        <exclude>
+            <!-- Exclude certain files or directories (e.g., tests) from the coverage report -->
+            <directory>tests</directory>
+        </exclude>
+	</coverage>
+	<testsuites>
         <testsuite name="POData tests">
             <directory>./tests/UnitTests</directory>
             <!--integration tests TBD -->
