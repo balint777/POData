@@ -955,7 +955,7 @@ class ResourceType
         }
     }
 
-    public function __serialize() 
+    public function __serialize() : array
     {
         return [
             '_name' => $this->_name,
