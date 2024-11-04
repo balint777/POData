@@ -42,9 +42,9 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
 	protected ResourceSet $mockResourceSet2;
 
-	protected ResourceSet $mockResourceType;
+	protected ResourceType $mockResourceType;
 
-    protected ResourceSet $mockResourceType2;
+    protected ResourceType $mockResourceType2;
 
     protected ResourceAssociationSet $mockResourceAssociationSet;
 
@@ -556,8 +556,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
 	}
 
-    /** @var  FilterInfo */
-    protected $mockFilterInfo;
+    protected FilterInfo $mockFilterInfo;
 
     public function testGetResourceSetJustEntities()
     {
