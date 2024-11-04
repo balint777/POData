@@ -4,8 +4,9 @@ namespace UnitTests;
 
 use Phockito;
 
-use PhpDocReader\PhpDocReader;
 use ReflectionClass;
+use ReflectionNamedType;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class BaseUnitTestCase extends TestCase
@@ -18,41 +19,44 @@ class BaseUnitTestCase extends TestCase
 
 
 	/**
-	 * Reflects on the current instance for any members prefixed with the name mock or spy
-	 * For each found it reflects on the php doc comment for the type and then generates a mock or spy instance
-	 * and sets the member to that instance.
-	 */
-	public function generateMocksAndSpies()
-	{
-		$parser = new PhpDocReader();
+ * Reflects on the current instance for any properties prefixed with "mock" or "spy".
+ * Generates a mock or spy instance based on the prefix and assigns it to the property.
+ */
+public function generateMocksAndSpies(): void
+{
+    $class = new ReflectionClass($this);
 
-		$class = new ReflectionClass($this);
+    // Iterate over all properties in the class
+    foreach ($class->getProperties() as $property) {
+        $propertyName = $property->getName();
 
-		//Find every member that begins with "mock" or "spy"
-		foreach ($class->getProperties() as $property) {
+        // Skip if the property name doesn't start with "mock" or "spy"
+        if (!(str_starts_with($propertyName, 'mock') || str_starts_with($propertyName, 'spy'))) {
+            continue;
+        }
 
-			if (strpos($property->name, 'mock') === 0 || strpos($property->name, 'spy') === 0) {
-				if($property->name == "mockObjects"){
-					//This is inherited from PHPUnit_Framework_TestCase and we can't mock it
-					continue;
-				}
+        // Ignore PHPUnit's `mockObjects` property
+        if ($propertyName === "mockObjects") {
+            continue;
+        }
 
-				$classType = $parser->getPropertyClass($property);
+        // Ensure the property has a type hint
+        $type = $property->getType();
+        if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
+            throw new InvalidArgumentException("Property '$propertyName' must have a class type hint.");
+        }
 
-				//Create the mock and assign it to the member
-				if($property->name[0] === 's'){
-					$mock = Phockito::spy($classType);
-				}
-				else{
-					$mock = Phockito::mock($classType);
-				}
+        // Get the class name from the type hint
+        $classType = $type->getName();
 
-				$property->setAccessible(true);
-				$property->setValue( $this, $mock );
+        // Create the mock or spy based on the prefix
+        $mock = str_starts_with($propertyName, 'spy')
+            ? Phockito::spy($classType)
+            : Phockito::mock($classType);
 
-			}
-
-		}
-
-	}
+        // Make the property accessible and set its value
+        $property->setAccessible(true);
+        $property->setValue($this, $mock);
+    }
+}
 }

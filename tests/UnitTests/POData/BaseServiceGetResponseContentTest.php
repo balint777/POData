@@ -18,24 +18,19 @@ use POData\Common\Version;
 
 use UnitTests\BaseUnitTestCase;
 use Phockito;
-
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 
-	/** @var  RequestDescription */
-	protected $mockRequest;
+	protected RequestDescription $mockRequest;
 
-	/** @var  UriProcessor */
-	protected $mockUriProcessor;
+	protected UriProcessor $mockUriProcessor;
 
-	/** @var  IService */
-	protected $mockService;
+	protected IService $mockService;
 
-	/** @var  ServiceHost */
-	protected $mockHost;
+	protected ServiceHost $mockHost;
 
-	public function setUp() : void
-	{
+	public function setUp() : void	{
 		parent::setUp();
 
 		Phockito::when($this->mockService->getHost())
@@ -44,9 +39,7 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 
 
 
-	/**
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testGetResponseContentType($id, $target, Version $version, $acceptsHeader, $format, $expectedValue)
 	{
 

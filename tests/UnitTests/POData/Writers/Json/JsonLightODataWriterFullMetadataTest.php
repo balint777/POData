@@ -19,6 +19,7 @@ use POData\Common\MimeTypes;
 
 use UnitTests\BaseUnitTestCase;
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 {
@@ -1403,10 +1404,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 
-	/**
-	 * @var ProvidersWrapper
-	 */
-	protected $mockProvider;
+	protected ProvidersWrapper $mockProvider;
 
 	public function testGetOutputNoResourceSets()
 	{
@@ -1420,7 +1418,6 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 
 		$this->assertEquals($expected, $actual);
 	}
-
 
 	public function testGetOutputTwoResourceSets()
 	{
@@ -1449,11 +1446,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-
-
-	/**
-	 * @dataProvider canHandleProvider
-	 */
+	#[DataProvider('canHandleProvider')]
 	public function testCanHandle($id, $version, $contentType, $expected){
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL, $this->serviceBase);
 

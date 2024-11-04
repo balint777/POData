@@ -8,13 +8,12 @@ use POData\Providers\Query\QueryResult;
 
 
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitTests\BaseUnitTestCase;
 
 class QueryResultTest extends BaseUnitTestCase
 {
-	/**
-	 * @dataProvider provider
-	 */
+	#[DataProvider('provider')]
 	public function testAdjustCountForPaging($id, $count, $top, $skip, $expected)
 	{
 		$actual = QueryResult::adjustCountForPaging($count, $top, $skip);
@@ -22,7 +21,7 @@ class QueryResultTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual, $id);
 	}
 
-	public static function provider(){
+	public static function provider() {
 		return array(
 					    //count //top   //skip  //expected
 			array(101,  0,      null,   null,   0),

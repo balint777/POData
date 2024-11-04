@@ -18,6 +18,7 @@ use POData\Common\MimeTypes;
 
 use UnitTests\BaseUnitTestCase;
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class JsonODataV2WriterTest extends BaseUnitTestCase
 {
@@ -1449,10 +1450,7 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 	}
 
 
-	/**
-	 * @var ProvidersWrapper
-	 */
-	protected $mockProvider;
+	protected ProvidersWrapper $mockProvider;
 
 	public function testGetOutputNoResourceSets()
 	{
@@ -1495,11 +1493,7 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-
-
-	/**
-	 * @dataProvider canHandleProvider
-	 */
+	#[DataProvider('canHandleProvider')]
 	public function testCanHandle($id, $version, $contentType, $expected){
 		$writer = new JsonODataV2Writer();
 

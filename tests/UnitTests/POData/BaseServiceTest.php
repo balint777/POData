@@ -22,23 +22,15 @@ use Phockito;
 
 class BaseServiceTest extends BaseUnitTestCase {
 
-	/** @var  RequestDescription */
-	protected $mockRequest;
+	protected RequestDescription $mockRequest;
 
-	/** @var  UriProcessor */
-	protected $mockUriProcessor;
+	protected UriProcessor $mockUriProcessor;
 
+	protected ODataWriterRegistry $mockRegistry;
 
-	/** @var  ODataWriterRegistry */
-	protected $mockRegistry;
+	protected IMetadataProvider $mockMetaProvider;
 
-	/** @var  IMetadataProvider */
-	protected $mockMetaProvider;
-
-	/** @var  ServiceHost */
-	protected $mockHost;
-
-
+	protected ServiceHost $mockHost;
 
 	public function testRegisterWritersV1()
 	{

@@ -20,6 +20,7 @@ use POData\Common\MimeTypes;
 
 use UnitTests\BaseUnitTestCase;
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 {
@@ -1366,10 +1367,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-
-	/**
-	 * @dataProvider canHandleProvider
-	 */
+	#[DataProvider('canHandleProvider')]
 	public function testCanHandle($id, $version, $contentType, $expected){
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL, $this->serviceBase);
 

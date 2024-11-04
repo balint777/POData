@@ -17,6 +17,7 @@ use POData\Common\Version;
 use POData\Common\MimeTypes;
 
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitTests\BaseUnitTestCase;
 
 
@@ -1335,10 +1336,7 @@ class JsonODataV1WriterTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual);
 	}
 
-
-	/**
-	 * @dataProvider canHandleProvider
-	 */
+	#[DataProvider('canHandleProvider')]
 	public function testCanHandle($id, $version, $contentType, $expected){
 		$writer = new JsonODataV1Writer();
 

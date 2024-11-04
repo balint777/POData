@@ -17,6 +17,7 @@ use POData\Common\Version;
 use POData\Common\MimeTypes;
 
 use Phockito;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitTests\BaseUnitTestCase;
 
 
@@ -1161,10 +1162,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
         $this->assertEquals($expected, $actual);
     }
-
-	/**
-	 * @dataProvider canHandleProvider
-	 */
+	
+	#[DataProvider('canHandleProvider')]
 	public function testCanHandle($id, $version, $contentType, $expected){
 		$writer = new AtomODataWriter("http://yahoo.com/some.svc");
 

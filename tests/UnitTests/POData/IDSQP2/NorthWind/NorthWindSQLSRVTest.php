@@ -39,7 +39,6 @@ class NorthWindSQLSRVTest extends TestCase
 		$uriProcessor = $dataService->handleRequest();
 		$this->assertNotNull($uriProcessor);
 
-
 		$requestDescription = $uriProcessor->getRequest();
 		$this->assertNotNull($requestDescription);
 
