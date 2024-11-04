@@ -2240,44 +2240,31 @@ class UriProcessorTest extends BaseUnitTestCase
 
     }
 
-	/** @var  IService */
-	protected $mockService;
+	protected IService $mockService;
 
-	/** @var  ServiceHost */
-	protected $mockServiceHost;
+	protected ServiceHost $mockServiceHost;
 
-	/** @var  ServiceConfiguration */
-	protected $fakeServiceConfig;
+	protected ServiceConfiguration $fakeServiceConfig;
 
-	/** @var  IMetadataProvider */
-	protected $mockMetadataProvider;
+	protected IMetadataProvider $mockMetadataProvider;
 
-    /** @var  ProvidersWrapper */
-    protected $mockProvidersWrapper;
+    protected ProvidersWrapper $mockProvidersWrapper;
 
-    /** @var ResourceSetWrapper */
-    protected $mockCollectionResourceSetWrapper;
+    protected ResourceSetWrapper $mockCollectionResourceSetWrapper;
 
-	/** @var ResourceType */
-	protected $mockCollectionResourceType;
+	protected ResourceType $mockCollectionResourceType;
 
-    /** @var ResourceProperty */
-    protected $mockCollectionKeyProperty;
+    protected ResourceProperty $mockCollectionKeyProperty;
 
-    /** @var ResourceProperty */
-    protected $mockCollectionRelatedCollectionProperty;
+    protected ResourceProperty $mockCollectionRelatedCollectionProperty;
 
-    /** @var ResourceSetWrapper */
-    protected $mockRelatedCollectionResourceSetWrapper;
+    protected ResourceSetWrapper $mockRelatedCollectionResourceSetWrapper;
 
-    /** @var ResourceType */
-    protected $mockRelatedCollectionResourceType;
+    protected ResourceType $mockRelatedCollectionResourceType;
 
-    /** @var ResourceProperty */
-    protected $mockRelatedCollectionKeyProperty;
+    protected ResourceProperty $mockRelatedCollectionKeyProperty;
 
-	/** @var RequestDescription */
-	protected $mockRequest;
+	protected RequestDescription $mockRequest;
 
 	public function testProcessRequestForCollection()
 	{
