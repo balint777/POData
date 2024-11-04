@@ -27,7 +27,7 @@
         "hafriedlander/phockito" : "dev-master",
         "doctrine/annotations": "1.*",
         "php-coveralls/php-coveralls": "2.*",
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "11.3"
     },
     "autoload": {
         "psr-0": {
