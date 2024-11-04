@@ -29,47 +29,30 @@ use UnitTests\BaseUnitTestCase;
 
 class ProvidersWrapperTest extends BaseUnitTestCase
 {
+ 
+	protected IQueryProvider $mockQueryProvider;
 
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+	protected IMetadataProvider $mockMetadataProvider;
 
+	protected ServiceConfiguration $mockServiceConfig;
 
-	/** @var  IMetadataProvider */
-	protected $mockMetadataProvider;
+	protected ResourceSet $mockResourceSet;
 
-	/**
-	 * @var ServiceConfiguration
-	 */
-	protected $mockServiceConfig;
+	protected RequestDescription $mockRequest;
 
-	/** @var  ResourceSet */
-	protected $mockResourceSet;
+	protected ResourceSet $mockResourceSet2;
 
-	/** @var  RequestDescription */
-	protected $mockRequest;
+	protected ResourceSet $mockResourceType;
 
-	/** @var  ResourceSet */
-	protected $mockResourceSet2;
+    protected ResourceSet $mockResourceType2;
 
-	/** @var  ResourceType */
-	protected $mockResourceType;
+    protected ResourceAssociationSet $mockResourceAssociationSet;
 
-    /** @var  ResourceType */
-    protected $mockResourceType2;
+    protected ResourceProperty $mockResourceProperty;
 
-    /** @var  ResourceAssociationSet */
-    protected $mockResourceAssociationSet;
-
-    /** @var  ResourceProperty */
-    protected $mockResourceProperty;
-
-    /** @var  ResourceAssociationSetEnd */
-    protected $mockResourceAssociationSetEnd;
-
-	/**
-	 * @return ProvidersWrapper
-	 */
-	public function getMockedWrapper()
+    protected ResourceAssociationSetEnd $mockResourceAssociationSetEnd;
+ 
+	public function getMockedWrapper() : ProvidersWrapper
 	{
 		return new ProvidersWrapper(
 			$this->mockMetadataProvider,
