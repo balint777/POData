@@ -22,8 +22,7 @@ class SegmentParserTest extends TestCase
     private $_serviceConfiguration;    
     private $_segmentParser;
 
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+	protected IQueryProvider $mockQueryProvider;
 
     protected function setUp() : void
     {

@@ -14,11 +14,9 @@ use Phockito;
 
 class ODataWriterRegistryTest extends BaseUnitTestCase {
 
-	/** @var  IODataWriter */
-	protected $mockWriter1;
+	protected IODataWriter $mockWriter1;
 
-	/** @var  IODataWriter */
-	protected $mockWriter2;
+	protected IODataWriter $mockWriter2;
 
 	public function testConstructor()
 	{

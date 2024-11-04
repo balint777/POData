@@ -12,11 +12,9 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ServiceConfigurationTest extends TestCase
 {
-	/** @var  IMetadataProvider */
-    private $_northWindMetadata;
-
-	/** @var  ServiceConfiguration */
-    private $_dataServiceConfiguration;
+    private IMetadataProvider $_northWindMetadata;
+	
+    private ServiceConfiguration $_dataServiceConfiguration;
     
     protected function setUp() : void
     {

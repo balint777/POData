@@ -37,17 +37,11 @@ use UnitTests\BaseUnitTestCase;
 class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
 {
 
-	/** @var  IService */
-	protected $mockService;
+	protected IService $mockService;
 
+	protected ServiceHost $mockServiceHost;
 
-	/** @var  ServiceHost */
-	protected $mockServiceHost;
-
-	/**
-	 * @var ServiceConfiguration
-	 */
-	protected $mockServiceConfiguration;
+	protected ServiceConfiguration $mockServiceConfiguration;
 
 
 	public function setUp() : void

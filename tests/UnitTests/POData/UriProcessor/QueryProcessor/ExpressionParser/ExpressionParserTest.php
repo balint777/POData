@@ -31,13 +31,10 @@ use UnitTests\POData\Facets\NorthWind1\NorthWindMetadata;
 
 class ExpressionParserTest extends TestCase
 {
-    /** @var IMetadataProvider  */
-    private $northWindMetadata;
 
-	/**
-	 * @var ResourceType
-	 */
-	private $customersResourceType;
+    private IMetadataProvider $northWindMetadata;
+
+	private ResourceType $customersResourceType;
 
     protected function setUp() : void
     {        

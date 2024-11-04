@@ -41,10 +41,8 @@ class NorthWindDSExpressionProvider4 implements IExpressionProvider
 
     /**
      * The type of the resource pointed by the resource path segement
-     *
-     * @var ResourceType
      */
-    private $_resourceType;
+    private ResourceType $_resourceType;
 
 
 

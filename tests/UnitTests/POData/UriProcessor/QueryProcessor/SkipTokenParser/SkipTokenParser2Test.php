@@ -21,8 +21,7 @@ use Phockito;
 class SkipTokenParser2Test extends BaseUnitTestCase
 {
 
-    /** @var  IQueryProvider */
-    protected $mockQueryProvider;
+    protected IQueryProvider $mockQueryProvider;
 
 
     /**

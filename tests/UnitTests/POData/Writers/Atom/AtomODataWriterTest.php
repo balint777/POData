@@ -1114,10 +1114,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     }
 
 
-    /**
-     * @var ProvidersWrapper
-     */
-    protected $mockProvider;
+    protected ProvidersWrapper $mockProvider;
 
     public function testGetOutputNoResourceSets()
     {

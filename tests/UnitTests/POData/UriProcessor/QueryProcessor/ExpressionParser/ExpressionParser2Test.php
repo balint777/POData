@@ -13,10 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class ExpressionParser2Test extends TestCase
 {
-	/**
-	 * @var IMetadataProvider
-	 */
-	private $_northWindMetadata;
+	private IMetadataProvider $_northWindMetadata;
     
     protected function setUp() : void
     {        

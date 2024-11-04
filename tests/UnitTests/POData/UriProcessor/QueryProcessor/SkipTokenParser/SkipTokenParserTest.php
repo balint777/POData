@@ -21,8 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class SkipTokenParserTest extends TestCase
 {
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+	protected IQueryProvider $mockQueryProvider;
 
 	protected function setUp() : void
 	{

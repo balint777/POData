@@ -21,10 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class PHPExpressionProviderTest extends TestCase
 {
-    /**
-     * @var IMetadataProvider
-     */
-    private $northWindMetadata;
+    private IMetadataProvider $northWindMetadata;
     
     protected function setUp() : void
     {        

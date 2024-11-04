@@ -20,8 +20,7 @@ use POData\Providers\Query\IQueryProvider;
 
 class MetadataWriterTest extends TestCase
 {
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+	protected IQueryProvider $mockQueryProvider;
 
     protected function setUp() : void
     {

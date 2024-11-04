@@ -38,16 +38,13 @@ class WordPressQueryProvider implements IQueryProvider
 {
 	/**
 	 * The not implemented error message
-	 * @var string
 	 */
-	private $_message = 'This functionality is not implemented as the class is only for testing IExpressionProvider for MySQL';
+	private string $_message = 'This functionality is not implemented as the class is only for testing IExpressionProvider for MySQL';
 
     /**
      * Reference to the custom expression provider
-     *
-     * @var IExpressionProvider
      */
-    private $_wordPressMySQLExpressionProvider;
+    private IExpressionProvider $_wordPressMySQLExpressionProvider;
 
 
 

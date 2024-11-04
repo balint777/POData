@@ -24,8 +24,7 @@ use POData\Providers\Query\IQueryProvider;
 
 class OrderByParserTest extends TestCase
 {
-	/** @var  IQueryProvider */
-	protected $mockQueryProvider;
+	protected IQueryProvider $mockQueryProvider;
 
     protected function setUp() : void
     {

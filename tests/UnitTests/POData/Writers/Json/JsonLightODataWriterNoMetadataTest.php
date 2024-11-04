@@ -1307,10 +1307,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		$this->assertEquals(array($expected), array($actual), "raw JSON is: " . $writer->getOutput());
 	}
 
-	/**
-	 * @var ProvidersWrapper
-	 */
-	protected $mockProvider;
+	protected ProvidersWrapper $mockProvider;
 
 	public function testGetOutputNoResourceSets()
 	{
