@@ -955,7 +955,7 @@ class ResourceType
         }
     }
 
-    public function __serialize() : array
+    public function __serialize()
     {
         return [
             '_name' => $this->_name,
@@ -980,7 +980,7 @@ class ResourceType
         ];
     }
 
-    public function __unserialize(array $data) {
+    public function __unserialize($data) {
         $this->_name = $data["_name"];
         $this->_namespaceName = $data["_namespaceName"];
         $this->_fullName = $data["_fullName"];

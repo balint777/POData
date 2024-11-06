@@ -62,6 +62,7 @@ class IncomingRequest implements IHTTPRequest
         $this->_queryOptionsCount = null;
         $this->_headers = null;
         $this->getHeaders();
+		$this->getQueryParameters();
     }
 
     /**
@@ -172,7 +173,7 @@ class IncomingRequest implements IHTTPRequest
     private function getQueryString()
     {
         if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
-            return utf8_decode(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]));
+            return mb_convert_encoding(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]), 'UTF-8');
         } else {
             return "";
         }
