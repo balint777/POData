@@ -15,7 +15,6 @@ use POData\Common\Version;
 use POData\Common\ODataException;
 
 
-use Phockito;
 use UnitTests\BaseUnitTestCase;
 
 //OData has some interesting version negotiations
@@ -49,12 +48,12 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
 		parent::setUp();
 
 		//setup the general object graph
-		Phockito::when($this->mockService->getHost())
-			->return($this->mockServiceHost);
+		$this->mockService->method('getHost')
+			->willReturn($this->mockServiceHost);
 
 
-		Phockito::when($this->mockService->getConfiguration())
-			->return($this->mockServiceConfiguration);
+		$this->mockService->method('getConfiguration')
+			->willReturn($this->mockServiceConfiguration);
 
 
 	}
@@ -65,8 +64,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
 	    $requestMaxVersion = null;
 	    $fakeConfigMaxVersion = Version::v1();
 
-	    Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-		    ->return($fakeConfigMaxVersion);
+	    $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+		    ->willReturn($fakeConfigMaxVersion);
 
 	    $fakeURL = new Url("http://host/service.svc/Collection");
 	    $fakeSegments = array(
@@ -103,8 +102,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v1();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -141,8 +140,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v1();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -178,8 +177,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v1();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -220,8 +219,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         //the request and response are valid until the response or the request require version 2.0
         //at least that's how it seems to be working...need to look into this deeper
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -257,8 +256,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v2();
 
-		Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-			->return($fakeConfigMaxVersion);
+		$this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+			->willReturn($fakeConfigMaxVersion);
 
 		$fakeURL = new Url("http://host/service.svc/Collection");
 		$fakeSegments = array(
@@ -295,8 +294,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -333,8 +332,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -370,8 +369,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -411,8 +410,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -452,8 +451,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -493,8 +492,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -531,8 +530,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -571,8 +570,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -611,8 +610,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -654,8 +653,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -692,8 +691,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -733,8 +732,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v2();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -782,8 +781,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -813,8 +812,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -848,8 +847,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -888,8 +887,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -916,8 +915,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -945,8 +944,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -980,8 +979,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1020,8 +1019,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1048,8 +1047,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1077,8 +1076,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1112,8 +1111,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1152,8 +1151,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1180,8 +1179,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = null;
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1209,8 +1208,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "1.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1244,8 +1243,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "2.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
@@ -1284,8 +1283,8 @@ class RequestDescriptionResponseVersionTest extends BaseUnitTestCase
         $requestMaxVersion = "3.0";
         $fakeConfigMaxVersion = Version::v3();
 
-        Phockito::when($this->mockServiceConfiguration->getMaxDataServiceVersion())
-            ->return($fakeConfigMaxVersion);
+        $this->mockServiceConfiguration->method('getMaxDataServiceVersion')
+            ->willReturn($fakeConfigMaxVersion);
 
         $fakeURL = new Url("http://host/service.svc/Collection");
         $fakeSegments = array(
