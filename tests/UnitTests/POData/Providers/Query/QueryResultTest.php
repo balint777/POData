@@ -7,7 +7,7 @@ use POData\Common\ODataException;
 use POData\Providers\Query\QueryResult;
 
 
-use Phockito;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use UnitTests\BaseUnitTestCase;
 

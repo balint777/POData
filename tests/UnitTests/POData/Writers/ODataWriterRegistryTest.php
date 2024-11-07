@@ -10,7 +10,7 @@ use POData\UriProcessor\RequestDescription;
 use POData\Writers\IODataWriter;
 
 use UnitTests\BaseUnitTestCase;
-use Phockito;
+
 
 class ODataWriterRegistryTest extends BaseUnitTestCase {
 
@@ -33,8 +33,8 @@ class ODataWriterRegistryTest extends BaseUnitTestCase {
 		$registry->register($this->mockWriter1);
 		$registry->register($this->mockWriter2);
 
-		Phockito::when($this->mockWriter2->canHandle(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM))
-			->return(true);
+		$this->mockWriter2->method('canHandle')->with(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM)
+			->willReturn(true);
 
 		$this->assertEquals($this->mockWriter2, $registry->getWriter(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM));
 

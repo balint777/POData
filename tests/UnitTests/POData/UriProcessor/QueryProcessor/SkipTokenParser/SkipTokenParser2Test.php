@@ -16,7 +16,7 @@ use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 
 
 use UnitTests\BaseUnitTestCase;
-use Phockito;
+
 
 class SkipTokenParser2Test extends BaseUnitTestCase
 {

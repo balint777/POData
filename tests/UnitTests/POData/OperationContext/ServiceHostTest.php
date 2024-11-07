@@ -7,7 +7,7 @@ use POData\Common\ODataConstants;
 use POData\Common\Version;
 
 use UnitTests\BaseUnitTestCase;
-use Phockito;
+
 
 class ServiceHostTest extends BaseUnitTestCase {
 

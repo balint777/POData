@@ -17,7 +17,6 @@ use POData\OperationContext\ServiceHost;
 use POData\Common\Version;
 
 use UnitTests\BaseUnitTestCase;
-use Phockito;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
@@ -32,30 +31,26 @@ class BaseServiceGetResponseContentTest extends BaseUnitTestCase {
 
 	public function setUp() : void	{
 		parent::setUp();
-
-		Phockito::when($this->mockService->getHost())
-			->return($this->mockHost);
+		
+		$this->mockService->method('getHost')
+			->willReturn($this->mockHost);
 	}
-
-
 
 	#[DataProvider('provider')]
 	public function testGetResponseContentType($id, $target, Version $version, $acceptsHeader, $format, $expectedValue)
 	{
+		$this->mockRequest->method('getTargetKind')->willReturn($target);
 
-		Phockito::when($this->mockRequest->getTargetKind())
-			->return($target);
+		$this->mockHost->method('getRequestAccept')
+			->willReturn($acceptsHeader);
 
-		Phockito::when($this->mockHost->getRequestAccept())
-			->return($acceptsHeader);
+		$this->mockRequest->method('getQueryStringItem')->with(ODataConstants::HTTPQUERY_STRING_FORMAT)
+			->willReturn($format);
 
-		Phockito::when($this->mockRequest->getQueryStringItem(ODataConstants::HTTPQUERY_STRING_FORMAT))
-			->return($format);
-
-		Phockito::when($this->mockRequest->getResponseVersion())
-			->return($version);
-		Phockito::when($this->mockUriProcessor->process($this->mockService))
-			->return($this->mockRequest);
+		$this->mockRequest->method('getResponseVersion')
+			->willReturn($version);
+		$this->mockUriProcessor->method('process')->with($this->mockService)
+			->willReturn($this->mockRequest);
 		$actual = BaseService::getResponseContentType($this->mockRequest, $this->mockUriProcessor, $this->mockService);
 
 		//accepts doesn't match any possibles actual for that format..so it should return null

@@ -44,7 +44,7 @@ class WordPressQueryProvider implements IQueryProvider
     /**
      * Reference to the custom expression provider
      */
-    private IExpressionProvider $_wordPressMySQLExpressionProvider;
+    private ?IExpressionProvider $_wordPressMySQLExpressionProvider = null;
 
 
 

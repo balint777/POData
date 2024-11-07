@@ -2,7 +2,7 @@
 
 namespace UnitTests;
 
-use Phockito;
+
 
 use ReflectionClass;
 use ReflectionNamedType;
@@ -13,7 +13,6 @@ class BaseUnitTestCase extends TestCase
 {
 	public function setUp(): void
 	{
-		Phockito::include_hamcrest();
 		$this->generateMocksAndSpies();
 	}
 
@@ -51,8 +50,8 @@ public function generateMocksAndSpies(): void
 
         // Create the mock or spy based on the prefix
         $mock = str_starts_with($propertyName, 'spy')
-            ? Phockito::spy($classType)
-            : Phockito::mock($classType);
+            ?  $this->getMockBuilder($classType::class)->getMock()
+            :  $this->createMock($classType);
 
         // Make the property accessible and set its value
         $property->setAccessible(true);
