@@ -23,7 +23,6 @@ use POData\UriProcessor\QueryProcessor\ExpressionParser\FilterInfo;
 use POData\Providers\Query\QueryResult;
 
 
-use Phockito;
 use POData\UriProcessor\RequestDescription;
 use UnitTests\BaseUnitTestCase;
 
@@ -65,11 +64,11 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     {
 
 	    $fakeContainerName = "BigBadContainer";
-	    Phockito::when($this->mockMetadataProvider->getContainerName())
-		    ->return($fakeContainerName);
-
+        $this->mockMetadataProvider->method('getContainerName')->willReturn($fakeContainerName);
         $wrapper = $this->getMockedWrapper();
-
+        
+        // $wrapper->expects($this->once())->method('getContainerName')->willReturn($fakeContainerName);
+        $wrapper->getContainerName();
         $this->assertEquals($fakeContainerName, $wrapper->getContainerName());
 
     }
@@ -93,8 +92,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testGetContainerNameThrowsWhenEmpty()
 	{
 
-		Phockito::when($this->mockMetadataProvider->getContainerName())
-			->return('');
+        $this->mockMetadataProvider->method('getContainerName')->willReturn('');
 		$wrapper = $this->getMockedWrapper();
 
 		try{
@@ -110,9 +108,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testGetContainerNamespace()
 	{
 		$fakeContainerNamespace = "BigBadNamespace";
-		Phockito::when($this->mockMetadataProvider->getContainerNamespace())
-			->return($fakeContainerNamespace);
-
+        $this->mockMetadataProvider->method('getContainerNamespace')->willReturn($fakeContainerNamespace);
+		
 		$wrapper = $this->getMockedWrapper();
 
 		$this->assertEquals($fakeContainerNamespace, $wrapper->getContainerNamespace());
@@ -138,9 +135,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testGetContainerNamespaceThrowsWhenEmpty()
 	{
 
-		Phockito::when($this->mockMetadataProvider->getContainerNamespace())
-			->return('');
-
+        $this->mockMetadataProvider->method('getContainerNamespace')->willReturn('');
+		
 		$wrapper = $this->getMockedWrapper();
 
 		try{
@@ -156,16 +152,14 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testResolveResourceSet()
 	{
 		$fakeSetName = 'SomeSet';
-		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
-			->return($this->mockResourceSet);
+        $this->mockMetadataProvider->method('resolveResourceSet')->with($fakeSetName)
+            ->willReturn($this->mockResourceSet);
 
-
-		Phockito::when($this->mockResourceSet->getResourceType())
-			->return($this->mockResourceType);
+        $this->mockResourceSet->method('getResourceType')->willReturn($this->mockResourceType);
 
 		//Indicate the resource set is visible
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-			->return(EntitySetRights::READ_SINGLE);
+        $this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+            ->willReturn(EntitySetRights::READ_SINGLE);
 
 
 		$wrapper = $this->getMockedWrapper();
@@ -184,29 +178,30 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	{
 		$fakeSetName = 'SomeSet';
 
-		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
-			->return($this->mockResourceSet);
+		$this->mockMetadataProvider->method('resolveResourceSet')->with($fakeSetName)
+			->willReturn($this->mockResourceSet);
 
 
-		Phockito::when($this->mockResourceSet->getResourceType())
-			->return($this->mockResourceType);
+		$this->mockResourceSet->method('getResourceType')
+			->willReturn($this->mockResourceType);
 
 		//Indicate the resource set is NOT visible
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-			->return(EntitySetRights::NONE);
+		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+			->willReturn(EntitySetRights::NONE);
 
-		Phockito::when($this->mockResourceSet->getName())
-			->return($fakeSetName);
+		$this->mockResourceSet->method('getName')
+			->willReturn($fakeSetName);
 
 		$wrapper = $this->getMockedWrapper();
+
+        //make sure the metadata provider was only called once
+        $this->mockMetadataProvider->expects($this->exactly(1))->method('resolveResourceSet')->with($fakeSetName);
 
 		$this->assertNull($wrapper->resolveResourceSet($fakeSetName));
 
 		//verify it comes from cache
 		$wrapper->resolveResourceSet($fakeSetName); //call it again
 
-		//make sure the metadata provider was only called once
-		Phockito::verify($this->mockMetadataProvider, 1)->resolveResourceSet($fakeSetName);
 
 	}
 
@@ -214,8 +209,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	{
 		$fakeSetName = 'SomeSet';
 
-		Phockito::when($this->mockMetadataProvider->resolveResourceSet($fakeSetName))
-			->return(null);
+		$this->mockMetadataProvider->method('resolveResourceSet')->with($fakeSetName)
+			->willReturn(null);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -229,8 +224,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeTypeName = 'SomeType';
 
-        Phockito::when($this->mockMetadataProvider->resolveResourceType($fakeTypeName))
-            ->return(null);
+        $this->mockMetadataProvider->method('resolveResourceType')->with($fakeTypeName)
+            ->willReturn(null);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -244,8 +239,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeTypeName = 'SomeType';
 
-        Phockito::when($this->mockMetadataProvider->resolveResourceType($fakeTypeName))
-            ->return($this->mockResourceType);
+        $this->mockMetadataProvider->method('resolveResourceType')->with($fakeTypeName)
+            ->willReturn($this->mockResourceType);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -260,11 +255,11 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     {
         $fakeName = "FakeType";
 
-        Phockito::when($this->mockMetadataProvider->getDerivedTypes($this->mockResourceType))
-            ->return($this->mockResourceType);
+        $this->mockMetadataProvider->method('getDerivedTypes')->with($this->mockResourceType)
+            ->willReturn($this->mockResourceType);
 
-        Phockito::when($this->mockResourceType->getName())
-            ->return($fakeName);
+        $this->mockResourceType->method('getName')
+            ->willReturn($fakeName);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -282,11 +277,11 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     {
         $fakeName = "FakeType";
 
-        Phockito::when($this->mockMetadataProvider->getDerivedTypes($this->mockResourceType))
-            ->return(array($this->mockResourceType2));
+        $this->mockMetadataProvider->method('getDerivedTypes')->with($this->mockResourceType)
+            ->willReturn(array($this->mockResourceType2));
 
-        Phockito::when($this->mockResourceType->getName())
-            ->return($fakeName);
+        $this->mockResourceType->method('getName')
+            ->willReturn($fakeName);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -298,8 +293,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     public function testHasDerivedTypes()
     {
 
-        Phockito::when($this->mockMetadataProvider->hasDerivedTypes($this->mockResourceType))
-            ->return(true);
+        $this->mockMetadataProvider->method('hasDerivedTypes')->with($this->mockResourceType)
+            ->willReturn(true);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -310,50 +305,50 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     public function testGetResourceAssociationSet()
     {
         $fakePropName = "Fake Prop";
-        Phockito::when($this->mockResourceProperty->getName())
-            ->return($fakePropName);
+        $this->mockResourceProperty->method('getName')
+            ->willReturn($fakePropName);
 
 
-        Phockito::when($this->mockResourceType->resolvePropertyDeclaredOnThisType($fakePropName))
-            ->return($this->mockResourceProperty);
+        $this->mockResourceType->method('resolvePropertyDeclaredOnThisType')->with($fakePropName)
+            ->willReturn($this->mockResourceProperty);
 
         $fakeTypeName = "Fake Type";
-        Phockito::when($this->mockResourceType->getName())
-            ->return($fakeTypeName);
+        $this->mockResourceType->method('getName')
+            ->willReturn($fakeTypeName);
 
         $fakeSetName = "Fake Set";
-        Phockito::when($this->mockResourceSet->getName())
-            ->return($fakeSetName);
+        $this->mockResourceSet->method('getName')
+            ->willReturn($fakeSetName);
 
-        Phockito::when($this->mockResourceSet->getResourceType())
-            ->return($this->mockResourceType);
+        $this->mockResourceSet->method('getResourceType')
+            ->willReturn($this->mockResourceType);
 
-        Phockito::when($this->mockResourceSet2->getResourceType())
-            ->return($this->mockResourceType2);
-
-        //Indicate the resource set is visible
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-            ->return(EntitySetRights::READ_SINGLE);
+        $this->mockResourceSet2->method('getResourceType')
+            ->willReturn($this->mockResourceType2);
 
         //Indicate the resource set is visible
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
-            ->return(EntitySetRights::READ_SINGLE);
+        $this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+            ->willReturn(EntitySetRights::READ_SINGLE);
 
-        Phockito::when($this->mockMetadataProvider->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSet);
+        //Indicate the resource set is visible
+        $this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet2)
+            ->willReturn(EntitySetRights::READ_SINGLE);
+
+        $this->mockMetadataProvider->method('getResourceAssociationSet')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSet);
 
 
-        Phockito::when($this->mockResourceAssociationSet->getResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSetEnd);
+        $this->mockResourceAssociationSet->method('getResourceAssociationSetEnd')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSetEnd);
 
-        Phockito::when($this->mockResourceAssociationSet->getRelatedResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSetEnd);
+        $this->mockResourceAssociationSet->method('getRelatedResourceAssociationSetEnd')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSetEnd);
 
-        Phockito::when($this->mockResourceAssociationSetEnd->getResourceSet())
-            ->return($this->mockResourceSet2);
+        $this->mockResourceAssociationSetEnd->method('getResourceSet')
+            ->willReturn($this->mockResourceSet2);
 
-        Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
-            ->return($this->mockResourceType2);
+        $this->mockResourceAssociationSetEnd->method('getResourceType')
+            ->willReturn($this->mockResourceType2);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -367,50 +362,50 @@ class ProvidersWrapperTest extends BaseUnitTestCase
     public function testGetResourceAssociationSetEndIsNotVisible()
     {
         $fakePropName = "Fake Prop";
-        Phockito::when($this->mockResourceProperty->getName())
-            ->return($fakePropName);
+        $this->mockResourceProperty->method('getName')
+            ->willReturn($fakePropName);
 
 
-        Phockito::when($this->mockResourceType->resolvePropertyDeclaredOnThisType($fakePropName))
-            ->return($this->mockResourceProperty);
+        $this->mockResourceType->method('resolvePropertyDeclaredOnThisType')->with($fakePropName)
+            ->willReturn($this->mockResourceProperty);
 
         $fakeTypeName = "Fake Type";
-        Phockito::when($this->mockResourceType->getName())
-            ->return($fakeTypeName);
+        $this->mockResourceType->method('getName')
+            ->willReturn($fakeTypeName);
 
         $fakeSetName = "Fake Set";
-        Phockito::when($this->mockResourceSet->getName())
-            ->return($fakeSetName);
+        $this->mockResourceSet->method('getName')
+            ->willReturn($fakeSetName);
 
-        Phockito::when($this->mockResourceSet->getResourceType())
-            ->return($this->mockResourceType);
+        $this->mockResourceSet->method('getResourceType')
+            ->willReturn($this->mockResourceType);
 
-        Phockito::when($this->mockResourceSet2->getResourceType())
-            ->return($this->mockResourceType2);
-
-        //Indicate the resource set is visible
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-            ->return(EntitySetRights::READ_SINGLE);
+        $this->mockResourceSet2->method('getResourceType')
+            ->willReturn($this->mockResourceType2);
 
         //Indicate the resource set is visible
-        Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
-            ->return(EntitySetRights::NONE);
+        $this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+            ->willReturn(EntitySetRights::NONE);
 
-        Phockito::when($this->mockMetadataProvider->getResourceAssociationSet($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSet);
+        //Indicate the resource set is visible
+        $this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet2)
+            ->willReturn(EntitySetRights::READ_SINGLE);
+
+        $this->mockMetadataProvider->method('getResourceAssociationSet')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSet);
 
 
-        Phockito::when($this->mockResourceAssociationSet->getResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSetEnd);
+        $this->mockResourceAssociationSet->method('getResourceAssociationSetEnd')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSetEnd);
 
-        Phockito::when($this->mockResourceAssociationSet->getRelatedResourceAssociationSetEnd($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty))
-            ->return($this->mockResourceAssociationSetEnd);
+        $this->mockResourceAssociationSet->method('getRelatedResourceAssociationSetEnd')->with($this->mockResourceSet, $this->mockResourceType, $this->mockResourceProperty)
+            ->willReturn($this->mockResourceAssociationSetEnd);
 
-        Phockito::when($this->mockResourceAssociationSetEnd->getResourceSet())
-            ->return($this->mockResourceSet2);
+        $this->mockResourceAssociationSetEnd->method('getResourceSet')
+            ->willReturn($this->mockResourceSet2);
 
-        Phockito::when($this->mockResourceAssociationSetEnd->getResourceType())
-            ->return($this->mockResourceType2);
+        $this->mockResourceAssociationSetEnd->method('getResourceType')
+            ->willReturn($this->mockResourceType2);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -426,14 +421,14 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$this->mockResourceSet,
 		);
 
-		Phockito::when($this->mockMetadataProvider->getResourceSets())
-			->return($fakeSets);
+		$this->mockMetadataProvider->method('getResourceSets')
+			->willReturn($fakeSets);
 
-		Phockito::when($this->mockResourceSet->getResourceType())
-			->return($this->mockResourceType);
+		$this->mockResourceSet->method('getResourceType')
+			->willReturn($this->mockResourceType);
 
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-			->return(EntitySetRights::READ_SINGLE);
+		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+			->willReturn(EntitySetRights::READ_SINGLE);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -454,18 +449,18 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$this->mockResourceSet,
 		);
 
-		Phockito::when($this->mockMetadataProvider->getResourceSets())
-			->return($fakeSets);
+		$this->mockMetadataProvider->method('getResourceSets')
+			->willReturn($fakeSets);
 
-		Phockito::when($this->mockResourceSet->getResourceType())
-			->return($this->mockResourceType);
+		$this->mockResourceSet->method('getResourceType')
+			->willReturn($this->mockResourceType);
 
 		$fakeName = "Fake Set 1";
-		Phockito::when($this->mockResourceSet->getName())
-			->return($fakeName);
+		$this->mockResourceSet->method('getName')
+			->willReturn($fakeName);
 
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-			->return(EntitySetRights::READ_SINGLE);
+		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+			->willReturn(EntitySetRights::READ_SINGLE);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -486,25 +481,25 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$this->mockResourceSet2,
 		);
 
-		Phockito::when($this->mockMetadataProvider->getResourceSets())
+		$this->mockMetadataProvider->method('getResourceSets')
 			->return($fakeSets);
 
-		Phockito::when($this->mockResourceSet->getName())
-			->return("fake name 1");
+        $this->mockResourceSet->method('getName')
+			->willReturn("fake name 1");
 
-		Phockito::when($this->mockResourceSet2->getName())
-			->return("fake name 2");
+		$this->mockResourceSet2->method('getName')
+			->willReturn("fake name 2");
 
-		Phockito::when($this->mockResourceSet->getResourceType())
-			->return($this->mockResourceType);
+		$this->mockResourceSet->method('getResourceType')
+			->willReturn($this->mockResourceType);
 
-		Phockito::when($this->mockResourceSet2->getResourceType())
-			->return($this->mockResourceType);
+		$this->mockResourceSet2->method('getResourceType')
+			->willReturn($this->mockResourceType2);
 
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet))
-			->return(EntitySetRights::NONE);
+		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
+			->willReturn(EntitySetRights::READ_SINGLE);
 
-		Phockito::when($this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
+		$this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
 			->return(EntitySetRights::READ_SINGLE);
 
 		$wrapper = $this->getMockedWrapper();
@@ -525,8 +520,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
 		);
 
-		Phockito::when($this->mockMetadataProvider->getTypes())
-			->return($fakeTypes);
+		$this->mockMetadataProvider->method('getTypes')
+			->willReturn($fakeTypes);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -541,8 +536,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			new ResourceType(new StringType(), ResourceTypeKind::PRIMITIVE, "FakeType1" ),
 		);
 
-		Phockito::when($this->mockMetadataProvider->getTypes())
-			->return($fakeTypes);
+		$this->mockMetadataProvider->method('getTypes')
+			->willReturn($fakeTypes);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -568,7 +563,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult = new QueryResult();
         $fakeQueryResult->results = array();
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -576,7 +571,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -601,7 +596,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $skip = 10;
 
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -609,7 +604,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return(null);
+        )->willReturn(null);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -644,10 +639,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		$fakeQueryResult->results = null;
 
 		//Because the provider doe NOT handle paging and this request needs a count, there must be results to calculate a count from
-		Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-			->return(false);
+		$this->mockQueryProvider->method('handlesOrderedPaging')
+			->willReturn(false);
 
-		Phockito::when($this->mockQueryProvider->getResourceSet(
+		$this->mockQueryProvider->method('getResourceSet')->with(
 			QueryType::COUNT,
 			$this->mockResourceSet,
 			$this->mockRequest,
@@ -655,7 +650,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$orderBy,
 			$top,
 			$skip
-		))->return($fakeQueryResult);
+		)->willReturn($fakeQueryResult);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -688,10 +683,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = null; //null is not numeric
 
 	    //Because the provider handles paging and this request needs a count, the count must be numeric
-	    Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-		    ->return(true);
+	    $this->mockQueryProvider->method('handlesOrderedPaging')
+		    ->willReturn(true);
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::COUNT,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -699,7 +694,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -733,10 +728,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = null; //null is not numeric
 
 	    //Because the provider handles paging and this request needs a count, the count must be numeric
-	    Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-		    ->return(true);
+	    $this->mockQueryProvider->method('handlesOrderedPaging')
+		    ->willReturn(true);
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -744,7 +739,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -779,10 +774,10 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		$fakeQueryResult->results = null;
 
 		//Because the provider does NOT handle paging and this request needs a count, the result must have results collection to calculate count from
-		Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-			->return(false);
+		$this->mockQueryProvider->method('handlesOrderedPaging')
+			->willReturn(false);
 
-		Phockito::when($this->mockQueryProvider->getResourceSet(
+		$this->mockQueryProvider->method('getResourceSet')->with(
 			QueryType::ENTITIES_WITH_COUNT,
 			$this->mockResourceSet,
 			$this->mockRequest,
@@ -790,7 +785,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 			$orderBy,
 			$top,
 			$skip
-		))->return($fakeQueryResult);
+		)->willReturn($fakeQueryResult);
 
 		$wrapper = $this->getMockedWrapper();
 
@@ -825,7 +820,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = 2;
         $fakeQueryResult->results = null; //null is not an array
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -833,7 +828,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -867,7 +862,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = 4;
         $fakeQueryResult->results = null; //null is not an array
 
-        Phockito::when($this->mockQueryProvider->getResourceSet(
+        $this->mockQueryProvider->method('getResourceSet')->with(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
 			$this->mockRequest,
@@ -875,7 +870,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -911,7 +906,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -921,7 +916,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -949,7 +944,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -959,7 +954,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return(null);
+        )->willReturn(null);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -996,12 +991,12 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->results = null;
 
         //Because the provider doe NOT handle paging and this request needs a count, there must be results to calculate a count from
-        Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-            ->return(false);
+        $this->mockQueryProvider->method('handlesOrderedPaging')
+            ->willReturn(false);
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::COUNT,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1011,7 +1006,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -1046,12 +1041,12 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
-        Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-            ->return(true);
+        $this->mockQueryProvider->method('handlesOrderedPaging')
+            ->willReturn(true);
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::COUNT,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1061,7 +1056,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -1097,12 +1092,12 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->count = null; //null is not numeric
 
         //Because the provider handles paging and this request needs a count, the count must be numeric
-        Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-            ->return(true);
+        $this->mockQueryProvider->method('handlesOrderedPaging')
+            ->willReturn(true);
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1112,7 +1107,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -1149,12 +1144,12 @@ class ProvidersWrapperTest extends BaseUnitTestCase
         $fakeQueryResult->results = null;
 
         //Because the provider does NOT handle paging and this request needs a count, the result must have results collection to calculate count from
-        Phockito::when($this->mockQueryProvider->handlesOrderedPaging())
-            ->return(false);
+        $this->mockQueryProvider->method('handlesOrderedPaging')
+            ->willReturn(false);
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1164,7 +1159,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -1203,7 +1198,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1213,7 +1208,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
@@ -1251,7 +1246,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 
         $fakeSourceEntity = new \stdClass();
 
-        Phockito::when($this->mockQueryProvider->getRelatedResourceSet(
+        $this->mockQueryProvider->method('getRelatedResourceSet')->with(
             QueryType::ENTITIES_WITH_COUNT,
             $this->mockResourceSet,
             $fakeSourceEntity,
@@ -1261,7 +1256,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
             $orderBy,
             $top,
             $skip
-        ))->return($fakeQueryResult);
+        )->willReturn($fakeQueryResult);
 
         $wrapper = $this->getMockedWrapper();
 
