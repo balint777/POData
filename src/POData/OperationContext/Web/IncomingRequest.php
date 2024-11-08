@@ -137,6 +137,9 @@ class IncomingRequest implements IHTTPRequest
 
             $this->_rawUrl .= "://" . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= $_SERVER[ODataConstants::HTTPREQUEST_URI];
+			if (!empty($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING])) {
+				$this->_rawUrl .= "?" . $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING];
+			}
         }
 
         return $this->_rawUrl;
@@ -172,7 +175,7 @@ class IncomingRequest implements IHTTPRequest
      */
     private function getQueryString()
     {
-        if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER)) {
+        if (array_key_exists(ODataConstants::HTTPREQUEST_QUERY_STRING, $_SERVER) && !empty($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING])) {
             return mb_convert_encoding(trim($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING]), 'UTF-8');
         } else {
             return "";

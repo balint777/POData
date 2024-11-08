@@ -78,11 +78,12 @@ class OrderByParser
 
     private static function _mock($instanceType)
     {
-        $mock = [];
+		$reflection = new \ReflectionClass($instanceType->name);
+        $mock = $reflection->newInstanceWithoutConstructor();
         foreach ($instanceType->getProperties() as $property) {
-            $mock[$property->name] = null;
+            $mock->{$property->name} = null;
         }
-        return (object) $mock;
+        return $mock;
     }
 
     /**
