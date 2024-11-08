@@ -482,7 +482,7 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		);
 
 		$this->mockMetadataProvider->method('getResourceSets')
-			->return($fakeSets);
+			->willReturn($fakeSets);
 
         $this->mockResourceSet->method('getName')
 			->willReturn("fake name 1");
@@ -499,8 +499,8 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
 			->willReturn(EntitySetRights::READ_SINGLE);
 
-		$this->mockServiceConfig->getEntitySetAccessRule($this->mockResourceSet2))
-			->return(EntitySetRights::READ_SINGLE);
+		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet2)
+			->willReturn(EntitySetRights::NONE);
 
 		$wrapper = $this->getMockedWrapper();
 
