@@ -170,6 +170,10 @@ class JsonWriter
 
 
             case 'Edm.DateTime':
+                $dateTime = new \DateTime($value, new \DateTimeZone('UTC'));
+                $formattedDateTime = $dateTime->format('Y-m-d\TH:i:s');
+                $this->_writeCore($formattedDateTime, /* quotes */ true);
+                break;
             case 'Edm.Date':
                 $this->_writeCore($value, /* quotes */ true);
                 break;
