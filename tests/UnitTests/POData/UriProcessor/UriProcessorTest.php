@@ -82,14 +82,6 @@ class UriProcessorTest extends BaseUnitTestCase
         $this->mockCollectionKeyProperty->method('getInstanceType')
             ->willReturn(new Int32());
 
-		$this->mockCollectionResourceSetWrapper->method('getResourceType')
-			->willReturn($this->mockCollectionResourceType);		
-		$this->mockCollectionResourceType->method('resolveProperty')->with("Collection")
-			->willReturn($this->mockCollectionKeyProperty);
-		$this->mockProvidersWrapper->method('resolveResourceSet')->with("Collection")
-			->willReturn($this->mockCollectionResourceSetWrapper);
-
-
         $this->mockRelatedCollectionResourceType->method('getKeyProperties')
             ->willReturn(array($this->mockRelatedCollectionKeyProperty));
 
@@ -2279,6 +2271,13 @@ class UriProcessorTest extends BaseUnitTestCase
 			->willReturn($requestURI);
 		$this->mockServiceHost->method('getFullAbsoluteRequestUri')
 			->willReturn($requestURI);
+
+		$this->mockCollectionResourceSetWrapper->method('getResourceType')
+			->willReturn($this->mockCollectionResourceType);		
+		$this->mockCollectionResourceType->method('resolveProperty')->with("Collection")
+			->willReturn($this->mockCollectionKeyProperty);
+		$this->mockProvidersWrapper->method('resolveResourceSet')->with("Collection")
+			->willReturn($this->mockCollectionResourceSetWrapper);
 	
 		$uriProcessor = UriProcessor::process($this->mockService);
 		$request = $uriProcessor->getRequest();
@@ -2309,6 +2308,8 @@ class UriProcessorTest extends BaseUnitTestCase
 	{
 		$requestURI = new Url('http://host.com/data.svc/Collection/$count');
 		$this->mockServiceHost->method('getAbsoluteRequestUri')
+			->willReturn($requestURI);
+		$this->mockServiceHost->method('getFullAbsoluteRequestUri')
 			->willReturn($requestURI);
 
 		$this->fakeServiceConfig->setAcceptCountRequests(true);
