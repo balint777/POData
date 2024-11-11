@@ -1454,8 +1454,8 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 
 	public function testGetOutputNoResourceSets()
 	{
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return(array());
+		$this->mockProvider->method('getResourceSets')
+			->willReturn(array());
 
 		$writer = new JsonODataV2Writer();
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1469,20 +1469,20 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 	public function testGetOutputTwoResourceSets()
 	{
 
-		$fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-		Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+		$fakeResourceSet1 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet1->method('getName')->willReturn("Name 1");
 
-		$fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet2 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
 		//TODO: this certainly doesn't seem right...see #73
-		Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+		$fakeResourceSet2->method('getName')->willReturn("XML escaped stuff \" ' <> & ?");
 
 		$fakeResourceSets = array(
 			$fakeResourceSet1,
 			$fakeResourceSet2,
 		);
 
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return($fakeResourceSets);
+		$this->mockProvider->method('getResourceSets')
+			->willReturn($fakeResourceSets);
 
 
 		$writer = new JsonODataV2Writer();
@@ -1502,12 +1502,12 @@ class JsonODataV2WriterTest extends BaseUnitTestCase
 		$this->assertEquals($expected, $actual, $id);
 	}
 
-	public static function canHandleProvider(){
+	public static function canHandleProvider() {
 
 
 		return array(
 			array(100, Version::v1(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
-			array(101, Version::v2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
+			array(101, Version::v2(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, true),
 			array(102, Version::v3(), MimeTypes::MIME_APPLICATION_ATOMSERVICE, false),
 
 			array(200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, false),

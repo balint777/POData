@@ -233,7 +233,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"value" : [
 							{
 								"@odata.type": "DataServiceProviderDemo.Product",
@@ -249,7 +249,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 								"Price@odata.type": "Edm.Decimal",
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" => ""http://services.odata.org/OData/OData.svc/Products(0)/Categories?$skiptoken=12"
 					}';
 		 $expected = json_decode($expected);
 
@@ -266,7 +267,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"odata.count":"33",
 						"value" : [
 							{
@@ -498,7 +499,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"value": [
 							{
 								"@odata.type": "ODataDemo.Supplier",
@@ -553,7 +554,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"odata.count":"55",
 						"value": [
 							{
@@ -647,7 +648,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
 						"@odata.type": "ODataDemo.Category",
 						"@odata.id": "http://services.odata.org/OData/OData.svc/Categories(0)",
 						"@odata.etag":"",
@@ -720,7 +721,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#ODataDemo.Address",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#ODataDemo.Address",
 						"@odata.type": "ODataDemo.Address",
 						"Street": "NE 228th",
 						"City": "Sammamish",
@@ -849,7 +850,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
 						"@odata.type": "SampleModel.Customer",
 						"@odata.id": "http://host/service.svc/Customers(1)",
 						"@odata.etag":"some eTag",
@@ -897,7 +898,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Edm.Int16",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Edm.Int16",
 						"value" :  56
 					 }';
 		$expected = json_decode($expected);
@@ -1039,7 +1040,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"@odata.type":"Main.Type",
 	"@odata.id":"Main Entry",
 	"@odata.etag":"Entry ETag",
@@ -1133,7 +1134,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"@odata.type":"Main.Type",
 	"@odata.id":"Main Entry",
 	"@odata.etag":"Entry ETag",
@@ -1362,7 +1363,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"@odata.type":"Main.Type",
 	"@odata.id":"Main Entry",
 	"@odata.etag":"Entry ETag",
@@ -1408,8 +1409,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 
 	public function testGetOutputNoResourceSets()
 	{
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return(array());
+		$this->mockProvider->method('getResourceSets')
+			->willReturn(array());
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1422,20 +1423,20 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 	public function testGetOutputTwoResourceSets()
 	{
 
-		$fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-		Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+		$fakeResourceSet1 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet1->method('getName')->willReturn("Name 1");
 
-		$fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet2 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
 		//TODO: this certainly doesn't seem right...see #73
-		Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+		$fakeResourceSet2->method('getName')->willReturn("XML escaped stuff \" ' <> & ?");
 
 		$fakeResourceSets = array(
 			$fakeResourceSet1,
 			$fakeResourceSet2,
 		);
 
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return($fakeResourceSets);
+		$this->mockProvider->method('getResourceSets')
+			->willReturn($fakeResourceSets);
 
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL, $this->serviceBase);

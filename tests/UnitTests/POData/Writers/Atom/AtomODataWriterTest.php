@@ -237,7 +237,7 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
   <title type="text">Feed Title</title>
   <id>Feed Id</id>
   <updated>2013-09-17T19:22:33-06:00</updated>
-  <link rel="Self Link Name" href="Self Link Url"/>
+  <link rel="Self Link Name" href="Self Link Url" title="Self Link Title"/>
   <m:count>Count</m:count>
   <entry m:etag="Entry ETag">
     <id>Entry 1</id>
@@ -1118,8 +1118,8 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
 
     public function testGetOutputNoResourceSets()
     {
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return(array());
+        $this->mockProvider->method('getResourceSets')
+            ->willReturn(array());
 
         $fakeBaseURL = "http://some/place/some/where/" . uniqid();
 
@@ -1135,20 +1135,20 @@ xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
     public function testGetOutputTwoResourceSets()
     {
 
-        $fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-        Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+        $fakeResourceSet1 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet1->method('getName')->willReturn("Name 1");
 
-        $fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+        $fakeResourceSet2 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
         //TODO: this certainly doesn't seem right...see #73
-        Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+        $fakeResourceSet2->method('getName')->willReturn("XML escaped stuff \" ' <> & ?");
 
         $fakeResourceSets = array(
             $fakeResourceSet1,
             $fakeResourceSet2,
         );
 
-        Phockito::when($this->mockProvider->getResourceSets())
-            ->return($fakeResourceSets);
+        $this->mockProvider->method('getResourceSets')
+            ->willReturn($fakeResourceSets);
 
         $fakeBaseURL = "http://some/place/some/where/" . uniqid();
 

@@ -101,7 +101,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.count" : "44",
+						"@odata.count" : "44",
 						"value" : [
 							{
 								"url": "http://services.odata.org/OData/OData.svc/Products(0)"
@@ -175,7 +175,6 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 
 		$entry1->propertyContent = $entry1PropContent;
 
-		$entry1->isExpanded	   = false;
 		$entry1->isMediaLinkEntry = false;
 
 		//entry 1 links NOTE nometadata means this won't be output
@@ -234,7 +233,8 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 								"DiscontinuedDate" : null,
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -251,7 +251,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.count":"33",
+						"@odata.count":"33",
 						"value" : [
 							{
 								"ID": 100,
@@ -260,7 +260,8 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 								"DiscontinuedDate" : null,
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -343,7 +344,6 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 
 		$entry1->propertyContent = $entry1PropContent;
 
-		$entry1->isExpanded	   = false;
 		$entry1->isMediaLinkEntry = false;
 
 		//entry 1 links
@@ -427,7 +427,6 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 
 		$entry2->propertyContent = $entry2PropContent;
 
-		$entry2->isExpanded	   = false;
 		$entry2->isMediaLinkEntry = false;
 
 		//entry 2 links
@@ -500,7 +499,8 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -517,7 +517,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.count":"55",
+						"@odata.count":"55",
 						"value": [
 							{
 								"ID": 0,
@@ -543,7 +543,8 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -1311,13 +1312,13 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 
 	public function testGetOutputNoResourceSets()
 	{
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return(array());
+		$this->mockProvider->method('getResourceSets')
+			->willReturn(array());
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"this should not be used for minimal metadata/\$metadata\",\"value\":[\n\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1326,26 +1327,26 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 	public function testGetOutputTwoResourceSets()
 	{
 
-		$fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-		Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+		$fakeResourceSet1 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet1->method('getName')->willReturn("Name 1");
 
-		$fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet2 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
 		//TODO: this certainly doesn't seem right...see #73
-		Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+		$fakeResourceSet2->method('getName')->willReturn("XML escaped stuff \" ' <> & ?");
 
 		$fakeResourceSets = array(
 			$fakeResourceSet1,
 			$fakeResourceSet2,
 		);
 
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return($fakeResourceSets);
+		$this->mockProvider->method('getResourceSets')
+			->willReturn($fakeResourceSets);
 
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n			\"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"this should not be used for minimal metadata/\$metadata\",\"value\":[\n		{\n			\"name\":\"Name 1\",\"url\":\"Name 1\"\n		},{\n			\"name\":\"XML escaped stuff \\\" ' <> & ?\",\"url\":\"XML escaped stuff \\\" ' <> & ?\"\n		}\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1369,7 +1370,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 
 			array(200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, false),
 			array(201, Version::v2(), MimeTypes::MIME_APPLICATION_JSON, false),
-			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, false),
+			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, true),
 
 			//TODO: is this first one right?  this should NEVER come up, but should we claim to handle this format when
 			//it's invalid for V1? Ditto first of the next sections

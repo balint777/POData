@@ -30,7 +30,7 @@ class SegmentParserTest extends TestCase
         $this->_serviceConfiguration = new ServiceConfiguration($this->_metadataProvider);
         $this->_serviceConfiguration->setEntitySetAccessRule('*', EntitySetRights::ALL);
 
-	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
+	    $this->mockQueryProvider = $this->createMock('POData\Providers\Query\IQueryProvider');
 
         $this->providersWrapper = new ProvidersWrapper($this->_metadataProvider, $this->mockQueryProvider, $this->_serviceConfiguration, false);
     }

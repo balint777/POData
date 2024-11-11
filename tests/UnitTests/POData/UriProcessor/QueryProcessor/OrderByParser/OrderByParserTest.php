@@ -21,15 +21,11 @@ use UnitTests\POData\Facets\NorthWind1\Product2;
 use PHPUnit\Framework\TestCase;
 
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\BaseUnitTestCase;
 
-class OrderByParserTest extends TestCase
+class OrderByParserTest extends BaseUnitTestCase
 {
 	protected IQueryProvider $mockQueryProvider;
-
-    protected function setUp() : void
-    {
-	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
-    }
 
     //All all test case (which are +ve) check the generated function and
 

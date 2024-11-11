@@ -18,15 +18,11 @@ use UnitTests\POData\Facets\NorthWind1\Customer2;
 use UnitTests\POData\Facets\NorthWind1\Order2;
 use POData\Providers\Query\IQueryProvider;
 use PHPUnit\Framework\TestCase;
+use UnitTests\BaseUnitTestCase;
 
-class SkipTokenParserTest extends TestCase
+class SkipTokenParserTest extends BaseUnitTestCase
 {
 	protected IQueryProvider $mockQueryProvider;
-
-	protected function setUp() : void
-	{
-		$this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
-	}
 
 	protected function tearDown() : void
 	{

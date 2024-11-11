@@ -17,16 +17,12 @@ use PHPUnit\Framework\TestCase;
 
 use UnitTests\POData\Facets\NorthWind2\NorthWindMetadata;
 use POData\Providers\Query\IQueryProvider;
+use UnitTests\BaseUnitTestCase;
 
-class MetadataWriterTest extends TestCase
+class MetadataWriterTest extends BaseUnitTestCase
 {
 	protected IQueryProvider $mockQueryProvider;
 
-    protected function setUp() : void
-    {
-	    $this->mockQueryProvider = \Phockito::mock('POData\Providers\Query\IQueryProvider');
-    }
-    
     public function testWriteMetadata()
     {
 		$northWindMetadata = NorthWindMetadata::Create();

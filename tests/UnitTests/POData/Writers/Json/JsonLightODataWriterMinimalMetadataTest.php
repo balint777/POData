@@ -1325,8 +1325,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 
 	public function testGetOutputNoResourceSets()
 	{
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return(array());
+		$this->mockProvider->method('getResourceSets')
+			->willReturn(array());
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
@@ -1340,20 +1340,20 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 	public function testGetOutputTwoResourceSets()
 	{
 
-		$fakeResourceSet1 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
-		Phockito::when($fakeResourceSet1->getName())->return("Name 1");
+		$fakeResourceSet1 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet1->method('getName')->willReturn("Name 1");
 
-		$fakeResourceSet2 = Phockito::mock('POData\Providers\Metadata\ResourceSetWrapper');
+		$fakeResourceSet2 = $this->createMock('POData\Providers\Metadata\ResourceSetWrapper');
 		//TODO: this certainly doesn't seem right...see #73
-		Phockito::when($fakeResourceSet2->getName())->return("XML escaped stuff \" ' <> & ?");
+		$fakeResourceSet2->method('getName')->willReturn("XML escaped stuff \" ' <> & ?");
 
 		$fakeResourceSets = array(
 			$fakeResourceSet1,
 			$fakeResourceSet2,
 		);
 
-		Phockito::when($this->mockProvider->getResourceSets())
-			->return($fakeResourceSets);
+		$this->mockProvider->method('getResourceSets')
+			->willReturn($fakeResourceSets);
 
 
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL, $this->serviceBase);

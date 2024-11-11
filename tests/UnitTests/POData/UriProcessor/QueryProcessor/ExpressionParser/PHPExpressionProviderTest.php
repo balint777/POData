@@ -356,7 +356,7 @@ class PHPExpressionProviderTest extends TestCase
     {
         //Currently the expression parser just ignores expression types it doesn't know
         //TODO: maybe this should throw instead??
-        $unknownExpression = \Phockito::mock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
+        $unknownExpression = $this->createMock('POData\UriProcessor\QueryProcessor\ExpressionParser\Expressions\AbstractExpression');
         $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
         $actual = $expressionProcessor->processExpression($unknownExpression);
 
