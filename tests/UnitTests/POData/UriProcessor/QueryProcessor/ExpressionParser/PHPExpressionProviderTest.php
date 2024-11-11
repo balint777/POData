@@ -207,7 +207,7 @@ class PHPExpressionProviderTest extends TestCase
         $odataUriExpression = 'replace(CustomerID, \'LFK\', \'RTT\') eq \'ARTTI\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (str_replace(\'LFK\', \'RTT\', $lt->CustomerID) = \'ARTTI\'))';
+        $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (str_replace(\'LFK\', \'RTT\', $lt->CustomerID) == \'ARTTI\'))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'startswith(CustomerID, \'AL\')';
@@ -272,7 +272,7 @@ class PHPExpressionProviderTest extends TestCase
         $expressionTree = $parser->parseFilter();
         $expressionProcessor = new ExpressionProcessor(new PHPExpressionProvider('$lt'));
         $actualPHPExpression = $expressionProcessor->processExpression($expressionTree);
-        $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, \'2010-12-08\') == 0))';
+        $expectedPHPExpression = '(!(is_null($lt->OrderDate)) && ($lt->OrderDate == \'2010-12-08\'))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'OrderDate gt DeliveryDate';

@@ -188,7 +188,7 @@ class NorthWindSQLSRVTest extends TestCase
 		$this->assertNotNull($filterInfo);
 
 		$sqlexpression = $filterInfo->getExpressionAsString();
-		$this->AssertEquals("((OrderDate =  '1996-07-04'))", $sqlexpression);
+		$this->AssertEquals("(OrderDate = '1996-07-04')", $sqlexpression);
 
 	}
 
