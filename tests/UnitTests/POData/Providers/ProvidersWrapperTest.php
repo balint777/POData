@@ -53,11 +53,12 @@ class ProvidersWrapperTest extends BaseUnitTestCase
  
 	public function getMockedWrapper() : ProvidersWrapper
 	{
-		return new ProvidersWrapper(
+        $wrapper = new ProvidersWrapper(
 			$this->mockMetadataProvider,
 			$this->mockQueryProvider,
 			$this->mockServiceConfig
 		);
+		return $wrapper;
 	}
 
     public function testGetContainerName()
@@ -476,14 +477,6 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 	public function testGetResourceSetsSecondOneIsNotVisible()
 	{
 
-		$fakeSets = array(
-			$this->mockResourceSet,
-			$this->mockResourceSet2,
-		);
-
-		$this->mockMetadataProvider->method('getResourceSets')
-			->willReturn($fakeSets);
-
         $this->mockResourceSet->method('getName')
 			->willReturn("fake name 1");
 
@@ -496,20 +489,29 @@ class ProvidersWrapperTest extends BaseUnitTestCase
 		$this->mockResourceSet2->method('getResourceType')
 			->willReturn($this->mockResourceType2);
 
-		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet)
-			->willReturn(EntitySetRights::READ_SINGLE);
-
-		$this->mockServiceConfig->method('getEntitySetAccessRule')->with($this->mockResourceSet2)
-			->willReturn(EntitySetRights::NONE);
+        $this->mockServiceConfig->method('getEntitySetAccessRule')
+            ->willReturnMap([
+                [$this->mockResourceSet, EntitySetRights::READ_SINGLE],   // First parameter set, with its return value
+                [$this->mockResourceSet2, (int) EntitySetRights::NONE],   // Second parameter set, with its return value
+            ]);
 
 		$wrapper = $this->getMockedWrapper();
+
+        $fakeSets = array(
+			$this->mockResourceSet,
+			$this->mockResourceSet2,
+		);
+
+		$this->mockMetadataProvider->method('getResourceSets')
+			->willReturn($fakeSets);
 
 		$actual = $wrapper->getResourceSets();
 
 
 		$expected = array(
-			new ResourceSetWrapper($this->mockResourceSet2, $this->mockServiceConfig)
+			new ResourceSetWrapper($this->mockResourceSet, $this->mockServiceConfig)
 		);
+
 		$this->assertEquals($expected, $actual);
 
 	}
