@@ -184,7 +184,7 @@ class WordPressMySQLTest extends TestCase
         $this->assertNotNull($filterInfo);
 
         $mysqlexpression = $filterInfo->getExpressionAsString();
-        $this->AssertEquals("((post_date =  '2011-12-24 19:54:00'))", $mysqlexpression);
+        $this->AssertEquals("(post_date = '2011-12-24 19:54:00')", $mysqlexpression);
 
 	}
 

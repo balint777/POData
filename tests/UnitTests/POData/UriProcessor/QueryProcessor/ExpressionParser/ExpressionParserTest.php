@@ -560,7 +560,7 @@ class ExpressionParserTest extends TestCase
         $this->assertTrue($expr instanceof RelationalExpression);
 	    /** @var RelationalExpression $expr */
         $this->assertTrue($expr->getLeft() instanceof FunctionCallExpression);
-        $this->assertEquals('strcmp', $expr->getLeft()->getFunctionDescription()->name);
+        $this->assertEquals('substring', $expr->getLeft()->getFunctionDescription()->name);
         $paramExpressions = $expr->getLeft()->getParamExpressions();
         $this->assertEquals(2, count($paramExpressions));
         $this->assertTrue($paramExpressions[0] instanceof FunctionCallExpression);
