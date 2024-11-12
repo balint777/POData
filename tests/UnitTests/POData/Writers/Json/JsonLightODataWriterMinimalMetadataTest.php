@@ -108,7 +108,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.count" : "44",
+						"@odata.count" : 44,
 						"odata.metdata" : "http://services.odata.org/OData/OData.svc/$metadata#Products/$links/Products",
 						"value" : [
 							{
@@ -120,7 +120,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 							{
 								"url": "http://services.odata.org/OData/OData.svc/Products(8)"
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 
 		$expected = json_decode($expected);
@@ -230,7 +231,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"value" : [
 							{
 								"ID": 100,
@@ -239,7 +240,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 								"DiscontinuedDate" : null,
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		 $expected = json_decode($expected);
 
@@ -256,8 +258,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
-						"odata.count":"33",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.count": 33,
 						"value" : [
 							{
 								"ID": 100,
@@ -266,7 +268,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 								"DiscontinuedDate" : null,
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -481,7 +484,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
 						"value": [
 							{
 								"ID": 0,
@@ -507,7 +510,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -524,8 +528,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		//decoding the json string to test
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
-						"odata.count":"55",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
+						"@odata.count": 55,
 						"value": [
 							{
 								"ID": 0,
@@ -551,7 +555,8 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -606,7 +611,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
 						"ID": 0,
 						"Name": "Food"
 					}';
@@ -674,7 +679,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#ODataDemo.Address",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#ODataDemo.Address",
 						"Street": "NE 228th",
 						"City": "Sammamish",
 						"State": "WA",
@@ -802,7 +807,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#resource set name/@Element",
 						"ID": 1,
 						"Name": "mike",
 						"EmailAddresses": [
@@ -844,7 +849,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-						"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Edm.Int16",
+						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#Edm.Int16",
 						"value" :  56
 					 }';
 		$expected = json_decode($expected);
@@ -987,7 +992,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"Expanded Property":{
 		"Expanded Entry Complex Property":{
 			"fname":"Yash",
@@ -1070,7 +1075,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"Expanded Property":null,
 	"Main Entry Property 1":"Yash",
 	"Main Entry Property 2":"Kothari"
@@ -1294,7 +1299,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 
 		$expected = '{
-	"odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
+	"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#/@Element",
 	"SubCollection" : [
 		{
 			"Expanded Entry Complex Property":{
@@ -1331,7 +1336,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"http://services.odata.org/OData/OData.svc/\$metadata\",\"value\":[\n\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1359,7 +1364,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::MINIMAL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n			\"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"http://services.odata.org/OData/OData.svc/\$metadata\",\"value\":[\n		{\n			\"name\":\"Name 1\",\"url\":\"Name 1\"\n		},{\n			\"name\":\"XML escaped stuff \\\" ' <> & ?\",\"url\":\"XML escaped stuff \\\" ' <> & ?\"\n		}\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1383,7 +1388,7 @@ class JsonLightODataWriterMinimalMetadataTest extends BaseUnitTestCase
 
 			array(200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, false),
 			array(201, Version::v2(), MimeTypes::MIME_APPLICATION_JSON, false),
-			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, false),
+			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, TRUE),
 
 			//TODO: is this first one right?  this should NEVER come up, but should we claim to handle this format when
 			//it's invalid for V1? Ditto first of the next sections
