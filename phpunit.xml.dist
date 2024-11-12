@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit backupGlobals="false"
-         colors="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         bootstrap="./tests/bootstrap.php">
-
-	<coverage processUncoveredFiles="true">
-		<include>
-            <!-- Include the source directory for coverage analysis -->
-            <directory suffix=".php">src</directory>
-        </include>
-        <exclude>
-            <!-- Exclude certain files or directories (e.g., tests) from the coverage report -->
-            <directory>tests</directory>
-			<directory>vendor</directory>
-        </exclude>
-	</coverage>
-	<testsuites>
-        <testsuite name="POData tests">
-            <directory>./tests/UnitTests</directory>
-            <!--integration tests TBD -->
-        </testsuite>
-    </testsuites>
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.3/phpunit.xsd" cacheDirectory=".phpunit.cache">
+  <testsuites>
+    <testsuite name="POData tests">
+      <directory>./tests/UnitTests</directory>
+      <!--integration tests TBD -->
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <!-- Include the source directory for coverage analysis -->
+      <directory suffix=".php">src</directory>
+    </include>
+    <exclude>
+      <!-- Exclude certain files or directories (e.g., tests) from the coverage report -->
+      <directory>tests</directory>
+      <directory>vendor</directory>
+    </exclude>
+  </source>
 </phpunit>
