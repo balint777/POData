@@ -33,7 +33,7 @@ class ODataWriterRegistryTest extends BaseUnitTestCase {
 		$registry->register($this->mockWriter1);
 		$registry->register($this->mockWriter2);
 
-		$this->mockWriter2->method('canHandle')->with(Version::v1(), MimeTypes::MIME_APPLICATION_ATOM)
+		$this->mockWriter2->method('canHandle')->with(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM)
 			->willReturn(true);
 
 		$this->assertEquals($this->mockWriter2, $registry->getWriter(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM));
