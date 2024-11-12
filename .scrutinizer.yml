@@ -8,13 +8,13 @@ build:
       tests:
         override:
           - command:  |
-              mkdir -p build/logs
+              mkdir -p logs
               # Install and enable Xdebug for code coverage
               if ! php -m | grep -q 'xdebug'; then
                   pecl install xdebug || true
               fi
               php -m  # Check Xdebug is enabled
-              php -d xdebug.mode=coverage,develop -d xdebug.start_with_request=yes vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+              php -d xdebug.mode=coverage,develop -d xdebug.start_with_request=yes vendor/bin/phpunit --coverage-clover logs/clover.xml
           #  - command: | 
           #     mkdir -p build/logs
           #     # Install and enable Xdebug for code coverage
@@ -27,7 +27,7 @@ build:
           #     php -i | grep xdebug.mode  # Verify Xdebug mode
           #     vendor/bin/phpunit --coverage-clover build/logs/clover.xml
             coverage:
-              file: build/logs/clover.xml
+              file: logs/clover.xml
               format: clover
             idle_timeout: 360
   environment:
