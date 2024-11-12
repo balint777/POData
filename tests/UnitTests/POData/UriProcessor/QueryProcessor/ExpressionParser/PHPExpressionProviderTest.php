@@ -216,10 +216,10 @@ class PHPExpressionProviderTest extends TestCase
         $expectedPHPExpression = '(!(is_null($lt->CustomerID)) && (strpos($lt->CustomerID, \'AL\') === 0))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
-        $odataUriExpression = 'tolower(\'PeRsIsTeNt\') eq \'persistent\'';
+        $odataUriExpression = '(tolower(\'PeRsIsTeNt\')) eq \'persistent\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(strcmp(strtolower(\'PeRsIsTeNt\'), \'persistent\') == 0)';
+        $expectedPHPExpression = '(strtolower(\'PeRsIsTeNt\'), \'persistent\') == 0)';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'toupper(\'mICRosoFT\') eq \'MICROSOFT\'';

@@ -103,7 +103,8 @@ class OrderByLeafNode extends OrderByBaseNode
                 Messages::orderByLeafNodeArgumentShouldBeNonEmptyArray()
             );
         }
-
+		$flag1 = "";
+		$flag2 = "";
         $parameterNames = null;
         $accessor1 = null;
         $accessor2 = null;
