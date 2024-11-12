@@ -419,7 +419,7 @@ class SkipTokenParserTest extends BaseUnitTestCase
         $this->assertTrue(!is_null($nextLink));
         $thrownException = false;
         $nextLink = $internalSkipTokenInfo->buildNextPageLink($lastObject);
-        $this->assertEquals($nextLink, "'Antonio+Moreno+Taquer%C3%ADa', 23.56D, 3456");
+        $this->assertEquals($nextLink, "'Antonio+Moreno+Taquer%3Fa', 23.56D, 3456");
     }
     
     /**

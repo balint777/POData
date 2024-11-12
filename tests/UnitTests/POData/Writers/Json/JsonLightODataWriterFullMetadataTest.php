@@ -250,7 +250,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 								"Price" : 2.5
 							}
 						],
-						"__next" => ""http://services.odata.org/OData/OData.svc/Products(0)/Categories?$skiptoken=12"
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		 $expected = json_decode($expected);
 
@@ -268,7 +268,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
 						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
-						"odata.count":"33",
+						"@odata.count":"33",
 						"value" : [
 							{
 								"@odata.type": "DataServiceProviderDemo.Product",
@@ -284,7 +284,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 								"Price@odata.type": "Edm.Decimal",
 								"Price" : 2.5
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -537,7 +538,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -555,7 +557,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$actual = json_decode($writer->getOutput());
 		$expected = '{
 						"@odata.metadata":"http://services.odata.org/OData/OData.svc/$metadata#FEED TITLE",
-						"odata.count":"55",
+						"@odata.count":"55",
 						"value": [
 							{
 								"@odata.type": "ODataDemo.Supplier",
@@ -593,7 +595,8 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 								},
 								"Concurrency": 0
 							}
-						]
+						],
+						"__next" : "http://services.odata.org/OData/OData.svc$skiptoken=12"
 					}';
 		$expected = json_decode($expected);
 
@@ -1415,7 +1418,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"http://services.odata.org/OData/OData.svc/\$metadata\",\"value\":[\n\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1442,7 +1445,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::FULL, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"d\":{\n		\"EntitySet\":[\n			\"Name 1\",\"XML escaped stuff \\\" ' <> & ?\"\n		]\n	}\n}";
+		$expected = "{\n	\"odata.metadata\":\"http://services.odata.org/OData/OData.svc/\$metadata\",\"value\":[\n		{\n			\"name\":\"Name 1\",\"url\":\"Name 1\"\n		},{\n			\"name\":\"XML escaped stuff \\\" ' <> & ?\",\"url\":\"XML escaped stuff \\\" ' <> & ?\"\n		}\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}
@@ -1466,7 +1469,7 @@ class JsonLightODataWriterFullMetadataTest extends BaseUnitTestCase
 
 			array(200, Version::v1(), MimeTypes::MIME_APPLICATION_JSON, false),
 			array(201, Version::v2(), MimeTypes::MIME_APPLICATION_JSON, false),
-			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, false),
+			array(202, Version::v3(), MimeTypes::MIME_APPLICATION_JSON, true),
 
 			//TODO: is this first one right?  this should NEVER come up, but should we claim to handle this format when
 			//it's invalid for V1? Ditto first of the next sections

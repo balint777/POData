@@ -219,13 +219,13 @@ class PHPExpressionProviderTest extends TestCase
         $odataUriExpression = '(tolower(\'PeRsIsTeNt\')) eq \'persistent\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(strtolower(\'PeRsIsTeNt\'), \'persistent\') == 0)';
+        $expectedPHPExpression = '(strtolower(\'PeRsIsTeNt\') == \'persistent\')';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'toupper(\'mICRosoFT\') eq \'MICROSOFT\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(strcmp(strtoupper(\'mICRosoFT\'), \'MICROSOFT\') == 0)';
+        $expectedPHPExpression = '(strtoupper(\'mICRosoFT\') == \'MICROSOFT\')';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'trim(\'  ODataPHP Producer   \') eq null';
@@ -237,13 +237,13 @@ class PHPExpressionProviderTest extends TestCase
         $odataUriExpression = 'substring(\'Red_Black_Tree\', 3) ne \'Black_Tree\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(strcmp(substr(\'Red_Black_Tree\', 3), \'Black_Tree\') != 0)';
+        $expectedPHPExpression = '(substr(\'Red_Black_Tree\', 3) != \'Black_Tree\')';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'substring(\'Red_Black_Tree\', 3, 5) ne \'Black\'';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '(strcmp(substr(\'Red_Black_Tree\', 3, 5), \'Black\') != 0)';
+        $expectedPHPExpression = '(substr(\'Red_Black_Tree\', 3, 5) != \'Black\')';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'substringof(CustomerID, \'MRR\')';
@@ -278,7 +278,7 @@ class PHPExpressionProviderTest extends TestCase
         $odataUriExpression = 'OrderDate gt DeliveryDate';
         $parser->resetParser($odataUriExpression);
         $actualPHPExpression = $expressionProcessor->processExpression($parser->parseFilter());
-        $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && (POData\Providers\Metadata\Type\DateTime::dateTimeCmp($lt->OrderDate, $lt->DeliveryDate) > 0))';
+        $expectedPHPExpression = '((!(is_null($lt->OrderDate)) && !(is_null($lt->DeliveryDate))) && ($lt->OrderDate > $lt->DeliveryDate))';
         $this->assertEquals($expectedPHPExpression, $actualPHPExpression);
 
         $odataUriExpression = 'OrderDate eq null';

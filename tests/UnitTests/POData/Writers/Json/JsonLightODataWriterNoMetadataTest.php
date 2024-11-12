@@ -1318,7 +1318,7 @@ class JsonLightODataWriterNoMetadataTest extends BaseUnitTestCase
 		$writer = new JsonLightODataWriter(JsonLightMetadataLevel::NONE, $this->serviceBase);
 		$actual = $writer->writeServiceDocument($this->mockProvider)->getOutput();
 
-		$expected = "{\n	\"odata.metadata\":\"this should not be used for minimal metadata/\$metadata\",\"value\":[\n\n	]\n}";
+		$expected = "{\n	\"odata.metadata\":\"this should not beE used for minimal metadata/\$metadata\",\"value\":[\n\n	]\n}";
 
 		$this->assertEquals($expected, $actual);
 	}

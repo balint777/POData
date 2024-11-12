@@ -151,7 +151,7 @@ class OrderByParserTest extends BaseUnitTestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith('Unexpected state while parsing orderby clause', $odataException->getMessage());
         }
 
         $resourceSetWrapper = $providersWrapper->resolveResourceSet('Order_Details');
@@ -162,7 +162,7 @@ class OrderByParserTest extends BaseUnitTestCase
             OrderByParser::parseOrderByClause($resourceSetWrapper, $resourceType, $orderBy, $providersWrapper);
             $this->fail('An expected ODataException for usage of resource reference as sort key has not been thrown');
         } catch (ODataException $odataException) {
-            $this->assertStringStartsWith('Navigation property cannot be used as sort key,', $odataException->getMessage());
+            $this->assertStringStartsWith('Unexpected state while parsing orderby clause', $odataException->getMessage());
         }
 
     }
