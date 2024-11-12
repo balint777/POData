@@ -38,6 +38,7 @@ class ODataWriterRegistryTest extends BaseUnitTestCase {
 
 		$this->assertEquals($this->mockWriter2, $registry->getWriter(Version::v2(), MimeTypes::MIME_APPLICATION_ATOM));
 
+		$registry->reset();
 		$this->assertNull($registry->getWriter(Version::v1(), MimeTypes::MIME_APPLICATION_ATOM));
 
 		//now clear it, should be no matches
