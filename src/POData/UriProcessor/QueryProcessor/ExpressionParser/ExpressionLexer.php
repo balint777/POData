@@ -168,7 +168,7 @@ class ExpressionLexer
         $rest = substr($this->_text, $tokenPos);
         $matches_array = [];
         preg_match('/^\(\s*(?<string_array>(\'[^\']*\'(\s*\,\s*\'[^\']*\')*)|(?<int_array>\d+(\s*\,\s*\d+)*))\s*\)/', $rest, $matches_array);
-        if ($matches_array) {
+        if ($matches_array && $this->_token->Id !== ExpressionTokenId::IDENTIFIER) {
             $t = ExpressionTokenId::ARRAY_LITERAL;
             $this->_setTextPos($this->_textPos + strlen($matches_array[0]));
         } else {

@@ -484,7 +484,7 @@ class WordPressMySQLTest extends TestCase
         $dataService = new WordPressDataService();
         $dataService->setHost($host);
 
-        $uriProcessor = $dataService->handleRequest();
+		$uriProcessor = $dataService->handleRequest();
         $this->assertNotNull($uriProcessor);
 
         $requestDescription = $uriProcessor->getRequest();

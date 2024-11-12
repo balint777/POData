@@ -36,6 +36,7 @@ class WordPressDSExpressionProvider implements IExpressionProvider
     const NEGATE               = '-';
     const NOTEQUAL             = '!=';
     const OPEN_BRAKET          = '(';
+	const TYPE_NAMESPACE        = 'POData\\Providers\\Metadata\\Type\\';
     
     /**
      * The type of the resource pointed by the resource path segement
