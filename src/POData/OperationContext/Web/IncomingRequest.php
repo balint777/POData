@@ -137,9 +137,10 @@ class IncomingRequest implements IHTTPRequest
 
             $this->_rawUrl .= "://" . $_SERVER[HttpProcessUtility::headerToServerKey(ODataConstants::HTTPREQUEST_HEADER_HOST)];
             $this->_rawUrl .= $_SERVER[ODataConstants::HTTPREQUEST_URI];
-			if (!empty($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING])) {
-				$this->_rawUrl .= "?" . $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING];
-			}
+			//It looks like it is not working, for example if there is an $inlinecount then it will double the parameter
+			//if (!empty($_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING])) {
+			//	$this->_rawUrl .= "?" . $_SERVER[ODataConstants::HTTPREQUEST_QUERY_STRING];
+			//}
         }
 
         return $this->_rawUrl;
