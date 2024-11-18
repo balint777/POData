@@ -78,12 +78,12 @@ class OrderByParser
 
     private static function _mock($instanceType)
     {
-		$reflection = new \ReflectionClass($instanceType->name);
-        $mock = $reflection->newInstanceWithoutConstructor();
+		//The previous solution is nice, but causes problems, because we initialize classes that have not null properties as well 
+		$mock = [];
         foreach ($instanceType->getProperties() as $property) {
-            $mock->{$property->name} = null;
+            $mock[$property->name] = null;
         }
-        return $mock;
+        return (object) $mock;
     }
 
     /**
