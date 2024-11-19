@@ -62,7 +62,8 @@ class IncomingRequest implements IHTTPRequest
         $this->_queryOptionsCount = null;
         $this->_headers = null;
         $this->getHeaders();
-		$this->getQueryParameters();
+		//Not sure about this
+		//$this->getQueryParameters();
     }
 
     /**
