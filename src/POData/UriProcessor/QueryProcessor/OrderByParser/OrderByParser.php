@@ -10,8 +10,10 @@ use POData\Providers\Metadata\Type\Binary;
 use POData\Providers\Metadata\ResourceSetWrapper;
 use POData\Providers\Metadata\ResourceType;
 use POData\Providers\Metadata\ResourcePropertyKind;
+use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Common\ODataException;
 use POData\Common\Messages;
+use POData\Providers\Metadata\ResourceProperty;
 
 /**
  * Class OrderByParser
@@ -76,26 +78,44 @@ class OrderByParser
         $this->_providerWrapper = $providerWrapper;
     }
 
-    private static function _mock($instanceType)
-    {
+    private static function _mock($resourceType): object {
+		$instanceType = $resourceType->getInstanceType();
 		$reflection = new \ReflectionClass($instanceType->name);
 		$mock = $reflection->newInstanceWithoutConstructor();
 
 		foreach ($reflection->getProperties() as $property) {
 			$property->setAccessible(true);
 
-			// Check if the property has a non-nullable type and set a default value
 			$type = $property->getType();
+			if($resourceType instanceof ResourceProperty) {
+				$resourceType  = $resourceType->getResourceType();
+			}
+			$resourceProperty = $resourceType->resolveProperty($property->getName());
+			if(is_null($resourceProperty)) continue;
+
+			$resourcePropertyType = $resourceProperty->getResourceType();
+			$resourceKind = $resourcePropertyType->getResourceTypeKind();
 			if ($type && !$type->allowsNull()) {
-				// Determine a default value based on the type
-				if ($type->getName() === 'int') {
-					$property->setValue($mock, 0); // Default integer value
-				} elseif ($type->getName() === 'string') {
-					$property->setValue($mock, ''); // Default string value
-				} elseif ($type->getName() === 'bool') {
-					$property->setValue($mock, false); // Default boolean value
+				if ($resourceKind === ResourceTypeKind::PRIMITIVE) {
+					switch ($type->getName()) {
+						case 'int':
+							$property->setValue($mock, 0);
+							break;
+						case 'string':
+							$property->setValue($mock, '');
+							break;
+						case 'bool':
+							$property->setValue($mock, false);
+							break;
+						case 'array':
+							// If the property is of type array, set it as an empty array
+							$property->setValue($mock, []);
+							break;
+						default:
+							break;
+					}
 				} else {
-					$property->setValue($mock, null); // Fallback to null for nullable types
+					continue;
 				}
 			} else {
 				// If the property allows null, set it to null
@@ -104,8 +124,7 @@ class OrderByParser
 		}
 
 		return $mock;
-
-    }
+	}
 
     /**
      * This function perform the following tasks with the help of internal helper
@@ -138,7 +157,7 @@ class OrderByParser
     ) {
         $orderByParser = new OrderByParser($providerWrapper);
         try {
-            $orderByParser->_dummyObject = self::_mock($resourceType->getInstanceType());
+            $orderByParser->_dummyObject = self::_mock($resourceType);
         } catch (\ReflectionException $reflectionException) {
             throw ODataException::createInternalServerError(Messages::orderByParserFailedToCreateDummyObject());
         }
@@ -299,14 +318,14 @@ class OrderByParser
                         );
                         // Initialize this member variable (identified by
                         // $resourceProperty) of parent object.
-                        $object = $this->_mock($resourceProperty->getInstanceType());
+                        $object = $this->_mock($resourceProperty);
                         $currentObject->{$resourceProperty->getName()} = $object;
                         $currentObject = $object;
                     } else if ($resourceProperty->getKind() == ResourcePropertyKind::COMPLEX_TYPE) {
                         $node = new OrderByNode($orderBySubPathSegment, $resourceProperty, null);
                         // Initialize this member variable
                         // (identified by $resourceProperty)of parent object.
-                        $object = $this->_mock($resourceProperty->getInstanceType());
+                        $object = $this->_mock($resourceProperty);
                         $currentObject->{$resourceProperty->getName()} = $object;
                         $currentObject = $object;
                     }
