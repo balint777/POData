@@ -63,7 +63,7 @@ class IncomingRequest implements IHTTPRequest
         $this->_headers = null;
         $this->getHeaders();
 		//Not sure about this
-		//$this->getQueryParameters();
+		$this->getQueryParameters();
     }
 
     /**
@@ -194,15 +194,14 @@ class IncomingRequest implements IHTTPRequest
         if (is_null($this->_queryOptions)) {
             $queryString = $this->getQueryString();
             $this->_queryOptions = array();
-
+			//example $filter=CustomerID gt \'ALFKI\'
             foreach (explode('&', $queryString) as $queryOptionAsString) {
                 $queryOptionAsString = trim($queryOptionAsString);
                 if (!empty($queryOptionAsString)) {
                     $result = explode('=', $queryOptionAsString, 2);
                     $isNamedOptions = count($result) == 2;
                     if ($isNamedOptions) {
-                        $this->_queryOptions[]
-                            = array(rawurldecode($result[0]) => trim(rawurldecode($result[1])));
+                        $this->_queryOptions[rawurldecode($result[0])] = trim(rawurldecode($result[1]));
                     } else {
                         $this->_queryOptions[]
                             = array(null => trim(rawurldecode($result[0])));

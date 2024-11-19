@@ -124,10 +124,12 @@ Class ServiceHost
     {
         if (is_null($this->_absoluteRequestUri)) {
             $this->_absoluteRequestUriAsString = $this->_operationContext->incomingRequest()->getRawUrl();
+			$originalRequest = $this->_operationContext->incomingRequest();
             // Validate the uri first
             try {
                 $this->_fullAbsoluteRequestUriAsString = $this->_absoluteRequestUriAsString;
                 $this->_fullAbsoluteRequestUri = new Url($this->_fullAbsoluteRequestUriAsString);
+				$this->_fullAbsoluteRequestUri->setQueryOptions($originalRequest->getQueryParameters());
             } catch (UrlFormatException $exception) {
                 throw ODataException::createBadRequestError($exception->getMessage());
             }

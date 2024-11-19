@@ -68,6 +68,24 @@ class Url
         }
     }
 
+	 /**
+     * Gets query options
+     *
+     * @return array
+     */
+    public function getQueryOptions()
+    {
+        return $this->_queryOptions;
+    }
+
+	 /**
+     * Sets query options
+     */
+    public function setQueryOptions($_queryOptions)
+    {
+        $this->_queryOptions = $_queryOptions;
+    }
+
     /**
      * Gets the url represented by this instance as string
      *

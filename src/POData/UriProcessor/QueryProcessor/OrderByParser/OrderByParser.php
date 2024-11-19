@@ -78,12 +78,33 @@ class OrderByParser
 
     private static function _mock($instanceType)
     {
-		//The previous solution is nice, but causes problems, because we initialize classes that have not null properties as well 
-		$mock = [];
-        foreach ($instanceType->getProperties() as $property) {
-            $mock[$property->name] = null;
-        }
-        return (object) $mock;
+		$reflection = new \ReflectionClass($instanceType->name);
+		$mock = $reflection->newInstanceWithoutConstructor();
+
+		foreach ($reflection->getProperties() as $property) {
+			$property->setAccessible(true);
+
+			// Check if the property has a non-nullable type and set a default value
+			$type = $property->getType();
+			if ($type && !$type->allowsNull()) {
+				// Determine a default value based on the type
+				if ($type->getName() === 'int') {
+					$property->setValue($mock, 0); // Default integer value
+				} elseif ($type->getName() === 'string') {
+					$property->setValue($mock, ''); // Default string value
+				} elseif ($type->getName() === 'bool') {
+					$property->setValue($mock, false); // Default boolean value
+				} else {
+					$property->setValue($mock, null); // Fallback to null for nullable types
+				}
+			} else {
+				// If the property allows null, set it to null
+				$property->setValue($mock, null);
+			}
+		}
+
+		return $mock;
+
     }
 
     /**

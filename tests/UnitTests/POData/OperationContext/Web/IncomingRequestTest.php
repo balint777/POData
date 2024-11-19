@@ -16,16 +16,15 @@ class IncomingRequestTest extends TestCase {
         $incoming = new IncomingRequest();
 
         $expectedParameters = array(
-            array(
-                '$format' => 'json'
-            ),
-            array(
-                '$expand' => 'PhysicalAddress'
-            ),
-            array(
+            
+            '$format' => 'json'
+            ,
+            
+        	'$expand' => 'PhysicalAddress'
+            ,
                 //Notice the value of this URI component has been decoded
-                '$filter' => "Active eq true and (Segments/any(s: s/Name eq 'Cedar Rapids-Waterloo-Iowa City&Dubuque'))"
-            ),
+            '$filter' => "Active eq true and (Segments/any(s: s/Name eq 'Cedar Rapids-Waterloo-Iowa City&Dubuque'))"
+            ,
         );
 
         $this->assertEquals($expectedParameters, $incoming->getQueryParameters());
@@ -42,10 +41,8 @@ class IncomingRequestTest extends TestCase {
         $incoming = new IncomingRequest();
 
         $expectedParameters = array(
-            array(
                 //Notice the value of this URI component has been decoded
                 '$filter' => "%20"
-            ),
         );
 
         $this->assertEquals($expectedParameters, $incoming->getQueryParameters());
