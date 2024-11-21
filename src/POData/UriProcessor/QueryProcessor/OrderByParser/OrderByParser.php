@@ -81,6 +81,9 @@ class OrderByParser
     private static function _mock($resourceType): object {
 		$instanceType = $resourceType->getInstanceType();
 		$reflection = new \ReflectionClass($instanceType->name);
+		if($reflection->isAbstract()) {
+			return new stdClass();
+		}
 		$mock = $reflection->newInstanceWithoutConstructor();
 
 		foreach ($reflection->getProperties() as $property) {
