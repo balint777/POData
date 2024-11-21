@@ -14,6 +14,7 @@ use POData\Providers\Metadata\ResourceTypeKind;
 use POData\Common\ODataException;
 use POData\Common\Messages;
 use POData\Providers\Metadata\ResourceProperty;
+use stdClass;
 
 /**
  * Class OrderByParser
